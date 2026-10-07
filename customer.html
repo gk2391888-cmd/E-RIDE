@@ -1,1063 +1,1424 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  >
-
-  <title>E RIDE — Customer</title>
-
-  <meta name="theme-color" content="#070a10">
-
-  <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com"
-  >
-
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  >
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  >
-
-  <!-- Leaflet Map -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  >
-
-  <style>
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    :root {
-      --bg: #070a10;
-      --surface: #10151f;
-      --surface2: #151b27;
-      --border: rgba(255,255,255,.08);
-      --text: #ffffff;
-      --muted: #8f9aaa;
-      --green: #22c55e;
-      --green2: #16a34a;
-      --red: #ef4444;
-      --yellow: #f59e0b;
-      --blue: #3b82f6;
-    }
-
-    html,
-    body {
-      width: 100%;
-      min-height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Inter, Arial, sans-serif;
-    }
-
-    body {
-      overflow-x: hidden;
-    }
-
-    button,
-    input {
-      font-family: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    /* =========================
-       APP
-    ========================= */
-
-    .app {
-      width: 100%;
-      max-width: 520px;
-      min-height: 100vh;
-      margin: auto;
-      background: var(--bg);
-      padding-bottom: 92px;
-    }
-
-    /* =========================
-       HEADER
-    ========================= */
-
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      padding: 17px 18px;
-
-      background: rgba(7,10,16,.90);
-      backdrop-filter: blur(18px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>E RIDE — Customer</title>
+
+<meta name="theme-color" content="#22c55e">
+<meta name="description" content="E RIDE customer ride booking">
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<link
+  rel="preconnect"
+  href="https://fonts.googleapis.com"
+>
+
+<link
+  rel="preconnect"
+  href="https://fonts.gstatic.com"
+  crossorigin
+>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+  rel="stylesheet"
+>
+
+<style>
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+  --bg:#070a10;
+  --card:#10151f;
+  --card2:#151b27;
+  --border:rgba(255,255,255,.08);
+  --text:#fff;
+  --muted:#8f9aaa;
+  --green:#22c55e;
+  --green2:#86efac;
+  --red:#ef4444;
+  --yellow:#f59e0b;
+  --blue:#3b82f6;
+}
+
+html,
+body{
+  min-height:100%;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,Arial,sans-serif;
+}
+
+button,
+input,
+textarea,
+select{
+  font-family:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+button:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.app{
+  width:100%;
+  max-width:1180px;
+  margin:auto;
+  min-height:100vh;
+  padding-bottom:90px;
+}
+
+/* HEADER */
+
+.header{
+  position:sticky;
+  top:0;
+  z-index:1000;
+
+  height:68px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:0 20px;
 
-    .brand-logo {
-      width: 42px;
-      height: 42px;
+  background:rgba(7,10,16,.94);
+  backdrop-filter:blur(18px);
 
-      border-radius: 13px;
+  border-bottom:1px solid var(--border);
+}
 
-      display: grid;
-      place-items: center;
-
-      background: linear-gradient(
-        135deg,
-        var(--green),
-        #86efac
-      );
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
 
-      font-size: 22px;
-
-      box-shadow:
-        0 10px 30px rgba(34,197,94,.20);
-    }
+.logo{
+  width:40px;
+  height:40px;
+
+  display:grid;
+  place-items:center;
 
-    .brand-name {
-      font-size: 18px;
-      font-weight: 800;
-    }
+  border-radius:12px;
 
-    .brand-sub {
-      margin-top: 2px;
-      color: var(--muted);
-      font-size: 9px;
-      letter-spacing: .8px;
-      text-transform: uppercase;
-    }
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--green2)
+    );
+
+  font-size:21px;
+}
+
+.brand-name{
+  font-size:17px;
+  font-weight:800;
+}
+
+.brand-sub{
+  color:var(--muted);
+  font-size:8px;
+  margin-top:2px;
+  letter-spacing:.6px;
+}
+
+.header-actions{
+  display:flex;
+  gap:7px;
+}
+
+.header-btn{
+  width:38px;
+  height:38px;
 
-    .profile-btn {
-      width: 42px;
-      height: 42px;
+  border:1px solid var(--border);
 
-      border: 1px solid var(--border);
-      border-radius: 50%;
+  background:var(--card2);
 
-      background: var(--surface2);
+  color:white;
 
-      display: grid;
-      place-items: center;
+  border-radius:11px;
 
-      overflow: hidden;
-    }
+  display:grid;
+  place-items:center;
 
-    .profile-btn img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: none;
-    }
+  font-size:16px;
+}
 
-    .profile-letter {
-      font-weight: 700;
-      color: #d9dee7;
-    }
+/* MAIN */
 
-    /* =========================
-       MAIN
-    ========================= */
+.main{
+  padding:20px;
+}
 
-    .main {
-      padding: 18px;
-    }
+.welcome{
+  margin-bottom:17px;
+}
 
-    .hello {
-      margin-bottom: 18px;
-    }
+.welcome-title{
+  font-size:25px;
+  font-weight:800;
+}
 
-    .hello-small {
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 4px;
-    }
+.welcome-sub{
+  color:var(--muted);
+  font-size:10px;
+  margin-top:5px;
+}
 
-    .hello-name {
-      font-size: 25px;
-      font-weight: 800;
-      letter-spacing: -.7px;
-    }
+/* LAYOUT */
 
-    /* =========================
-       MAP
-    ========================= */
+.grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);
+  gap:15px;
+}
 
-    .map-card {
-      position: relative;
+/* CARD */
 
-      height: 245px;
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:17px;
+}
 
-      border-radius: 24px;
-      overflow: hidden;
+.card-title{
+  font-size:14px;
+  font-weight:800;
+  margin-bottom:13px;
+}
 
-      border: 1px solid var(--border);
+.card-sub{
+  color:var(--muted);
+  font-size:9px;
+  margin-top:-8px;
+  margin-bottom:13px;
+}
 
-      background: #dfe8df;
+/* MAP */
 
-      box-shadow:
-        0 20px 50px rgba(0,0,0,.22);
-    }
+.map{
+  width:100%;
+  height:380px;
+  border-radius:17px;
+  overflow:hidden;
+  background:#111;
+}
 
-    #map {
-      width: 100%;
-      height: 100%;
-    }
+.leaflet-control-attribution{
+  font-size:7px!important;
+}
 
-    .map-location-btn {
-      position: absolute;
-      z-index: 500;
+/* LOCATION INPUTS */
 
-      right: 12px;
-      bottom: 12px;
+.location-box{
+  margin-top:13px;
+  display:grid;
+  gap:9px;
+}
 
-      width: 45px;
-      height: 45px;
+.location-row{
+  display:flex;
+  align-items:center;
+  gap:9px;
 
-      border: 1px solid rgba(255,255,255,.8);
-      border-radius: 14px;
+  padding:11px;
 
-      background: white;
+  background:var(--card2);
 
-      color: #111827;
+  border:1px solid var(--border);
 
-      font-size: 18px;
+  border-radius:13px;
+}
 
-      box-shadow: 0 8px 20px rgba(0,0,0,.20);
-    }
+.location-icon{
+  width:27px;
+  height:27px;
 
-    /* =========================
-       BOOKING CARD
-    ========================= */
+  display:grid;
+  place-items:center;
 
-    .booking-card {
-      position: relative;
+  border-radius:9px;
 
-      margin-top: -25px;
-      z-index: 600;
+  background:rgba(34,197,94,.1);
 
-      background: var(--surface);
+  font-size:13px;
+}
 
-      border: 1px solid var(--border);
-      border-radius: 25px;
+.location-content{
+  flex:1;
+}
 
-      padding: 18px;
+.location-label{
+  color:var(--muted);
+  font-size:8px;
+  margin-bottom:3px;
+}
 
-      box-shadow:
-        0 20px 55px rgba(0,0,0,.35);
-    }
+.location-input{
+  width:100%;
 
-    .booking-title {
-      font-size: 16px;
-      font-weight: 800;
+  border:0;
+  outline:0;
 
-      margin-bottom: 14px;
-    }
+  background:transparent;
 
-    /* =========================
-       SERVICE SELECTOR
-    ========================= */
+  color:white;
 
-    .service-tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+  font-size:10px;
+}
 
-      gap: 10px;
+.location-input::placeholder{
+  color:#687384;
+}
 
-      margin-bottom: 16px;
-    }
+/* CURRENT LOCATION */
 
-    .service {
-      border: 1px solid var(--border);
+.current-location{
+  border:1px solid rgba(59,130,246,.16);
+  background:rgba(59,130,246,.06);
+  color:#bfdbfe;
 
-      background: rgba(255,255,255,.025);
+  border-radius:11px;
 
-      border-radius: 16px;
+  padding:10px;
 
-      padding: 13px;
+  margin-top:9px;
 
-      color: white;
+  font-size:9px;
 
-      text-align: left;
+  cursor:pointer;
+}
 
-      transition: .2s ease;
-    }
+/* SERVICES */
 
-    .service.active {
-      border-color: rgba(34,197,94,.7);
+.services{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-bottom:13px;
+}
 
-      background: rgba(34,197,94,.10);
+.service{
+  border:1px solid var(--border);
+  background:var(--card2);
+  color:white;
 
-      box-shadow:
-        0 0 0 2px rgba(34,197,94,.06);
-    }
+  border-radius:14px;
 
-    .service-icon {
-      font-size: 22px;
-      margin-bottom: 7px;
-    }
+  padding:13px;
 
-    .service-title {
-      font-size: 12px;
-      font-weight: 700;
-    }
+  text-align:left;
+}
 
-    .service-description {
-      margin-top: 3px;
+.service.selected{
+  border-color:var(--green);
+  background:rgba(34,197,94,.08);
+}
 
-      color: var(--muted);
-      font-size: 9px;
-    }
+.service-icon{
+  font-size:22px;
+  margin-bottom:6px;
+}
 
-    /* =========================
-       LOCATION INPUTS
-    ========================= */
+.service-name{
+  font-size:11px;
+  font-weight:800;
+}
 
-    .locations {
-      display: flex;
-      flex-direction: column;
+.service-desc{
+  color:var(--muted);
+  font-size:8px;
+  margin-top:3px;
+}
 
-      gap: 9px;
+/* GOODS */
 
-      margin-bottom: 15px;
-    }
+.goods-box{
+  display:none;
+  margin-bottom:13px;
+}
 
-    .location-input {
-      position: relative;
-    }
+.goods-box.show{
+  display:block;
+}
 
-    .location-input .dot {
-      position: absolute;
+.field{
+  margin-bottom:10px;
+}
 
-      left: 14px;
-      top: 50%;
+.label{
+  color:var(--muted);
+  font-size:8px;
+  margin-bottom:6px;
+}
 
-      transform: translateY(-50%);
+.input,
+.textarea{
+  width:100%;
 
-      width: 10px;
-      height: 10px;
+  border:1px solid var(--border);
 
-      border-radius: 50%;
+  background:var(--card2);
 
-      background: var(--green);
-    }
+  color:white;
 
-    .location-input.destination .dot {
-      background: var(--red);
-    }
+  border-radius:11px;
 
-    .location-input input {
-      width: 100%;
+  padding:11px;
 
-      height: 53px;
+  outline:none;
 
-      border: 1px solid var(--border);
-      border-radius: 15px;
+  font-size:10px;
+}
 
-      outline: none;
+.textarea{
+  min-height:75px;
+  resize:vertical;
+}
 
-      padding:
-        0 14px 0 36px;
+/* FARE */
 
-      background: var(--surface2);
+.fare-box{
+  padding:14px;
 
-      color: white;
+  border-radius:15px;
 
-      font-size: 12px;
-    }
+  background:
+    linear-gradient(
+      135deg,
+      rgba(34,197,94,.08),
+      rgba(255,255,255,.025)
+    );
 
-    .location-input input::placeholder {
-      color: #70798a;
-    }
+  border:1px solid rgba(34,197,94,.13);
 
-    .location-input input:focus {
-      border-color: rgba(34,197,94,.5);
-    }
+  margin-bottom:12px;
+}
 
-    /* =========================
-       GOODS DETAILS
-    ========================= */
+.fare-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 
-    .goods-box {
-      display: none;
+  padding:5px 0;
 
-      margin-bottom: 15px;
-    }
+  font-size:9px;
+}
 
-    .goods-box.show {
-      display: block;
-    }
+.fare-row span:first-child{
+  color:var(--muted);
+}
 
-    .goods-box textarea {
-      width: 100%;
+.fare-total{
+  border-top:1px solid var(--border);
+  margin-top:5px;
+  padding-top:10px;
 
-      min-height: 85px;
+  font-size:14px;
+  font-weight:800;
+}
 
-      resize: none;
+.book-btn{
+  width:100%;
+  height:50px;
 
-      border: 1px solid var(--border);
-      border-radius: 15px;
+  border:0;
 
-      outline: none;
+  border-radius:14px;
 
-      padding: 13px;
+  background:var(--green);
 
-      background: var(--surface2);
+  color:#041008;
 
-      color: white;
+  font-size:11px;
+  font-weight:800;
+}
 
-      font-size: 12px;
-    }
+/* ACTIVE RIDE */
 
-    .goods-box textarea::placeholder {
-      color: #70798a;
-    }
+.active-card{
+  display:none;
 
-    /* =========================
-       FARE
-    ========================= */
+  border:1px solid rgba(34,197,94,.2);
 
-    .fare-box {
-      display: none;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(34,197,94,.08),
+      var(--card)
+    );
 
-      background:
-        linear-gradient(
-          135deg,
-          rgba(34,197,94,.10),
-          rgba(34,197,94,.025)
-        );
+  border-radius:20px;
 
-      border: 1px solid rgba(34,197,94,.14);
+  padding:17px;
 
-      border-radius: 17px;
+  margin-bottom:15px;
+}
 
-      padding: 14px;
+.active-card.show{
+  display:block;
+}
 
-      margin-bottom: 15px;
-    }
+.status-line{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
 
-    .fare-box.show {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+.status-name{
+  font-size:14px;
+  font-weight:800;
+}
 
-    .fare-label {
-      color: var(--muted);
-      font-size: 10px;
-    }
+.status-badge{
+  padding:6px 9px;
 
-    .fare-distance {
-      margin-top: 4px;
-      font-size: 11px;
-      font-weight: 600;
-    }
+  border-radius:999px;
 
-    .fare-price {
-      font-size: 23px;
-      font-weight: 800;
-      color: #86efac;
-    }
+  background:rgba(34,197,94,.1);
 
-    /* =========================
-       BOOK BUTTON
-    ========================= */
+  color:#86efac;
 
-    .book-btn {
-      width: 100%;
-      height: 55px;
+  font-size:8px;
+  font-weight:800;
+}
 
-      border: none;
-      border-radius: 16px;
+.active-route{
+  margin-top:13px;
 
-      background:
-        linear-gradient(
-          135deg,
-          var(--green),
-          var(--green2)
-        );
+  padding:12px;
 
-      color: #041008;
+  border-radius:13px;
 
-      font-size: 14px;
-      font-weight: 800;
+  background:rgba(255,255,255,.035);
 
-      box-shadow:
-        0 12px 28px rgba(34,197,94,.18);
+  font-size:9px;
 
-      transition: .15s ease;
-    }
+  line-height:1.7;
+}
 
-    .book-btn:active {
-      transform: scale(.98);
-    }
+.driver-box{
+  display:none;
 
-    .book-btn:disabled {
-      opacity: .45;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
+  margin-top:10px;
 
-    /* =========================
-       QUICK ACTIONS
-    ========================= */
+  padding:12px;
 
-    .section-title {
-      margin-top: 25px;
-      margin-bottom: 11px;
+  border-radius:14px;
 
-      font-size: 14px;
-      font-weight: 800;
-    }
+  background:var(--card2);
 
-    .quick-actions {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+  border:1px solid var(--border);
+}
 
-      gap: 9px;
-    }
+.driver-box.show{
+  display:block;
+}
 
-    .quick {
-      min-height: 78px;
+.driver-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
 
-      border: 1px solid var(--border);
-      border-radius: 16px;
+.driver-avatar{
+  width:43px;
+  height:43px;
 
-      background: var(--surface);
+  border-radius:50%;
 
-      color: white;
+  background:#202938;
 
-      padding: 12px 8px;
+  overflow:hidden;
 
-      text-align: center;
-    }
+  display:grid;
+  place-items:center;
+}
 
-    .quick-icon {
-      font-size: 20px;
-      margin-bottom: 7px;
-    }
+.driver-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 
-    .quick span {
-      display: block;
-      font-size: 9px;
-      color: var(--muted);
-    }
+.driver-name{
+  font-size:11px;
+  font-weight:800;
+}
 
-    .driver-ride-card {
-      display:flex; align-items:center; gap:11px;
-      padding:12px; margin-bottom:12px;
-      border-radius:15px; background:rgba(255,255,255,.04);
-    }
-    .driver-ride-avatar {
-      width:46px; height:46px; border-radius:50%;
-      display:grid; place-items:center; background:#263142; overflow:hidden; flex:none;
-      font-size:20px;
-    }
-    .driver-ride-avatar img { width:100%; height:100%; object-fit:cover; }
-    .driver-ride-details { min-width:0; flex:1; }
-    .driver-ride-name { font-size:12px; font-weight:800; }
-    .driver-ride-meta, .driver-ride-phone { color:var(--muted); font-size:9px; margin-top:3px; }
-    .driver-call-btn { width:42px; height:42px; border-radius:50%; display:grid; place-items:center;
-      background:var(--green); color:#041008; text-decoration:none; font-size:18px; flex:none; }
+.driver-meta{
+  color:var(--muted);
+  font-size:8px;
+  margin-top:3px;
+}
 
-    /* =========================
-       HISTORY
-    ========================= */
-    .history-modal {
-      display:none;
-      position:fixed;
-      inset:0;
-      z-index:6000;
-      background:rgba(0,0,0,.72);
-      align-items:flex-end;
-      justify-content:center;
-    }
-    .history-modal.show { display:flex; }
-    .history-card {
-      width:100%;
-      max-width:520px;
-      max-height:86vh;
-      overflow:auto;
-      padding:20px;
-      background:#111722;
-      border-radius:27px 27px 0 0;
-      border:1px solid var(--border);
-    }
-    .history-head {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:14px;
-    }
-    .history-title { font-size:18px; font-weight:800; }
-    .history-close {
-      width:38px; height:38px; border:0; border-radius:50%;
-      background:rgba(255,255,255,.07); color:white; font-size:18px;
-    }
-    .history-list { display:flex; flex-direction:column; gap:10px; }
-    .history-item {
-      padding:13px;
-      border:1px solid var(--border);
-      border-radius:16px;
-      background:rgba(255,255,255,.035);
-    }
-    .history-item-top {
-      display:flex; justify-content:space-between; gap:8px; align-items:center;
-    }
-    .history-service { font-size:12px; font-weight:800; }
-    .history-status {
-      font-size:8px; padding:5px 8px; border-radius:999px;
-      background:rgba(34,197,94,.09); color:#86efac;
-      text-transform:uppercase;
-    }
-    .history-route { margin-top:9px; color:#dbe1ea; font-size:10px; line-height:1.65; }
-    .history-meta {
-      margin-top:8px; display:flex; justify-content:space-between;
-      gap:8px; color:var(--muted); font-size:9px;
-    }
-    .history-empty {
-      padding:30px 15px; text-align:center; color:var(--muted);
-      border:1px dashed rgba(255,255,255,.1); border-radius:16px; font-size:11px;
-    }
+.driver-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
 
-    /* =========================
-       ACTIVE RIDE
-    ========================= */
+  margin-top:10px;
+}
 
-    .active-ride {
-      display: none;
+.action-btn{
+  height:40px;
 
-      margin-top: 22px;
+  border-radius:11px;
 
-      padding: 17px;
+  border:1px solid var(--border);
 
-      border-radius: 20px;
+  background:rgba(255,255,255,.04);
 
-      border: 1px solid rgba(59,130,246,.18);
+  color:white;
 
-      background: rgba(59,130,246,.07);
-    }
+  font-size:9px;
+  font-weight:800;
+}
 
-    .active-ride.show {
-      display: block;
-    }
+.action-btn.green{
+  background:var(--green);
+  color:#041008;
+  border-color:var(--green);
+}
 
-    .active-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+.action-btn.red{
+  color:#fca5a5;
+  border-color:rgba(239,68,68,.2);
+  background:rgba(239,68,68,.07);
+}
 
-      margin-bottom: 13px;
-    }
+/* TRACKING MAP */
 
-    .active-title {
-      font-size: 14px;
-      font-weight: 800;
-    }
+.tracking-map{
+  width:100%;
+  height:210px;
 
-    .ride-status {
-      font-size: 9px;
+  border-radius:14px;
 
-      color: #93c5fd;
+  overflow:hidden;
 
-      background: rgba(59,130,246,.12);
+  margin-top:11px;
 
-      border-radius: 999px;
+  display:none;
+}
 
-      padding: 6px 9px;
-    }
+.tracking-map.show{
+  display:block;
+}
 
-    .ride-info {
-      color: var(--muted);
+/* QUICK */
 
-      font-size: 11px;
+.quick-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
 
-      line-height: 1.7;
-    }
+  margin-top:15px;
+}
 
-    /* =========================
-       BOTTOM NAV
-    ========================= */
+.quick{
+  border:1px solid var(--border);
 
-    .bottom-nav {
-      position: fixed;
+  background:var(--card);
 
-      z-index: 2000;
+  color:white;
 
-      bottom: 0;
-      left: 50%;
+  border-radius:14px;
 
-      transform: translateX(-50%);
+  padding:13px 7px;
 
-      width: 100%;
-      max-width: 520px;
+  font-size:8px;
+  font-weight:700;
+}
 
-      height: 75px;
+.quick-icon{
+  font-size:18px;
+  margin-bottom:5px;
+}
 
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+/* HISTORY */
 
-      padding:
-        8px 10px
-        calc(8px + env(safe-area-inset-bottom));
+.history-list{
+  display:grid;
+  gap:9px;
+}
 
-      background: rgba(12,16,24,.96);
+.history-item{
+  padding:13px;
 
-      backdrop-filter: blur(20px);
+  background:var(--card2);
 
-      border-top: 1px solid var(--border);
-    }
+  border:1px solid var(--border);
 
-    .nav-item {
-      border: none;
-      background: transparent;
+  border-radius:14px;
+}
 
-      color: #697384;
+.history-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
 
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+.history-status{
+  font-size:8px;
+  font-weight:800;
+  color:#86efac;
+}
 
-      gap: 4px;
+.history-route{
+  font-size:9px;
+  line-height:1.6;
+  margin-top:8px;
+}
 
-      font-size: 9px;
-    }
+.history-fare{
+  font-size:12px;
+  font-weight:800;
+  margin-top:8px;
+}
 
-    .nav-item .nav-icon {
-      font-size: 19px;
-    }
+/* NOTIFICATIONS */
 
-    .nav-item.active {
-      color: var(--green);
-    }
+.notification-list{
+  display:grid;
+  gap:9px;
+}
 
-    /* =========================
-       MODAL
-    ========================= */
+.notification{
+  padding:12px;
 
-    .modal {
-      display: none;
+  background:var(--card2);
 
-      position: fixed;
+  border:1px solid var(--border);
 
-      z-index: 5000;
+  border-radius:13px;
+}
 
-      inset: 0;
+.notification.unread{
+  border-color:rgba(34,197,94,.25);
+}
 
-      background: rgba(0,0,0,.65);
+.notification-title{
+  font-size:10px;
+  font-weight:800;
+}
 
-      align-items: flex-end;
+.notification-body{
+  color:var(--muted);
+  font-size:9px;
+  line-height:1.5;
+  margin-top:4px;
+}
 
-      justify-content: center;
-    }
+/* SUPPORT */
 
-    .modal.show {
-      display: flex;
-    }
+.support-box{
+  display:none;
+}
 
-    .modal-card {
-      width: 100%;
-      max-width: 520px;
+.support-box.show{
+  display:block;
+}
 
-      background: #111722;
+/* PROFILE */
 
-      border-radius: 27px 27px 0 0;
+.profile{
+  display:none;
+}
 
-      border: 1px solid var(--border);
+.profile.show{
+  display:block;
+}
 
-      padding: 22px;
+.profile-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
 
-      animation: slideUp .22s ease;
-    }
+  padding:13px;
 
-    @keyframes slideUp {
-      from {
-        transform: translateY(100%);
-      }
+  background:var(--card2);
 
-      to {
-        transform: translateY(0);
-      }
-    }
+  border-radius:15px;
 
-    .modal-title {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 15px;
-    }
+  margin-bottom:12px;
+}
 
-    .profile-info {
-      display: flex;
-      align-items: center;
-      gap: 13px;
+.profile-photo{
+  width:50px;
+  height:50px;
 
-      padding: 14px;
+  border-radius:50%;
 
-      border-radius: 17px;
+  overflow:hidden;
 
-      background: rgba(255,255,255,.04);
+  background:#202938;
 
-      margin-bottom: 15px;
-    }
+  display:grid;
+  place-items:center;
+}
 
-    .profile-big {
-      width: 48px;
-      height: 48px;
+.profile-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 
-      border-radius: 50%;
+.profile-name{
+  font-size:12px;
+  font-weight:800;
+}
 
-      object-fit: cover;
+.profile-email{
+  color:var(--muted);
+  font-size:8px;
+  margin-top:3px;
+}
 
-      background: var(--surface2);
-    }
+/* EMPTY */
 
-    .profile-name {
-      font-weight: 700;
-      font-size: 13px;
-    }
+.empty{
+  padding:28px 15px;
 
-    .profile-email {
-      color: var(--muted);
-      font-size: 10px;
-      margin-top: 3px;
-    }
+  border:1px dashed rgba(255,255,255,.1);
 
-    .logout-btn {
-      width: 100%;
+  border-radius:15px;
 
-      height: 50px;
+  text-align:center;
 
-      border: 1px solid rgba(239,68,68,.25);
+  color:var(--muted);
 
-      border-radius: 15px;
+  font-size:9px;
+}
 
-      background: rgba(239,68,68,.08);
+.empty-icon{
+  font-size:28px;
+  margin-bottom:8px;
+}
 
-      color: #fca5a5;
+/* MODAL */
 
-      font-weight: 700;
-    }
+.modal{
+  position:fixed;
+  inset:0;
 
-    .close-btn {
-      width: 100%;
+  z-index:5000;
 
-      height: 50px;
+  display:none;
 
-      border: none;
+  align-items:flex-end;
+  justify-content:center;
 
-      border-radius: 15px;
+  background:rgba(0,0,0,.78);
+}
 
-      margin-top: 9px;
+.modal.show{
+  display:flex;
+}
 
-      background: rgba(255,255,255,.06);
+.modal-card{
+  width:100%;
+  max-width:600px;
 
-      color: white;
+  max-height:90vh;
 
-      font-weight: 700;
-    }
+  overflow:auto;
 
-    /* =========================
-       TOAST
-    ========================= */
+  padding:20px;
 
-    .toast {
-      position: fixed;
+  background:#111722;
 
-      z-index: 7000;
+  border-radius:24px 24px 0 0;
 
-      left: 50%;
+  border:1px solid var(--border);
+}
 
-      bottom: 90px;
+.modal-title{
+  font-size:17px;
+  font-weight:800;
+  margin-bottom:15px;
+}
 
-      transform:
-        translateX(-50%)
-        translateY(20px);
+.modal-row{
+  padding:12px;
 
-      width: calc(100% - 36px);
+  background:rgba(255,255,255,.04);
 
-      max-width: 480px;
+  border-radius:12px;
 
-      padding: 13px 15px;
+  margin-bottom:7px;
+}
 
-      border-radius: 15px;
+.modal-label{
+  color:var(--muted);
+  font-size:8px;
+  margin-bottom:4px;
+}
 
-      background: #1b2330;
+.modal-value{
+  font-size:10px;
+  font-weight:700;
+  word-break:break-word;
+}
 
-      border: 1px solid var(--border);
+.close-btn{
+  width:100%;
+  height:45px;
 
-      color: white;
+  border:0;
 
-      font-size: 11px;
+  border-radius:12px;
 
-      opacity: 0;
+  background:rgba(255,255,255,.07);
 
-      pointer-events: none;
+  color:white;
 
-      transition: .25s ease;
+  margin-top:8px;
 
-      box-shadow: 0 15px 40px rgba(0,0,0,.35);
-    }
+  font-weight:700;
+}
 
-    .toast.show {
-      opacity: 1;
+/* RATING */
 
-      transform:
-        translateX(-50%)
-        translateY(0);
-    }
+.stars{
+  display:flex;
+  justify-content:center;
+  gap:7px;
 
-    /* =========================
-       DESKTOP
-    ========================= */
+  margin:14px 0;
+}
 
-    @media (min-width: 700px) {
+.star{
+  width:40px;
+  height:40px;
 
-      .app {
-        max-width: 1050px;
-      }
+  border:1px solid var(--border);
 
-      .main {
-        max-width: 850px;
-        margin: auto;
-      }
+  border-radius:10px;
 
-      .map-card {
-        height: 380px;
-      }
+  background:var(--card2);
 
-      .booking-card {
-        max-width: 700px;
-        margin-left: auto;
-        margin-right: auto;
-      }
+  color:#667080;
 
-      .bottom-nav {
-        max-width: 520px;
-      }
-    }
+  font-size:20px;
+}
 
-  </style>
+.star.active{
+  color:#fbbf24;
+  border-color:rgba(251,191,36,.3);
+  background:rgba(251,191,36,.07);
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+
+  z-index:9999;
+
+  left:50%;
+  bottom:25px;
+
+  width:
+    min(
+      calc(100% - 30px),
+      450px
+    );
+
+  transform:
+    translate(-50%,20px);
+
+  opacity:0;
+
+  pointer-events:none;
+
+  padding:13px 15px;
+
+  border-radius:14px;
+
+  background:#1c2431;
+
+  border:1px solid var(--border);
+
+  font-size:10px;
+
+  text-align:center;
+
+  transition:.25s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:
+    translate(-50%,0);
+}
+
+/* LOADING */
+
+.loading{
+  position:fixed;
+  inset:0;
+
+  z-index:8000;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  background:var(--bg);
+}
+
+.loading.hide{
+  display:none;
+}
+
+.loading-box{
+  text-align:center;
+}
+
+.spinner{
+  width:30px;
+  height:30px;
+
+  margin:auto;
+
+  border:3px solid rgba(255,255,255,.1);
+
+  border-top-color:var(--green);
+
+  border-radius:50%;
+
+  animation:spin .8s linear infinite;
+}
+
+.loading-text{
+  color:var(--muted);
+  font-size:10px;
+  margin-top:12px;
+}
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav{
+  position:fixed;
+
+  left:50%;
+
+  bottom:0;
+
+  transform:translateX(-50%);
+
+  z-index:1200;
+
+  width:min(100%,1180px);
+
+  padding:8px 12px;
+
+  background:rgba(7,10,16,.95);
+
+  backdrop-filter:blur(18px);
+
+  border-top:1px solid var(--border);
+
+  display:grid;
+
+  grid-template-columns:repeat(4,1fr);
+
+  gap:5px;
+}
+
+.nav-item{
+  border:0;
+
+  background:transparent;
+
+  color:var(--muted);
+
+  padding:7px 3px;
+
+  border-radius:10px;
+
+  font-size:8px;
+  font-weight:700;
+}
+
+.nav-item.active{
+  color:var(--green2);
+  background:rgba(34,197,94,.06);
+}
+
+.nav-icon{
+  font-size:17px;
+  margin-bottom:3px;
+}
+
+/* MOBILE */
+
+@media(max-width:850px){
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .map{
+    height:330px;
+  }
+
+}
+
+@media(max-width:520px){
+
+  .main{
+    padding:14px;
+  }
+
+  .header{
+    padding:0 13px;
+  }
+
+  .welcome-title{
+    font-size:22px;
+  }
+
+  .quick-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+</style>
 </head>
 
 <body>
 
-  <div class="app">
+<!-- LOADING -->
 
-    <!-- HEADER -->
-    <header class="header">
+<div
+  class="loading"
+  id="loadingScreen"
+>
 
-      <div class="brand">
+  <div class="loading-box">
 
-        <div class="brand-logo">
-          🛺
+    <div class="spinner"></div>
+
+    <div class="loading-text">
+      Loading E RIDE...
+    </div>
+
+  </div>
+
+</div>
+
+
+<div class="app">
+
+<!-- HEADER -->
+
+<header class="header">
+
+  <div class="brand">
+
+    <div class="logo">
+      🛺
+    </div>
+
+    <div>
+
+      <div class="brand-name">
+        E RIDE
+      </div>
+
+      <div class="brand-sub">
+        CUSTOMER
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="header-actions">
+
+    <button
+      class="header-btn"
+      onclick="openNotifications()"
+      title="Notifications"
+    >
+      🔔
+    </button>
+
+    <button
+      class="header-btn"
+      onclick="openProfile()"
+      title="Profile"
+    >
+      👤
+    </button>
+
+  </div>
+
+</header>
+
+
+<main class="main">
+
+  <!-- WELCOME -->
+
+  <section class="welcome">
+
+    <div
+      class="welcome-title"
+      id="welcomeTitle"
+    >
+      Book your E RIDE
+    </div>
+
+    <div class="welcome-sub">
+      Safe local Toto rides, simple booking.
+    </div>
+
+  </section>
+
+
+  <!-- ACTIVE RIDE -->
+
+  <section
+    class="active-card"
+    id="activeRideCard"
+  >
+
+    <div class="status-line">
+
+      <div class="status-name">
+        Your Ride
+      </div>
+
+      <div
+        class="status-badge"
+        id="activeStatus"
+      >
+        SEARCHING
+      </div>
+
+    </div>
+
+
+    <div
+      class="active-route"
+      id="activeRoute"
+    >
+      Searching for a driver...
+    </div>
+
+
+    <div
+      class="driver-box"
+      id="driverBox"
+    >
+
+      <div class="driver-head">
+
+        <div
+          class="driver-avatar"
+          id="driverAvatar"
+        >
+          🧑‍✈️
         </div>
 
         <div>
-          <div class="brand-name">
-            E RIDE
+
+          <div
+            class="driver-name"
+            id="driverName"
+          >
+            Driver
           </div>
 
-          <div class="brand-sub">
-            Surajgarha • Lakhisarai
+          <div
+            class="driver-meta"
+            id="driverMeta"
+          >
+            Waiting for driver details
           </div>
+
         </div>
 
       </div>
 
-      <button
-        class="profile-btn"
-        onclick="openProfile()"
-        aria-label="Profile"
-      >
-        <span
-          class="profile-letter"
-          id="profileLetter"
-        >
-          U
-        </span>
 
-        <img
-          id="profileImage"
-          alt="Profile"
-        >
-      </button>
-
-    </header>
-
-
-    <!-- MAIN -->
-    <main class="main">
-
-      <section class="hello">
-
-        <div class="hello-small">
-          Welcome back 👋
-        </div>
-
-        <div
-          class="hello-name"
-          id="helloName"
-        >
-          Rider
-        </div>
-
-      </section>
-
-
-      <!-- MAP -->
-      <section class="map-card">
-
-        <div id="map"></div>
+      <div class="driver-actions">
 
         <button
-          class="map-location-btn"
-          onclick="locateMe()"
-          title="My location"
+          class="action-btn green"
+          id="callDriverBtn"
+          onclick="callDriver()"
         >
-          📍
+          📞 Call Driver
         </button>
 
-      </section>
+        <button
+          class="action-btn red"
+          onclick="cancelCurrentRide()"
+        >
+          ✕ Cancel Ride
+        </button>
+
+      </div>
+
+    </div>
 
 
-      <!-- BOOKING -->
-      <section class="booking-card">
+    <div
+      class="tracking-map"
+      id="trackingMap"
+    ></div>
 
-        <div class="booking-title">
-          Where are you going?
+  </section>
+
+
+  <!-- MAIN GRID -->
+
+  <div class="grid">
+
+    <!-- LEFT -->
+
+    <div>
+
+      <section class="card">
+
+        <div class="card-title">
+          Where do you want to go?
+        </div>
+
+        <div class="card-sub">
+          Select pickup and destination
         </div>
 
 
-        <!-- SERVICE -->
-        <div class="service-tabs">
+        <!-- MAP -->
+
+        <div
+          class="map"
+          id="map"
+        ></div>
+
+
+        <!-- CURRENT -->
+
+        <div
+          class="current-location"
+          onclick="useCurrentLocation()"
+        >
+          📍 Use my current location
+        </div>
+
+
+        <!-- LOCATIONS -->
+
+        <div class="location-box">
+
+          <div class="location-row">
+
+            <div class="location-icon">
+              📍
+            </div>
+
+            <div class="location-content">
+
+              <div class="location-label">
+                PICKUP
+              </div>
+
+              <input
+                class="location-input"
+                id="pickupInput"
+                placeholder="Your current location"
+              >
+
+            </div>
+
+          </div>
+
+
+          <div class="location-row">
+
+            <div class="location-icon">
+              🏁
+            </div>
+
+            <div class="location-content">
+
+              <div class="location-label">
+                DESTINATION
+              </div>
+
+              <input
+                class="location-input"
+                id="destinationInput"
+                placeholder="Where are you going?"
+              >
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+
+    <!-- RIGHT -->
+
+    <div>
+
+      <section class="card">
+
+        <div class="card-title">
+          Choose your ride
+        </div>
+
+
+        <div class="services">
 
           <button
-            class="service active"
+            class="service selected"
             id="totoService"
             onclick="selectService('toto')"
           >
@@ -1066,12 +1427,12 @@
               🛺
             </div>
 
-            <div class="service-title">
-              Toto Ride
+            <div class="service-name">
+              Toto
             </div>
 
-            <div class="service-description">
-              Travel locally
+            <div class="service-desc">
+              Passenger ride
             </div>
 
           </button>
@@ -1087,12 +1448,12 @@
               📦
             </div>
 
-            <div class="service-title">
+            <div class="service-name">
               Goods
             </div>
 
-            <div class="service-description">
-              Send goods locally
+            <div class="service-desc">
+              Small goods transport
             </div>
 
           </button>
@@ -1100,85 +1461,88 @@
         </div>
 
 
-        <!-- LOCATIONS -->
-        <div class="locations">
-
-          <div class="location-input">
-
-            <span class="dot"></span>
-
-            <input
-              id="pickup"
-              type="text"
-              placeholder="Pickup location"
-              autocomplete="off"
-            >
-
-          </div>
-
-
-          <div class="location-input destination">
-
-            <span class="dot"></span>
-
-            <input
-              id="destination"
-              type="text"
-              placeholder="Where should we go?"
-              autocomplete="off"
-            >
-
-          </div>
-
-        </div>
-
-
         <!-- GOODS -->
+
         <div
           class="goods-box"
           id="goodsBox"
         >
 
-          <textarea
-            id="goodsDetails"
-            placeholder="Describe your goods — e.g. 2 boxes, furniture, parcel..."
-          ></textarea>
+          <div class="field">
+
+            <div class="label">
+              Goods details
+            </div>
+
+            <textarea
+              class="textarea"
+              id="goodsDetails"
+              placeholder="What are you carrying?"
+            ></textarea>
+
+          </div>
 
         </div>
 
 
         <!-- FARE -->
-        <div
-          class="fare-box"
-          id="fareBox"
-        >
 
-          <div>
+        <div class="fare-box">
 
-            <div class="fare-label">
-              Estimated fare
-            </div>
+          <div class="fare-row">
 
-            <div
-              class="fare-distance"
-              id="fareDistance"
-            >
-              Distance calculating...
-            </div>
+            <span>
+              Distance
+            </span>
+
+            <span id="distanceText">
+              —
+            </span>
 
           </div>
 
-          <div
-            class="fare-price"
-            id="farePrice"
-          >
-            ₹ —
+
+          <div class="fare-row">
+
+            <span>
+              Base fare
+            </span>
+
+            <span id="baseFareText">
+              ₹20
+            </span>
+
+          </div>
+
+
+          <div class="fare-row">
+
+            <span>
+              Per KM
+            </span>
+
+            <span id="perKmText">
+              ₹12
+            </span>
+
+          </div>
+
+
+          <div class="fare-row fare-total">
+
+            <span>
+              Estimated fare
+            </span>
+
+            <span id="fareText">
+              ₹0
+            </span>
+
           </div>
 
         </div>
 
 
-        <!-- BOOK -->
         <button
           class="book-btn"
           id="bookBtn"
@@ -1190,54 +1554,12 @@
       </section>
 
 
-      <!-- ACTIVE RIDE -->
-      <section
-        class="active-ride"
-        id="activeRide"
-      >
+      <!-- QUICK -->
 
-        <div class="active-header">
-
-          <div class="active-title">
-            Your active ride
-          </div>
-
-          <div
-            class="ride-status"
-            id="rideStatus"
-          >
-            Finding driver
-          </div>
-
-        </div>
-
-        <div class="driver-ride-card" id="driverRideCard" style="display:none;">
-          <div class="driver-ride-avatar" id="activeDriverAvatar">🛺</div>
-          <div class="driver-ride-details">
-            <div class="driver-ride-name" id="activeDriverName">Driver</div>
-            <div class="driver-ride-meta" id="activeDriverMeta">Toto • —</div>
-            <div class="driver-ride-phone" id="activeDriverPhone">—</div>
-          </div>
-          <a class="driver-call-btn" id="callDriverBtn" href="#" style="display:none;">📞</a>
-        </div>
-
-        <div class="ride-info" id="rideInfo">
-          Searching for nearby Toto drivers...
-        </div>
-
-      </section>
-
-
-      <!-- QUICK ACTIONS -->
-      <div class="section-title">
-        Quick actions
-      </div>
-
-      <section class="quick-actions">
+      <div class="quick-grid">
 
         <button
           class="quick"
-          onclick="showComingSoon('Ride history')"
           onclick="openHistory()"
         >
 
@@ -1245,1554 +1567,3695 @@
             📜
           </div>
 
-          <span>
-            Ride History
-          </span>
+          Your Rides
 
         </button>
 
 
         <button
           class="quick"
-          onclick="showComingSoon('Help & Support')"
+          onclick="openNotifications()"
+        >
+
+          <div class="quick-icon">
+            🔔
+          </div>
+
+          Alerts
+
+        </button>
+
+
+        <button
+          class="quick"
+          onclick="openSupport()"
         >
 
           <div class="quick-icon">
             🆘
           </div>
 
-          <span>
-            Help & Support
-          </span>
+          Support
 
         </button>
 
 
         <button
           class="quick"
-          onclick="showComingSoon('Offers')"
+          onclick="openOffers()"
         >
 
           <div class="quick-icon">
             🎁
           </div>
 
-          <span>
-            Offers
-          </span>
+          Offers
 
         </button>
 
-      </section>
-
-    </main>
-
-  </div>
-
-
-  <!-- BOTTOM NAV -->
-  <nav class="bottom-nav">
-
-    <button
-      class="nav-item active"
-      onclick="scrollTopPage()"
-    >
-      <span class="nav-icon">🏠</span>
-      Home
-    </button>
-
-    <button
-      class="nav-item"
-      onclick="showComingSoon('Your rides')"
-      onclick="openHistory()"
-    >
-      <span class="nav-icon">🛺</span>
-      Rides
-    </button>
-
-    <button
-      class="nav-item"
-      onclick="showComingSoon('Notifications')"
-    >
-      <span class="nav-icon">🔔</span>
-      Alerts
-    </button>
-
-    <button
-      class="nav-item"
-      onclick="openProfile()"
-    >
-      <span class="nav-icon">👤</span>
-      Profile
-    </button>
-
-  </nav>
-
-
-  <!-- HISTORY MODAL -->
-  <div class="history-modal" id="historyModal" onclick="closeHistoryOutside(event)">
-    <div class="history-card">
-      <div class="history-head">
-        <div class="history-title">Ride History</div>
-        <button class="history-close" onclick="closeHistory()">✕</button>
       </div>
-      <div class="history-list" id="customerHistoryList">
-        <div class="history-empty">Loading rides...</div>
-      </div>
+
     </div>
+
   </div>
 
 
-  <!-- PROFILE MODAL -->
-  <div
-    class="modal"
-    id="profileModal"
-    onclick="closeProfileOutside(event)"
+  <!-- HISTORY -->
+
+  <section
+    class="card"
+    id="historySection"
+    style="display:none;margin-top:15px"
   >
 
-    <div class="modal-card">
+    <div class="card-title">
+      Your Ride History
+    </div>
 
-      <div class="modal-title">
-        Your Profile
+    <div
+      class="history-list"
+      id="historyList"
+    ></div>
+
+  </section>
+
+
+  <!-- NOTIFICATIONS -->
+
+  <section
+    class="card"
+    id="notificationsSection"
+    style="display:none;margin-top:15px"
+  >
+
+    <div class="card-title">
+      Notifications
+    </div>
+
+    <div
+      class="notification-list"
+      id="notificationList"
+    ></div>
+
+  </section>
+
+
+  <!-- SUPPORT -->
+
+  <section
+    class="card support-box"
+    id="supportSection"
+    style="margin-top:15px"
+  >
+
+    <div class="card-title">
+      Help & Support
+    </div>
+
+    <div class="card-sub">
+      Tell us what you need help with.
+    </div>
+
+
+    <div class="field">
+
+      <div class="label">
+        Subject
       </div>
 
+      <input
+        class="input"
+        id="supportSubject"
+        placeholder="Example: Ride issue"
+      >
 
-      <div class="profile-info">
+    </div>
 
-        <img
-          class="profile-big"
-          id="profileBig"
-          alt="Profile"
+
+    <div class="field">
+
+      <div class="label">
+        Message
+      </div>
+
+      <textarea
+        class="textarea"
+        id="supportMessage"
+        placeholder="Describe your issue..."
+      ></textarea>
+
+    </div>
+
+
+    <button
+      class="book-btn"
+      onclick="submitSupport()"
+    >
+      Submit Support Request
+    </button>
+
+  </section>
+
+
+  <!-- OFFERS -->
+
+  <section
+    class="card"
+    id="offersSection"
+    style="display:none;margin-top:15px"
+  >
+
+    <div class="card-title">
+      Offers
+    </div>
+
+    <div class="empty">
+
+      <div class="empty-icon">
+        🎁
+      </div>
+
+      Offers will appear here when E RIDE publishes them.
+
+    </div>
+
+  </section>
+
+
+  <!-- PROFILE -->
+
+  <section
+    class="card profile"
+    id="profileSection"
+    style="margin-top:15px"
+  >
+
+    <div class="card-title">
+      My Profile
+    </div>
+
+
+    <div class="profile-head">
+
+      <div
+        class="profile-photo"
+        id="profilePhoto"
+      >
+        👤
+      </div>
+
+      <div>
+
+        <div
+          class="profile-name"
+          id="profileName"
         >
+          Customer
+        </div>
 
-        <div>
-
-          <div
-            class="profile-name"
-            id="profileName"
-          >
-            User
-          </div>
-
-          <div
-            class="profile-email"
-            id="profileEmail"
-          >
-            —
-          </div>
-
+        <div
+          class="profile-email"
+          id="profileEmail"
+        >
+          —
         </div>
 
       </div>
 
+    </div>
 
-      <button
-        class="logout-btn"
-        onclick="logout()"
+
+    <div class="field">
+
+      <div class="label">
+        Phone number
+      </div>
+
+      <input
+        class="input"
+        id="profilePhone"
+        placeholder="Enter phone number"
       >
-        Sign Out
-      </button>
-
-
-      <button
-        class="close-btn"
-        onclick="closeProfile()"
-      >
-        Close
-      </button>
 
     </div>
 
+
+    <button
+      class="book-btn"
+      onclick="saveProfile()"
+    >
+      Save Profile
+    </button>
+
+
+    <button
+      class="action-btn red"
+      style="width:100%;margin-top:9px"
+      onclick="logout()"
+    >
+      Sign Out
+    </button>
+
+  </section>
+
+</main>
+
+</div>
+
+
+<!-- BOTTOM NAV -->
+
+<nav class="bottom-nav">
+
+  <button
+    class="nav-item active"
+    id="homeNav"
+    onclick="showHome()"
+  >
+
+    <div class="nav-icon">
+      🏠
+    </div>
+
+    Home
+
+  </button>
+
+
+  <button
+    class="nav-item"
+    onclick="openHistory()"
+  >
+
+    <div class="nav-icon">
+      📜
+    </div>
+
+    Rides
+
+  </button>
+
+
+  <button
+    class="nav-item"
+    onclick="openNotifications()"
+  >
+
+    <div class="nav-icon">
+      🔔
+    </div>
+
+    Alerts
+
+  </button>
+
+
+  <button
+    class="nav-item"
+    onclick="openProfile()"
+  >
+
+    <div class="nav-icon">
+      👤
+    </div>
+
+    Profile
+
+  </button>
+
+</nav>
+
+
+<!-- RATING MODAL -->
+
+<div
+  class="modal"
+  id="ratingModal"
+>
+
+  <div class="modal-card">
+
+    <div class="modal-title">
+      Rate your ride
+    </div>
+
+    <div
+      style="text-align:center;color:var(--muted);font-size:9px"
+    >
+      How was your E RIDE experience?
+    </div>
+
+
+    <div
+      class="stars"
+      id="stars"
+    >
+
+      <button
+        class="star"
+        onclick="selectRating(1)"
+      >★</button>
+
+      <button
+        class="star"
+        onclick="selectRating(2)"
+      >★</button>
+
+      <button
+        class="star"
+        onclick="selectRating(3)"
+      >★</button>
+
+      <button
+        class="star"
+        onclick="selectRating(4)"
+      >★</button>
+
+      <button
+        class="star"
+        onclick="selectRating(5)"
+      >★</button>
+
+    </div>
+
+
+    <textarea
+      class="textarea"
+      id="ratingReview"
+      placeholder="Write a review (optional)"
+    ></textarea>
+
+
+    <button
+      class="book-btn"
+      style="margin-top:10px"
+      onclick="submitRating()"
+    >
+      Submit Rating
+    </button>
+
+
+    <button
+      class="close-btn"
+      onclick="closeRatingModal()"
+    >
+      Later
+    </button>
+
   </div>
 
+</div>
 
-  <!-- TOAST -->
-  <div
-    class="toast"
-    id="toast"
-  ></div>
 
+<!-- DRIVER/INFO MODAL -->
 
-  <!-- LEAFLET -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  ></script>
+<div
+  class="modal"
+  id="infoModal"
+>
 
+  <div class="modal-card">
 
-  <!-- FIREBASE -->
-  <script type="module">
+    <div
+      class="modal-title"
+      id="infoModalTitle"
+    >
+      Information
+    </div>
 
-    import {
-      initializeApp
-    } from
-      "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    <div id="infoModalBody"></div>
 
+    <button
+      class="close-btn"
+      onclick="closeInfoModal()"
+    >
+      Close
+    </button>
 
-    import {
-      getAuth,
-      onAuthStateChanged,
-      signOut
-    } from
-      "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+  </div>
 
+</div>
 
-    import {
-      getFirestore,
-      doc,
-      getDoc,
-      getDocs,
-      addDoc,
-      collection,
-      query,
-      where,
-      onSnapshot,
-      serverTimestamp
-    } from
-      "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
+<!-- TOAST -->
 
-    /* =================================
-       FIREBASE CONFIG
-    ================================= */
+<div
+  class="toast"
+  id="toast"
+></div>
 
-    const firebaseConfig = {
 
-      apiKey:
-        "AIzaSyBKuGjmLBUbPCEAQglZK7pCFxH1bnh7OF4",
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+></script>
 
-      authDomain:
-        "e-ride-70342.firebaseapp.com",
 
-      projectId:
-        "e-ride-70342",
+<script type="module">
 
-      storageBucket:
-        "e-ride-70342.firebasestorage.app",
+/* =========================================================
+   FIREBASE
+========================================================= */
 
-      messagingSenderId:
-        "946431084655",
+import {
+  initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 
-      appId:
-        "1:946431084655:web:eddcb4fffe883d4fdf659a",
 
-      measurementId:
-        "G-WZ5YPZ4YZD"
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut,
+  setPersistence,
+  browserLocalPersistence
+}
+from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
-    };
 
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  addDoc,
+  collection,
+  query,
+  where,
+  orderBy,
+  limit,
+  getDocs,
+  onSnapshot,
+  serverTimestamp
+}
+from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
-    /* =================================
-       FIREBASE
-    ================================= */
 
-    const app =
-      initializeApp(firebaseConfig);
+/* =========================================================
+   FIREBASE CONFIG
+========================================================= */
 
-    const auth =
-      getAuth(app);
+const firebaseConfig = {
 
-    const db =
-      getFirestore(app);
+  apiKey:
+    "AIzaSyBKuGjmLBUbPCEAQglZK7PcfXh1bnh7OF4",
 
+  authDomain:
+    "e-ride-70342.firebaseapp.com",
 
-    /* =================================
-       GLOBAL VARIABLES
-    ================================= */
+  projectId:
+    "e-ride-70342",
 
-    let currentUser = null;
+  storageBucket:
+    "e-ride-70342.firebasestorage.app",
 
-    let currentUserData = null;
+  messagingSenderId:
+    "946431084655",
 
-    let selectedService = "toto";
+  appId:
+    "1:946431084655:web:eddcb4fffe883d4fdf659a",
 
-    let map = null;
+  measurementId:
+    "G-WZ5YPZ4YZD"
 
-    let userMarker = null;
+};
 
-    let userLocation = null;
 
-    let destinationMarker = null;
+const app =
+  initializeApp(firebaseConfig);
 
-    let activeRideId = null;
-    let unsubscribeActiveRide = null;
+const auth =
+  getAuth(app);
 
+const db =
+  getFirestore(app);
 
-    /* =================================
-       MAP INIT
-    ================================= */
 
-    function initMap() {
+/* =========================================================
+   STATE
+========================================================= */
 
-      /*
-        Default center:
-        Surajgarha / Lakhisarai area.
+let currentUser = null;
+let customerData = null;
 
-        Exact location is updated
-        when user allows location access.
-      */
+let selectedService = "toto";
 
-      map = L.map("map", {
-        zoomControl: false
-      }).setView(
-        [25.3788, 86.0956],
-        13
-      );
+let currentLatitude = null;
+let currentLongitude = null;
 
+let pickupAddress = "";
 
-      L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-          maxZoom: 19,
-          attribution:
-            '&copy; OpenStreetMap contributors'
-        }
-      ).addTo(map);
+let destinationData = null;
 
+let currentDistanceKm = 0;
 
-      locateMe();
+let baseFare = 20;
+let perKmFare = 12;
 
-    }
+let currentRideId = null;
+let currentRide = null;
 
+let unsubscribeRide = null;
+let unsubscribeDriver = null;
 
-    /* =================================
-       LOCATION
-    ================================= */
+let map = null;
+let pickupMarker = null;
+let destinationMarker = null;
+let driverMarker = null;
 
-    window.locateMe = function() {
+let trackingMap = null;
+let trackingDriverMarker = null;
 
-      if (!navigator.geolocation) {
+let selectedRatingValue = 0;
+let ratingRideId = null;
 
-        showToast(
-          "Location is not supported by this browser."
-        );
 
-        return;
-      }
+/* =========================================================
+   ELEMENTS
+========================================================= */
 
+const loadingScreen =
+  document.getElementById(
+    "loadingScreen"
+  );
 
-      showToast(
-        "Getting your location..."
-      );
 
+/* =========================================================
+   UTILITY
+========================================================= */
 
-      navigator.geolocation.getCurrentPosition(
+function showLoading(
+  show = true
+){
 
-        position => {
+  if(show){
 
-          const lat =
-            position.coords.latitude;
-
-          const lng =
-            position.coords.longitude;
-
-
-          userLocation = {
-            lat,
-            lng
-          };
-
-
-          if (userMarker) {
-
-            userMarker.setLatLng(
-              [lat, lng]
-            );
-
-          } else {
-
-            userMarker =
-              L.marker(
-                [lat, lng]
-              )
-              .addTo(map)
-              .bindPopup(
-                "📍 You are here"
-              );
-
-          }
-
-
-          map.setView(
-            [lat, lng],
-            16
-          );
-
-
-          document.getElementById(
-            "pickup"
-          ).value =
-            "My current location";
-
-
-          showToast(
-            "Current location detected."
-          );
-
-        },
-
-        error => {
-
-          console.warn(
-            "Location error:",
-            error
-          );
-
-          showToast(
-            "Location permission nahi mili. Pickup manually enter kar sakte ho."
-          );
-
-        },
-
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 30000
-        }
-
-      );
-
-    };
-
-
-    /* =================================
-       SERVICE SELECTION
-    ================================= */
-
-    window.selectService = function(service) {
-
-      selectedService = service;
-
-
-      const toto =
-        document.getElementById(
-          "totoService"
-        );
-
-      const goods =
-        document.getElementById(
-          "goodsService"
-        );
-
-      const goodsBox =
-        document.getElementById(
-          "goodsBox"
-        );
-
-      const bookBtn =
-        document.getElementById(
-          "bookBtn"
-        );
-
-
-      toto.classList.remove("active");
-
-      goods.classList.remove("active");
-
-
-      if (service === "toto") {
-
-        toto.classList.add("active");
-
-        goodsBox.classList.remove("show");
-
-        bookBtn.textContent =
-          "Find a Toto";
-
-      } else {
-
-        goods.classList.add("active");
-
-        goodsBox.classList.add("show");
-
-        bookBtn.textContent =
-          "Find a Goods Toto";
-
-      }
-
-    };
-
-
-    /* =================================
-       FARE CALCULATION
-    ================================= */
-
-    function calculateEstimatedFare(distanceKm) {
-
-      /*
-        Temporary launch fare.
-
-        This is NOT final pricing.
-        Later admin panel will control
-        the fare settings dynamically.
-      */
-
-      const baseFare = 20;
-
-      const perKm = 12;
-
-      let fare =
-        baseFare +
-        Math.max(distanceKm - 1, 0) * perKm;
-
-
-      /*
-        Round to nearest ₹5
-      */
-
-      fare =
-        Math.ceil(fare / 5) * 5;
-
-
-      return Math.max(
-        baseFare,
-        fare
-      );
-
-    }
-
-
-    /* =================================
-       DISTANCE
-    ================================= */
-
-    function calculateDistance(
-      lat1,
-      lon1,
-      lat2,
-      lon2
-    ) {
-
-      const R = 6371;
-
-      const dLat =
-        (lat2 - lat1) *
-        Math.PI / 180;
-
-      const dLon =
-        (lon2 - lon1) *
-        Math.PI / 180;
-
-
-      const a =
-        Math.sin(dLat / 2) ** 2 +
-
-        Math.cos(
-          lat1 * Math.PI / 180
-        ) *
-
-        Math.cos(
-          lat2 * Math.PI / 180
-        ) *
-
-        Math.sin(
-          dLon / 2
-        ) ** 2;
-
-
-      return (
-        R *
-        2 *
-        Math.atan2(
-          Math.sqrt(a),
-          Math.sqrt(1 - a)
-        )
-      );
-
-    }
-
-
-    /* =================================
-       DESTINATION GEOCODING
-    ================================= */
-
-    async function geocodeDestination(
-      text
-    ) {
-
-      try {
-
-        const url =
-          "https://nominatim.openstreetmap.org/search?" +
-          new URLSearchParams({
-
-            q:
-              text +
-              ", Surajgarha, Lakhisarai, Bihar",
-
-            format: "json",
-
-            limit: "1"
-
-          });
-
-
-        const response =
-          await fetch(url, {
-            headers: {
-              "Accept":
-                "application/json"
-            }
-          });
-
-
-        if (!response.ok) {
-          return null;
-        }
-
-
-        const results =
-          await response.json();
-
-
-        if (!results.length) {
-          return null;
-        }
-
-
-        return {
-
-          lat:
-            Number(results[0].lat),
-
-          lng:
-            Number(results[0].lon)
-
-        };
-
-      } catch (error) {
-
-        console.error(
-          "Geocoding error:",
-          error
-        );
-
-        return null;
-
-      }
-
-    }
-
-
-    /* =================================
-       FARE PREVIEW
-    ================================= */
-
-    async function previewFare() {
-
-      const pickup =
-        document.getElementById(
-          "pickup"
-        ).value.trim();
-
-
-      const destination =
-        document.getElementById(
-          "destination"
-        ).value.trim();
-
-
-      const fareBox =
-        document.getElementById(
-          "fareBox"
-        );
-
-
-      if (!pickup || !destination) {
-
-        fareBox.classList.remove(
-          "show"
-        );
-
-        return;
-
-      }
-
-
-      if (!userLocation) {
-
-        showToast(
-          "Pehle current location allow karo."
-        );
-
-        return;
-
-      }
-
-
-      const destinationLocation =
-        await geocodeDestination(
-          destination
-        );
-
-
-      if (!destinationLocation) {
-
-        showToast(
-          "Destination locate nahi ho paaya."
-        );
-
-        return;
-
-      }
-
-
-      const distance =
-        calculateDistance(
-
-          userLocation.lat,
-          userLocation.lng,
-
-          destinationLocation.lat,
-          destinationLocation.lng
-
-        );
-
-
-      if (destinationMarker) {
-
-        destinationMarker.setLatLng([
-          destinationLocation.lat,
-          destinationLocation.lng
-        ]);
-
-      } else {
-
-        destinationMarker =
-          L.marker([
-            destinationLocation.lat,
-            destinationLocation.lng
-          ])
-          .addTo(map)
-          .bindPopup(
-            "📍 Destination"
-          );
-
-      }
-
-
-      const fare =
-        calculateEstimatedFare(
-          distance
-        );
-
-
-      document.getElementById(
-        "fareDistance"
-      ).textContent =
-        distance.toFixed(1) +
-        " km approximately";
-
-
-      document.getElementById(
-        "farePrice"
-      ).textContent =
-        "₹ " + fare;
-
-
-      fareBox.classList.add(
-        "show"
-      );
-
-    }
-
-
-    /* =================================
-       DESTINATION CHANGE
-    ================================= */
-
-    document
-      .getElementById("destination")
-      .addEventListener(
-        "blur",
-        previewFare
-      );
-
-
-    /* =================================
-       BOOK RIDE
-    ================================= */
-
-    window.bookRide = async function() {
-
-      if (!currentUser) {
-
-        showToast(
-          "Please login first."
-        );
-
-        return;
-
-      }
-
-
-      const pickup =
-        document.getElementById(
-          "pickup"
-        ).value.trim();
-
-
-      const destination =
-        document.getElementById(
-          "destination"
-        ).value.trim();
-
-
-      const goodsDetails =
-        document.getElementById(
-          "goodsDetails"
-        ).value.trim();
-
-
-      if (!pickup) {
-
-        showToast(
-          "Pickup location enter karo."
-        );
-
-        return;
-
-      }
-
-
-      if (!destination) {
-
-        showToast(
-          "Destination enter karo."
-        );
-
-        return;
-
-      }
-
-
-      if (
-        selectedService === "goods" &&
-        !goodsDetails
-      ) {
-
-        showToast(
-          "Goods ka short description enter karo."
-        );
-
-        return;
-
-      }
-
-
-      const bookBtn =
-        document.getElementById(
-          "bookBtn"
-        );
-
-
-      bookBtn.disabled = true;
-
-      bookBtn.textContent =
-        "Finding nearby drivers...";
-
-
-      try {
-
-        let estimatedFare = null;
-
-        let distanceKm = null;
-
-
-        /*
-          Calculate destination
-          if current location exists.
-        */
-
-        if (userLocation) {
-
-          const destinationLocation =
-            await geocodeDestination(
-              destination
-            );
-
-
-          if (destinationLocation) {
-
-            distanceKm =
-              calculateDistance(
-
-                userLocation.lat,
-                userLocation.lng,
-
-                destinationLocation.lat,
-                destinationLocation.lng
-
-              );
-
-
-            estimatedFare =
-              calculateEstimatedFare(
-                distanceKm
-              );
-
-          }
-
-        }
-
-
-        /* =========================
-           RIDE DOCUMENT
-        ========================= */
-
-        const rideData = {
-
-          customerId:
-            currentUser.uid,
-
-          customerName:
-            currentUserData?.name ||
-            currentUser.displayName ||
-            "Customer",
-
-          customerEmail:
-            currentUser.email || "",
-
-          customerPhone:
-            currentUserData?.phone ||
-            currentUser.phoneNumber ||
-            "",
-
-          customerPhotoURL:
-            currentUserData?.photoURL ||
-            currentUser.photoURL ||
-            "",
-
-
-          serviceType:
-            selectedService,
-
-
-          pickup: {
-
-            address:
-              pickup,
-
-            latitude:
-              userLocation?.lat ||
-              null,
-
-            longitude:
-              userLocation?.lng ||
-              null
-
-          },
-
-
-          destination: {
-
-            address:
-              destination
-
-          },
-
-
-          goodsDetails:
-            selectedService === "goods"
-              ? goodsDetails
-              : "",
-
-
-          distanceKm:
-            distanceKm,
-
-
-          estimatedFare:
-            estimatedFare,
-
-
-          paymentMethod:
-            "cash",
-
-
-          status:
-            "searching",
-
-
-          driverId:
-            null,
-
-
-          createdAt:
-            serverTimestamp(),
-
-
-          updatedAt:
-            serverTimestamp()
-
-        };
-
-
-        const rideRef =
-          await addDoc(
-            collection(
-              db,
-              "rides"
-            ),
-            rideData
-          );
-
-
-        console.log(
-          "Ride created:",
-          rideRef.id
-        );
-
-        listenToActiveRide(rideRef.id);
-
-
-        /* =========================
-           ACTIVE RIDE UI
-        ========================= */
-
-        document
-          .getElementById(
-            "activeRide"
-          )
-          .classList.add("show");
-
-
-        document.getElementById(
-          "rideStatus"
-        ).textContent =
-          "Finding driver";
-
-
-        document.getElementById(
-          "rideInfo"
-        ).innerHTML =
-
-          "Searching for nearby " +
-
-          (
-            selectedService === "goods"
-              ? "Goods Toto"
-              : "Toto"
-          ) +
-
-          " drivers...<br><br>" +
-
-          "Ride ID: " +
-
-          rideRef.id;
-
-
-        showToast(
-          "Ride request successfully created."
-        );
-
-
-        bookBtn.textContent =
-          "Ride Request Sent";
-
-
-      } catch (error) {
-
-        console.error(
-          "Booking error:",
-          error
-        );
-
-
-        showToast(
-          "Ride booking failed. Please try again."
-        );
-
-
-        bookBtn.disabled = false;
-
-        bookBtn.textContent =
-          selectedService === "goods"
-            ? "Find a Goods Toto"
-            : "Find a Toto";
-
-      }
-
-    };
-
-
-    /* =================================
-       ACTIVE RIDE LISTENER + DRIVER DETAILS
-    ================================= */
-
-    function listenToActiveRide(rideId) {
-      if (unsubscribeActiveRide) unsubscribeActiveRide();
-      activeRideId = rideId;
-      unsubscribeActiveRide = onSnapshot(doc(db, "rides", rideId), snapshot => {
-        if (!snapshot.exists()) return;
-        const ride = { id: snapshot.id, ...snapshot.data() };
-        renderActiveRide(ride);
-      }, error => {
-        console.error("Active ride listener:", error);
-      });
-    }
-
-    function renderActiveRide(ride) {
-      const active = document.getElementById("activeRide");
-      const status = document.getElementById("rideStatus");
-      const info = document.getElementById("rideInfo");
-      const card = document.getElementById("driverRideCard");
-      const callBtn = document.getElementById("callDriverBtn");
-      const avatar = document.getElementById("activeDriverAvatar");
-      if (ride.status === "completed" || ride.status === "cancelled") {
-        active.classList.add("show");
-        status.textContent = ride.status === "completed" ? "Ride completed" : "Ride cancelled";
-        info.innerHTML = "📍 <b>Pickup:</b> " + escapeHtml(ride.pickup?.address || "Pickup") +
-          "<br>🏁 <b>Drop:</b> " + escapeHtml(ride.destination?.address || "Destination") +
-          (ride.finalFare || ride.estimatedFare ? "<br>💰 <b>Final fare:</b> ₹" + escapeHtml(String(ride.finalFare ?? ride.estimatedFare)) : "");
-        card.style.display = "none";
-        setTimeout(() => {
-          if (activeRideId === ride.id) active.classList.remove("show");
-        }, 2500);
-        return;
-      }
-
-      active.classList.add("show");
-      status.textContent = ride.status === "searching" ? "Finding driver" :
-        ride.status === "accepted" ? "Driver accepted" :
-        ride.status === "started" ? "Ride in progress" : ride.status;
-
-      info.innerHTML = "📍 <b>Pickup:</b> " + escapeHtml(ride.pickup?.address || "Pickup") +
-        "<br>🏁 <b>Drop:</b> " + escapeHtml(ride.destination?.address || "Destination") +
-        (ride.estimatedFare ? "<br>💰 <b>Fare:</b> ₹" + escapeHtml(String(ride.estimatedFare)) : "");
-
-      if (ride.driverId && ["accepted","started"].includes(ride.status)) {
-        card.style.display = "flex";
-        document.getElementById("activeDriverName").textContent = ride.driverName || "Driver";
-        document.getElementById("activeDriverMeta").textContent =
-          (ride.driverVehicleType || "Toto") + " • " + (ride.driverVehicleNumber || "Vehicle number pending");
-        const phone = ride.driverPhone || "";
-        document.getElementById("activeDriverPhone").textContent = phone ? phone : "Phone not available";
-        callBtn.style.display = phone ? "grid" : "none";
-        callBtn.href = phone ? "tel:" + phone : "#";
-        if (ride.driverPhotoURL) {
-          avatar.innerHTML = "<img alt=\"Driver\" src=\"" + escapeHtml(ride.driverPhotoURL) + "\">";
-        } else {
-          avatar.textContent = "🛺";
-        }
-      } else {
-        card.style.display = "none";
-      }
-    }
-
-    function escapeHtml(value) {
-      return String(value ?? "").replace(/[&<>'"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[char]));
-    }
-
-    /* =================================
-       AUTH STATE
-    ================================= */
-
-    onAuthStateChanged(
-      auth,
-      async user => {
-
-        if (!user) {
-
-          window.location.href =
-            "index.html";
-
-          return;
-
-        }
-
-
-        currentUser = user;
-
-
-        try {
-
-          const userRef =
-            doc(
-              db,
-              "users",
-              user.uid
-            );
-
-
-          const userSnap =
-            await getDoc(
-              userRef
-            );
-
-
-          if (
-            !userSnap.exists()
-          ) {
-
-            showToast(
-              "Profile not found."
-            );
-
-            return;
-
-          }
-
-
-          currentUserData =
-            userSnap.data();
-
-
-          /*
-            If account is driver,
-            don't allow customer dashboard.
-          */
-
-          if (
-            currentUserData.role ===
-            "driver"
-          ) {
-
-            window.location.href =
-              "driver.html";
-
-            return;
-
-          }
-
-
-          if (
-            currentUserData.role ===
-            "admin"
-          ) {
-
-            window.location.href =
-              "admin.html";
-
-            return;
-
-          }
-
-
-          /* =======================
-             PROFILE UI
-          ======================= */
-
-          const name =
-            currentUserData.name ||
-            user.displayName ||
-            "Rider";
-
-
-          document.getElementById(
-            "helloName"
-          ).textContent =
-            name.split(" ")[0];
-
-
-          document.getElementById(
-            "profileName"
-          ).textContent =
-            name;
-
-
-          document.getElementById(
-            "profileEmail"
-          ).textContent =
-            user.email || "";
-
-
-          const image =
-            currentUserData.photoURL ||
-            user.photoURL ||
-            "";
-
-
-          if (image) {
-
-            const profileImage =
-              document.getElementById(
-                "profileImage"
-              );
-
-
-            profileImage.src =
-              image;
-
-            profileImage.style.display =
-              "block";
-
-
-            document.getElementById(
-              "profileLetter"
-            ).style.display =
-              "none";
-
-
-            document.getElementById(
-              "profileBig"
-            ).src =
-              image;
-
-          } else {
-
-            document.getElementById(
-              "profileLetter"
-            ).textContent =
-              name
-                .charAt(0)
-                .toUpperCase();
-
-          }
-
-          await restoreCustomerActiveRide();
-
-        } catch (error) {
-
-          console.error(
-            "Profile error:",
-            error
-          );
-
-        }
-
-      }
+    loadingScreen.classList.remove(
+      "hide"
     );
 
+  }
+  else{
 
-    /* =================================
-       RESTORE ACTIVE RIDE
-    ================================= */
-    async function restoreCustomerActiveRide() {
-      if (!currentUser) return;
-      try {
-        const q = query(
-          collection(db, "rides"),
-          where("customerId", "==", currentUser.uid)
-        );
-        const snap = await getDocs(q);
-        let latest = null;
-        snap.forEach(s => {
-          const ride = { id:s.id, ...s.data() };
-          if (["searching","accepted","started"].includes(ride.status)) {
-            const a = ride.createdAt?.toMillis ? ride.createdAt.toMillis() : 0;
-            const b = latest?.createdAt?.toMillis ? latest.createdAt.toMillis() : 0;
-            if (!latest || a >= b) latest = ride;
-          }
-        });
-        if (latest) {
-          listenToActiveRide(latest.id);
-        }
-      } catch (error) {
-        console.warn("Restore active ride:", error);
-      }
+    loadingScreen.classList.add(
+      "hide"
+    );
+
+  }
+
+}
+
+
+function showToast(
+  message
+){
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+  toast.textContent =
+    message;
+
+  toast.classList.add(
+    "show"
+  );
+
+  clearTimeout(
+    window.__toastTimer
+  );
+
+  window.__toastTimer =
+    setTimeout(
+      () => toast.classList.remove("show"),
+      3000
+    );
+
+}
+
+
+window.showToast =
+showToast;
+
+
+function escapeHTML(value){
+
+  return String(
+    value ?? ""
+  )
+  .replace(/&/g,"&amp;")
+  .replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;")
+  .replace(/'/g,"&#039;");
+
+}
+
+
+function money(value){
+
+  return "₹" +
+    Math.round(
+      Number(value || 0)
+    );
+
+}
+
+
+/* =========================================================
+   HAVERSINE
+========================================================= */
+
+function distanceKm(
+  lat1,
+  lon1,
+  lat2,
+  lon2
+){
+
+  const R = 6371;
+
+  const dLat =
+    (lat2-lat1) *
+    Math.PI /
+    180;
+
+  const dLon =
+    (lon2-lon1) *
+    Math.PI /
+    180;
+
+  const a =
+    Math.sin(dLat/2) ** 2 +
+    Math.cos(lat1*Math.PI/180) *
+    Math.cos(lat2*Math.PI/180) *
+    Math.sin(dLon/2) ** 2;
+
+  return R *
+    2 *
+    Math.atan2(
+      Math.sqrt(a),
+      Math.sqrt(1-a)
+    );
+
+}
+
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+onAuthStateChanged(
+  auth,
+  async user => {
+
+    if(!user){
+
+      window.location.replace(
+        "index.html"
+      );
+
+      return;
+
     }
 
-    /* =================================
-       CUSTOMER RIDE HISTORY
-    ================================= */
-    window.openHistory = async function() {
-      document.getElementById("historyModal").classList.add("show");
-      const list = document.getElementById("customerHistoryList");
-      list.innerHTML = '<div class="history-empty">Loading rides...</div>';
 
-      try {
-        const q = query(
-          collection(db, "rides"),
-          where("customerId", "==", currentUser.uid)
+    try{
+
+      currentUser =
+        user;
+
+
+      const userSnap =
+        await getDoc(
+          doc(
+            db,
+            "users",
+            user.uid
+          )
         );
-        const snap = await getDocs(q);
-        const rides = [];
-        snap.forEach(s => rides.push({id:s.id, ...s.data()}));
-        rides.sort((a,b) => {
-          const ta = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
-          const tb = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
-          return tb - ta;
-        });
-
-        if (!rides.length) {
-          list.innerHTML = '<div class="history-empty">Abhi koi ride history nahi hai.</div>';
-          return;
-        }
-
-        list.innerHTML = rides.slice(0,50).map(ride => {
-          const service = ride.serviceType === "goods" ? "📦 Goods Toto" : "🛺 Toto Ride";
-          const status = ride.status || "unknown";
-          const fare = ride.finalFare ?? ride.estimatedFare;
-          const time = ride.createdAt?.toDate
-            ? ride.createdAt.toDate().toLocaleString("en-IN", {dateStyle:"medium", timeStyle:"short"})
-            : "Recent ride";
-          return `
-            <div class="history-item">
-              <div class="history-item-top">
-                <div class="history-service">${service}</div>
-                <div class="history-status">${escapeHtml(status)}</div>
-              </div>
-              <div class="history-route">
-                📍 ${escapeHtml(ride.pickup?.address || "Pickup")}<br>
-                🏁 ${escapeHtml(ride.destination?.address || "Destination")}
-              </div>
-              <div class="history-meta">
-                <span>${escapeHtml(time)}</span>
-                <strong>${fare != null ? "₹" + escapeHtml(String(fare)) : "Fare —"}</strong>
-              </div>
-            </div>`;
-        }).join("");
-      } catch (error) {
-        console.error("Customer history:", error);
-        list.innerHTML = '<div class="history-empty">History load nahi ho paayi.</div>';
-      }
-    };
-
-    window.closeHistory = function() {
-      document.getElementById("historyModal").classList.remove("show");
-    };
-
-    window.closeHistoryOutside = function(event) {
-      if (event.target.id === "historyModal") closeHistory();
-    };
-
-    /* =================================
-       PROFILE
-    ================================= */
-
-    window.openProfile = function() {
-
-      document
-        .getElementById(
-          "profileModal"
-        )
-        .classList.add("show");
-
-    };
 
 
-    window.closeProfile = function() {
-
-      document
-        .getElementById(
-          "profileModal"
-        )
-        .classList.remove("show");
-
-    };
-
-
-    window.closeProfileOutside =
-      function(event) {
-
-        if (
-          event.target.id ===
-          "profileModal"
-        ) {
-
-          closeProfile();
-
-        }
-
-      };
-
-
-    /* =================================
-       LOGOUT
-    ================================= */
-
-    window.logout = async function() {
-
-      try {
+      if(!userSnap.exists()){
 
         await signOut(auth);
 
-        window.location.href =
-          "index.html";
+        window.location.replace(
+          "index.html"
+        );
 
-      } catch (error) {
+        return;
 
-        console.error(
-          "Logout error:",
+      }
+
+
+      customerData =
+        userSnap.data();
+
+
+      /*
+        Role protection
+      */
+
+      if(
+        customerData.role === "admin"
+      ){
+
+        window.location.replace(
+          "admin.html"
+        );
+
+        return;
+
+      }
+
+
+      if(
+        customerData.role === "driver"
+      ){
+
+        window.location.replace(
+          "driver.html"
+        );
+
+        return;
+
+      }
+
+
+      if(
+        customerData.role !== "customer"
+      ){
+
+        await signOut(auth);
+
+        window.location.replace(
+          "index.html"
+        );
+
+        return;
+
+      }
+
+
+      renderProfile();
+
+      await loadFareSettings();
+
+      await initializeMap();
+
+      await useCurrentLocation();
+
+      await restoreActiveRide();
+
+      await loadHistory();
+
+      await loadNotifications();
+
+      showLoading(false);
+
+    }
+    catch(error){
+
+      console.error(
+        "Customer init:",
+        error
+      );
+
+      showLoading(false);
+
+      showToast(
+        "Unable to load customer account."
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   PERSISTENCE
+========================================================= */
+
+setPersistence(
+  auth,
+  browserLocalPersistence
+)
+.catch(
+  error =>
+    console.error(
+      "Auth persistence:",
+      error
+    )
+);
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+function renderProfile(){
+
+  const name =
+    customerData?.name ||
+    customerData?.displayName ||
+    currentUser?.displayName ||
+    "Customer";
+
+  const email =
+    customerData?.email ||
+    currentUser?.email ||
+    "—";
+
+  const photo =
+    customerData?.photoURL ||
+    currentUser?.photoURL ||
+    "";
+
+
+  document.getElementById(
+    "welcomeTitle"
+  ).textContent =
+    `Hi, ${name.split(" ")[0]}`;
+
+
+  document.getElementById(
+    "profileName"
+  ).textContent =
+    name;
+
+
+  document.getElementById(
+    "profileEmail"
+  ).textContent =
+    email;
+
+
+  document.getElementById(
+    "profilePhone"
+  ).value =
+    customerData?.phone ||
+    "";
+
+
+  if(photo){
+
+    document.getElementById(
+      "profilePhoto"
+    ).innerHTML =
+      `<img src="${escapeHTML(photo)}" alt="">`;
+
+  }
+
+}
+
+
+window.saveProfile =
+async function(){
+
+  if(!currentUser)
+    return;
+
+
+  const phone =
+    document.getElementById(
+      "profilePhone"
+    ).value.trim();
+
+
+  try{
+
+    await updateDoc(
+      doc(
+        db,
+        "users",
+        currentUser.uid
+      ),
+      {
+        phone,
+        updatedAt:
+          serverTimestamp()
+      }
+    );
+
+
+    customerData.phone =
+      phone;
+
+
+    showToast(
+      "Profile saved."
+    );
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    showToast(
+      "Could not save profile."
+    );
+
+  }
+
+};
+
+
+/* =========================================================
+   MAP
+========================================================= */
+
+async function initializeMap(){
+
+  if(map)
+    return;
+
+
+  map =
+    L.map(
+      "map"
+    ).setView(
+      [25.3788,96.0956],
+      13
+    );
+
+
+  /*
+    Correct local map position can be
+    changed after GPS detection.
+  */
+
+  L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      maxZoom:19,
+      attribution:"© OpenStreetMap"
+    }
+  ).addTo(map);
+
+}
+
+
+async function useCurrentLocation(){
+
+  if(!navigator.geolocation){
+
+    showToast(
+      "Location is not supported on this device."
+    );
+
+    return;
+
+  }
+
+
+  showToast(
+    "Getting your location..."
+  );
+
+
+  navigator.geolocation.getCurrentPosition(
+    async position => {
+
+      currentLatitude =
+        position.coords.latitude;
+
+      currentLongitude =
+        position.coords.longitude;
+
+
+      if(map){
+
+        map.setView(
+          [
+            currentLatitude,
+            currentLongitude
+          ],
+          15
+        );
+
+
+        if(pickupMarker){
+
+          pickupMarker.setLatLng([
+            currentLatitude,
+            currentLongitude
+          ]);
+
+        }
+        else{
+
+          pickupMarker =
+            L.marker([
+              currentLatitude,
+              currentLongitude
+            ])
+            .addTo(map)
+            .bindPopup(
+              "Your pickup location"
+            );
+
+        }
+
+      }
+
+
+      try{
+
+        const address =
+          await reverseGeocode(
+            currentLatitude,
+            currentLongitude
+          );
+
+
+        pickupAddress =
+          address ||
+          "Current location";
+
+
+        document.getElementById(
+          "pickupInput"
+        ).value =
+          pickupAddress;
+
+      }
+      catch(error){
+
+        console.warn(
+          "Reverse geocode:",
           error
         );
 
+        pickupAddress =
+          "Current location";
+
+        document.getElementById(
+          "pickupInput"
+        ).value =
+          pickupAddress;
+
+      }
+
+    },
+    error => {
+
+      console.warn(error);
+
+      showToast(
+        "Please allow location permission."
+      );
+
+    },
+    {
+      enableHighAccuracy:true,
+      timeout:12000,
+      maximumAge:30000
+    }
+  );
+
+}
+
+
+/* =========================================================
+   REVERSE GEOCODE
+========================================================= */
+
+async function reverseGeocode(
+  lat,
+  lon
+){
+
+  const url =
+    "https://nominatim.openstreetmap.org/reverse" +
+    `?format=json&lat=${encodeURIComponent(lat)}` +
+    `&lon=${encodeURIComponent(lon)}`;
+
+
+  const response =
+    await fetch(
+      url,
+      {
+        headers:{
+          "Accept":"application/json"
+        }
+      }
+    );
+
+
+  if(!response.ok)
+    return "";
+
+
+  const data =
+    await response.json();
+
+
+  return (
+    data.display_name ||
+    ""
+  );
+
+}
+
+
+/* =========================================================
+   DESTINATION GEOCODE
+========================================================= */
+
+async function geocodeDestination(
+  text
+){
+
+  const queryText =
+    `${text}, Surajgarha, Lakhisarai, Bihar, India`;
+
+
+  const url =
+    "https://nominatim.openstreetmap.org/search" +
+    `?format=json&limit=1&q=${encodeURIComponent(queryText)}`;
+
+
+  const response =
+    await fetch(
+      url,
+      {
+        headers:{
+          "Accept":"application/json"
+        }
+      }
+    );
+
+
+  if(!response.ok)
+    throw new Error(
+      "Destination search failed"
+    );
+
+
+  const results =
+    await response.json();
+
+
+  if(!results.length)
+    return null;
+
+
+  return {
+
+    latitude:
+      Number(results[0].lat),
+
+    longitude:
+      Number(results[0].lon),
+
+    address:
+      results[0].display_name ||
+      text
+
+  };
+
+}
+
+
+/* =========================================================
+   DESTINATION INPUT
+========================================================= */
+
+document.getElementById(
+  "destinationInput"
+).addEventListener(
+  "blur",
+  async () => {
+
+    const text =
+      document.getElementById(
+        "destinationInput"
+      ).value.trim();
+
+
+    if(!text)
+      return;
+
+
+    try{
+
+      showToast(
+        "Finding destination..."
+      );
+
+
+      destinationData =
+        await geocodeDestination(
+          text
+        );
+
+
+      if(!destinationData){
+
         showToast(
-          "Logout failed."
+          "Destination not found."
+        );
+
+        return;
+
+      }
+
+
+      if(map){
+
+        if(destinationMarker){
+
+          destinationMarker.setLatLng([
+            destinationData.latitude,
+            destinationData.longitude
+          ]);
+
+        }
+        else{
+
+          destinationMarker =
+            L.marker([
+              destinationData.latitude,
+              destinationData.longitude
+            ])
+            .addTo(map)
+            .bindPopup(
+              "Destination"
+            );
+
+        }
+
+
+        const bounds =
+          L.latLngBounds([
+            [
+              currentLatitude ||
+                destinationData.latitude,
+              currentLongitude ||
+                destinationData.longitude
+            ],
+            [
+              destinationData.latitude,
+              destinationData.longitude
+            ]
+          ]);
+
+
+        map.fitBounds(
+          bounds,
+          {
+            padding:[35,35]
+          }
         );
 
       }
+
+
+      document.getElementById(
+        "destinationInput"
+      ).value =
+        destinationData.address;
+
+
+      if(
+        currentLatitude != null &&
+        currentLongitude != null
+      ){
+
+        currentDistanceKm =
+          distanceKm(
+            currentLatitude,
+            currentLongitude,
+            destinationData.latitude,
+            destinationData.longitude
+          );
+
+      }
+
+
+      updateFarePreview();
+
+    }
+    catch(error){
+
+      console.error(error);
+
+      showToast(
+        "Could not find destination."
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   SERVICE
+========================================================= */
+
+window.selectService =
+function(service){
+
+  selectedService =
+    service;
+
+
+  document.getElementById(
+    "totoService"
+  ).classList.toggle(
+    "selected",
+    service === "toto"
+  );
+
+
+  document.getElementById(
+    "goodsService"
+  ).classList.toggle(
+    "selected",
+    service === "goods"
+  );
+
+
+  document.getElementById(
+    "goodsBox"
+  ).classList.toggle(
+    "show",
+    service === "goods"
+  );
+
+
+  updateFarePreview();
+
+};
+
+
+/* =========================================================
+   FARE SETTINGS
+========================================================= */
+
+async function loadFareSettings(){
+
+  try{
+
+    const snap =
+      await getDoc(
+        doc(
+          db,
+          "settings",
+          "fare"
+        )
+      );
+
+
+    if(snap.exists()){
+
+      const data =
+        snap.data();
+
+
+      if(
+        data.baseFare != null
+      ){
+
+        baseFare =
+          Number(
+            data.baseFare
+          );
+
+      }
+
+
+      if(
+        data.perKm != null
+      ){
+
+        perKmFare =
+          Number(
+            data.perKm
+          );
+
+      }
+
+    }
+
+  }
+  catch(error){
+
+    console.warn(
+      "Fare settings:",
+      error
+    );
+
+  }
+
+
+  document.getElementById(
+    "baseFareText"
+  ).textContent =
+    money(baseFare);
+
+
+  document.getElementById(
+    "perKmText"
+  ).textContent =
+    money(perKmFare);
+
+
+  updateFarePreview();
+
+}
+
+
+/* =========================================================
+   FARE
+========================================================= */
+
+function calculateFare(){
+
+  if(
+    !currentDistanceKm ||
+    currentDistanceKm <= 0
+  ){
+
+    return 0;
+
+  }
+
+
+  const fare =
+    baseFare +
+    (
+      currentDistanceKm *
+      perKmFare
+    );
+
+
+  return Math.max(
+    baseFare,
+    Math.round(fare)
+  );
+
+}
+
+
+function updateFarePreview(){
+
+  document.getElementById(
+    "distanceText"
+  ).textContent =
+    currentDistanceKm > 0
+      ? `${currentDistanceKm.toFixed(1)} km`
+      : "—";
+
+
+  document.getElementById(
+    "fareText"
+  ).textContent =
+    money(
+      calculateFare()
+    );
+
+}
+
+
+/* =========================================================
+   BOOK RIDE
+========================================================= */
+
+window.bookRide =
+async function(){
+
+  if(!currentUser){
+
+    showToast(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+
+  if(
+    currentRide &&
+    [
+      "searching",
+      "accepted",
+      "started"
+    ].includes(
+      currentRide.status
+    )
+  ){
+
+    showToast(
+      "You already have an active ride."
+    );
+
+    showActiveRide();
+
+    return;
+
+  }
+
+
+  const destinationText =
+    document.getElementById(
+      "destinationInput"
+    ).value.trim();
+
+
+  if(
+    currentLatitude == null ||
+    currentLongitude == null
+  ){
+
+    showToast(
+      "Please allow your location first."
+    );
+
+    await useCurrentLocation();
+
+    return;
+
+  }
+
+
+  if(!destinationText){
+
+    showToast(
+      "Enter your destination."
+    );
+
+    return;
+
+  }
+
+
+  if(!destinationData){
+
+    showToast(
+      "Please select a valid destination."
+    );
+
+    return;
+
+  }
+
+
+  if(
+    selectedService === "goods"
+  ){
+
+    const goods =
+      document.getElementById(
+        "goodsDetails"
+      ).value.trim();
+
+
+    if(!goods){
+
+      showToast(
+        "Enter goods details."
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  const button =
+    document.getElementById(
+      "bookBtn"
+    );
+
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "Booking...";
+
+
+  try{
+
+    const estimatedFare =
+      calculateFare();
+
+
+    const rideData = {
+
+      customerId:
+        currentUser.uid,
+
+      customerName:
+        customerData?.name ||
+        customerData?.displayName ||
+        currentUser.displayName ||
+        "Customer",
+
+      customerEmail:
+        currentUser.email ||
+        customerData?.email ||
+        "",
+
+      customerPhone:
+        customerData?.phone ||
+        "",
+
+      customerPhotoURL:
+        customerData?.photoURL ||
+        currentUser.photoURL ||
+        "",
+
+      serviceType:
+        selectedService,
+
+      pickup:{
+
+        address:
+          document.getElementById(
+            "pickupInput"
+          ).value.trim() ||
+          pickupAddress ||
+          "Current location",
+
+        latitude:
+          currentLatitude,
+
+        longitude:
+          currentLongitude
+
+      },
+
+      destination:{
+
+        address:
+          destinationData.address ||
+          destinationText,
+
+        latitude:
+          destinationData.latitude,
+
+        longitude:
+          destinationData.longitude
+
+      },
+
+      goodsDetails:
+        selectedService === "goods"
+          ? document.getElementById(
+              "goodsDetails"
+            ).value.trim()
+          : "",
+
+      distanceKm:
+        Number(
+          currentDistanceKm.toFixed(2)
+        ),
+
+      estimatedFare:
+        estimatedFare,
+
+      finalFare:
+        null,
+
+      baseFare:
+        baseFare,
+
+      perKmFare:
+        perKmFare,
+
+      paymentMethod:
+        "cash",
+
+      status:
+        "searching",
+
+      driverId:
+        null,
+
+      driverLocation:
+        null,
+
+      createdAt:
+        serverTimestamp(),
+
+      updatedAt:
+        serverTimestamp()
 
     };
 
 
-    /* =================================
-       TOAST
-    ================================= */
+    const ref =
+      await addDoc(
+        collection(
+          db,
+          "rides"
+        ),
+        rideData
+      );
 
-    window.showToast =
-      function(message) {
 
-        const toast =
+    currentRideId =
+      ref.id;
+
+
+    showToast(
+      "Ride requested. Finding a driver..."
+    );
+
+
+    listenToRide(
+      ref.id
+    );
+
+
+    document.getElementById(
+      "bookBtn"
+    ).textContent =
+      "Driver Search Active";
+
+
+    document.getElementById(
+      "bookBtn"
+    ).disabled =
+      true;
+
+  }
+  catch(error){
+
+    console.error(
+      "Book ride:",
+      error
+    );
+
+    showToast(
+      "Could not create ride."
+    );
+
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "Find a Toto";
+
+  }
+
+};
+
+
+/* =========================================================
+   RESTORE ACTIVE RIDE
+========================================================= */
+
+async function restoreActiveRide(){
+
+  if(!currentUser)
+    return;
+
+
+  try{
+
+    const q =
+      query(
+        collection(
+          db,
+          "rides"
+        ),
+        where(
+          "customerId",
+          "==",
+          currentUser.uid
+        ),
+        limit(50)
+      );
+
+
+    const snapshot =
+      await getDocs(q);
+
+
+    const active =
+      snapshot.docs
+        .map(
+          item => ({
+            id:item.id,
+            ...item.data()
+          })
+        )
+        .filter(
+          ride =>
+            [
+              "searching",
+              "accepted",
+              "started"
+            ].includes(
+              ride.status
+            )
+        )
+        .sort(
+          (a,b) =>
+            timestampValue(
+              b.createdAt
+            ) -
+            timestampValue(
+              a.createdAt
+            )
+        )[0];
+
+
+    if(active){
+
+      currentRideId =
+        active.id;
+
+      currentRide =
+        active;
+
+      listenToRide(
+        active.id
+      );
+
+    }
+
+  }
+  catch(error){
+
+    console.warn(
+      "Restore active ride:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   TIMESTAMP
+========================================================= */
+
+function timestampValue(
+  timestamp
+){
+
+  if(!timestamp)
+    return 0;
+
+
+  if(
+    typeof timestamp.toMillis ===
+    "function"
+  ){
+
+    return timestamp.toMillis();
+
+  }
+
+
+  if(
+    timestamp.seconds
+  ){
+
+    return timestamp.seconds *
+      1000;
+
+  }
+
+
+  return 0;
+
+}
+
+
+/* =========================================================
+   RIDE REALTIME LISTENER
+========================================================= */
+
+function listenToRide(
+  rideId
+){
+
+  if(unsubscribeRide){
+
+    unsubscribeRide();
+
+    unsubscribeRide =
+      null;
+
+  }
+
+
+  unsubscribeRide =
+    onSnapshot(
+      doc(
+        db,
+        "rides",
+        rideId
+      ),
+      async snapshot => {
+
+        if(!snapshot.exists()){
+
+          return;
+
+        }
+
+
+        currentRide = {
+
+          id:
+            snapshot.id,
+
+          ...snapshot.data()
+
+        };
+
+
+        currentRideId =
+          snapshot.id;
+
+
+        showActiveRide();
+
+
+        if(
+          currentRide.driverId
+        ){
+
+          listenToDriver(
+            currentRide.driverId
+          );
+
+        }
+        else{
+
+          hideDriverBox();
+
+        }
+
+
+        /*
+          Completed ride
+        */
+
+        if(
+          currentRide.status ===
+          "completed"
+        ){
+
+          const fare =
+            currentRide.finalFare ??
+            currentRide.estimatedFare ??
+            0;
+
+
+          showToast(
+            `Ride completed. Fare ${money(fare)}`
+          );
+
+
           document.getElementById(
-            "toast"
+            "bookBtn"
+          ).disabled =
+            false;
+
+
+          document.getElementById(
+            "bookBtn"
+          ).textContent =
+            "Find a Toto";
+
+
+          await loadHistory();
+
+
+          if(
+            currentRide.driverId
+          ){
+
+            openRatingForRide(
+              currentRide.id
+            );
+
+          }
+
+        }
+
+
+        /*
+          Cancelled
+        */
+
+        if(
+          currentRide.status ===
+          "cancelled"
+        ){
+
+          showToast(
+            "Ride has been cancelled."
           );
 
 
-        toast.textContent =
-          message;
+          document.getElementById(
+            "bookBtn"
+          ).disabled =
+            false;
 
 
-        toast.classList.add(
-          "show"
+          document.getElementById(
+            "bookBtn"
+          ).textContent =
+            "Find a Toto";
+
+
+          await loadHistory();
+
+        }
+
+      },
+      error => {
+
+        console.error(
+          "Ride listener:",
+          error
         );
-
-
-        setTimeout(() => {
-
-          toast.classList.remove(
-            "show"
-          );
-
-        }, 3000);
-
-      };
-
-
-    /* =================================
-       COMING SOON
-    ================================= */
-
-    window.showComingSoon =
-      function(feature) {
-
-        showToast(
-          feature +
-          " module next build mein connect hoga."
-        );
-
-      };
-
-
-    /* =================================
-       HOME
-    ================================= */
-
-    window.scrollTopPage =
-      function() {
-
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-        });
-
-      };
-
-
-    /* =================================
-       START MAP
-    ================================= */
-
-    window.addEventListener(
-      "load",
-      () => {
-
-        initMap();
 
       }
     );
 
-  </script>
+}
+
+
+/* =========================================================
+   DRIVER REALTIME LISTENER
+========================================================= */
+
+function listenToDriver(
+  driverId
+){
+
+  if(unsubscribeDriver){
+
+    unsubscribeDriver();
+
+    unsubscribeDriver =
+      null;
+
+  }
+
+
+  unsubscribeDriver =
+    onSnapshot(
+      doc(
+        db,
+        "drivers",
+        driverId
+      ),
+      snapshot => {
+
+        if(!snapshot.exists())
+          return;
+
+
+        const driver =
+          snapshot.data();
+
+
+        renderDriver(
+          driver
+        );
+
+
+        /*
+          Live driver location
+        */
+
+        if(
+          driver.latitude != null &&
+          driver.longitude != null
+        ){
+
+          updateTrackingMap(
+            Number(
+              driver.latitude
+            ),
+            Number(
+              driver.longitude
+            )
+          );
+
+        }
+
+      },
+      error => {
+
+        console.error(
+          "Driver listener:",
+          error
+        );
+
+      }
+    );
+
+}
+
+
+/* =========================================================
+   ACTIVE RIDE UI
+========================================================= */
+
+function showActiveRide(){
+
+  const card =
+    document.getElementById(
+      "activeRideCard"
+    );
+
+
+  card.classList.add(
+    "show"
+  );
+
+
+  if(!currentRide)
+    return;
+
+
+  const status =
+    currentRide.status ||
+    "searching";
+
+
+  document.getElementById(
+    "activeStatus"
+  ).textContent =
+    status.toUpperCase();
+
+
+  const pickup =
+    currentRide.pickup?.address ||
+    "Pickup";
+
+
+  const destination =
+    currentRide.destination?.address ||
+    "Destination";
+
+
+  document.getElementById(
+    "activeRoute"
+  ).innerHTML = `
+
+    <b>📍 Pickup</b><br>
+    ${escapeHTML(pickup)}
+
+    <br><br>
+
+    <b>🏁 Destination</b><br>
+    ${escapeHTML(destination)}
+
+    <br><br>
+
+    <b>💰 Fare:</b>
+    ${money(
+      currentRide.finalFare ??
+      currentRide.estimatedFare ??
+      0
+    )}
+
+  `;
+
+
+  if(
+    [
+      "accepted",
+      "started"
+    ].includes(status) &&
+    currentRide.driverId
+  ){
+
+    document.getElementById(
+      "driverBox"
+    ).classList.add(
+      "show"
+    );
+
+    document.getElementById(
+      "trackingMap"
+    ).classList.add(
+      "show"
+    );
+
+  }
+  else{
+
+    hideDriverBox();
+
+  }
+
+
+  if(
+    status === "searching"
+  ){
+
+    document.getElementById(
+      "bookBtn"
+    ).disabled =
+      true;
+
+    document.getElementById(
+      "bookBtn"
+    ).textContent =
+      "Finding Driver...";
+
+  }
+
+}
+
+
+/* =========================================================
+   DRIVER UI
+========================================================= */
+
+function renderDriver(
+  driver
+){
+
+  const name =
+    driver.name ||
+    "E RIDE Driver";
+
+
+  const photo =
+    driver.photoURL ||
+    "";
+
+
+  document.getElementById(
+    "driverName"
+  ).textContent =
+    name;
+
+
+  document.getElementById(
+    "driverMeta"
+  ).textContent =
+
+    `${driver.vehicleType || "Toto"} • ` +
+    `${driver.vehicleNumber || "Vehicle number unavailable"}` +
+    ` • ⭐ ${Number(driver.rating || 0).toFixed(1)}`;
+
+
+  if(photo){
+
+    document.getElementById(
+      "driverAvatar"
+    ).innerHTML =
+      `<img src="${escapeHTML(photo)}" alt="">`;
+
+  }
+  else{
+
+    document.getElementById(
+      "driverAvatar"
+    ).textContent =
+      "🧑‍✈️";
+
+  }
+
+
+  window.__currentDriverPhone =
+    driver.phone ||
+    "";
+
+}
+
+
+function hideDriverBox(){
+
+  document.getElementById(
+    "driverBox"
+  ).classList.remove(
+    "show"
+  );
+
+  document.getElementById(
+    "trackingMap"
+  ).classList.remove(
+    "show"
+  );
+
+}
+
+
+/* =========================================================
+   CALL DRIVER
+========================================================= */
+
+window.callDriver =
+function(){
+
+  const phone =
+    window.__currentDriverPhone;
+
+
+  if(!phone){
+
+    showToast(
+      "Driver phone number is not available."
+    );
+
+    return;
+
+  }
+
+
+  window.location.href =
+    `tel:${phone}`;
+
+};
+
+
+/* =========================================================
+   CUSTOMER CANCEL RIDE
+========================================================= */
+
+window.cancelCurrentRide =
+async function(){
+
+  if(!currentRideId){
+
+    showToast(
+      "No active ride."
+    );
+
+    return;
+
+  }
+
+
+  if(!currentRide){
+
+    return;
+
+  }
+
+
+  if(
+    [
+      "completed",
+      "cancelled"
+    ].includes(
+      currentRide.status
+    )
+  ){
+
+    showToast(
+      "Ride is already closed."
+    );
+
+    return;
+
+  }
+
+
+  const confirmed =
+    confirm(
+      "Cancel this ride?"
+    );
+
+
+  if(!confirmed)
+    return;
+
+
+  try{
+
+    await updateDoc(
+      doc(
+        db,
+        "rides",
+        currentRideId
+      ),
+      {
+
+        status:
+          "cancelled",
+
+        cancelledBy:
+          "customer",
+
+        cancelReason:
+          "Cancelled by customer",
+
+        cancelledAt:
+          serverTimestamp(),
+
+        updatedAt:
+          serverTimestamp()
+
+      }
+    );
+
+
+    showToast(
+      "Ride cancelled."
+    );
+
+
+    document.getElementById(
+      "bookBtn"
+    ).disabled =
+      false;
+
+
+    document.getElementById(
+      "bookBtn"
+    ).textContent =
+      "Find a Toto";
+
+
+    await loadHistory();
+
+  }
+  catch(error){
+
+    console.error(
+      "Cancel ride:",
+      error
+    );
+
+    showToast(
+      "Could not cancel ride."
+    );
+
+  }
+
+};
+
+
+/* =========================================================
+   TRACKING MAP
+========================================================= */
+
+function updateTrackingMap(
+  latitude,
+  longitude
+){
+
+  const element =
+    document.getElementById(
+      "trackingMap"
+    );
+
+
+  element.classList.add(
+    "show"
+  );
+
+
+  if(!trackingMap){
+
+    trackingMap =
+      L.map(
+        "trackingMap"
+      ).setView(
+        [latitude,longitude],
+        15
+      );
+
+
+    L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        maxZoom:19,
+        attribution:"© OpenStreetMap"
+      }
+    ).addTo(
+      trackingMap
+    );
+
+  }
+  else{
+
+    trackingMap.setView(
+      [latitude,longitude],
+      trackingMap.getZoom()
+    );
+
+  }
+
+
+  if(trackingDriverMarker){
+
+    trackingDriverMarker.setLatLng([
+      latitude,
+      longitude
+    ]);
+
+  }
+  else{
+
+    trackingDriverMarker =
+      L.marker([
+        latitude,
+        longitude
+      ])
+      .addTo(
+        trackingMap
+      )
+      .bindPopup(
+        "Driver location"
+      );
+
+  }
+
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+window.openHistory =
+async function(){
+
+  hideSections();
+
+  document.getElementById(
+    "historySection"
+  ).style.display =
+    "block";
+
+
+  await loadHistory();
+
+};
+
+
+async function loadHistory(){
+
+  if(!currentUser)
+    return;
+
+
+  const box =
+    document.getElementById(
+      "historyList"
+    );
+
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        query(
+          collection(
+            db,
+            "rides"
+          ),
+          where(
+            "customerId",
+            "==",
+            currentUser.uid
+          ),
+          limit(50)
+        )
+      );
+
+
+    const rides =
+      snapshot.docs
+        .map(
+          item => ({
+            id:item.id,
+            ...item.data()
+          })
+        )
+        .sort(
+          (a,b) =>
+            timestampValue(
+              b.createdAt
+            ) -
+            timestampValue(
+              a.createdAt
+            )
+        );
+
+
+    if(!rides.length){
+
+      box.innerHTML =
+        `<div class="empty">
+          <div class="empty-icon">🚕</div>
+          No rides yet.
+        </div>`;
+
+      return;
+
+    }
+
+
+    box.innerHTML =
+      rides.map(
+        ride => {
+
+          const fare =
+            ride.finalFare ??
+            ride.estimatedFare ??
+            0;
+
+
+          const status =
+            ride.status ||
+            "unknown";
+
+
+          const date =
+            formatDate(
+              ride.createdAt
+            );
+
+
+          return `
+
+            <div class="history-item">
+
+              <div class="history-top">
+
+                <div>
+                  <b style="font-size:10px">
+                    ${escapeHTML(
+                      ride.serviceType || "toto"
+                    ).toUpperCase()}
+                  </b>
+
+                  <div
+                    style="color:var(--muted);font-size:8px;margin-top:3px"
+                  >
+                    ${escapeHTML(date)}
+                  </div>
+
+                </div>
+
+                <div class="history-status">
+                  ${escapeHTML(
+                    status.toUpperCase()
+                  )}
+                </div>
+
+              </div>
+
+
+              <div class="history-route">
+
+                📍
+                ${escapeHTML(
+                  ride.pickup?.address ||
+                  "Pickup"
+                )}
+
+                <br>
+
+                🏁
+                ${escapeHTML(
+                  ride.destination?.address ||
+                  "Destination"
+                )}
+
+              </div>
+
+
+              <div class="history-fare">
+                ${money(fare)}
+              </div>
+
+
+              ${
+                status === "completed"
+                ?
+                `<button
+                  class="action-btn"
+                  style="width:100%;margin-top:8px"
+                  onclick="openRatingForRide('${ride.id}')"
+                >
+                  ⭐ Rate this ride
+                </button>`
+                :
+                ""
+              }
+
+            </div>
+
+          `;
+
+        }
+      ).join("");
+
+  }
+  catch(error){
+
+    console.error(
+      "History:",
+      error
+    );
+
+    box.innerHTML =
+      `<div class="empty">
+        Unable to load ride history.
+      </div>`;
+
+  }
+
+}
+
+
+function formatDate(
+  timestamp
+){
+
+  const value =
+    timestampValue(
+      timestamp
+    );
+
+
+  if(!value)
+    return "Date unavailable";
+
+
+  return new Date(
+    value
+  ).toLocaleString(
+    "en-IN",
+    {
+      day:"2-digit",
+      month:"short",
+      year:"numeric",
+      hour:"2-digit",
+      minute:"2-digit"
+    }
+  );
+
+}
+
+
+/* =========================================================
+   RATING
+========================================================= */
+
+window.openRatingForRide =
+async function(
+  rideId
+){
+
+  ratingRideId =
+    rideId;
+
+  selectedRatingValue =
+    0;
+
+
+  document.getElementById(
+    "ratingReview"
+  ).value =
+    "";
+
+
+  document
+    .querySelectorAll(
+      ".star"
+    )
+    .forEach(
+      star =>
+        star.classList.remove(
+          "active"
+        )
+    );
+
+
+  document.getElementById(
+    "ratingModal"
+  ).classList.add(
+    "show"
+  );
+
+};
+
+
+window.selectRating =
+function(value){
+
+  selectedRatingValue =
+    value;
+
+
+  document
+    .querySelectorAll(
+      ".star"
+    )
+    .forEach(
+      (star,index) =>
+        star.classList.toggle(
+          "active",
+          index < value
+        )
+    );
+
+};
+
+
+window.closeRatingModal =
+function(){
+
+  document.getElementById(
+    "ratingModal"
+  ).classList.remove(
+    "show"
+  );
+
+};
+
+
+window.submitRating =
+async function(){
+
+  if(!ratingRideId){
+
+    showToast(
+      "Ride not selected."
+    );
+
+    return;
+
+  }
+
+
+  if(
+    selectedRatingValue < 1 ||
+    selectedRatingValue > 5
+  ){
+
+    showToast(
+      "Select a rating first."
+    );
+
+    return;
+
+  }
+
+
+  const review =
+    document.getElementById(
+      "ratingReview"
+    ).value.trim();
+
+
+  try{
+
+    const rideSnap =
+      await getDoc(
+        doc(
+          db,
+          "rides",
+          ratingRideId
+        )
+      );
+
+
+    if(!rideSnap.exists()){
+
+      showToast(
+        "Ride not found."
+      );
+
+      return;
+
+    }
+
+
+    const ride =
+      rideSnap.data();
+
+
+    if(
+      ride.customerId !==
+      currentUser.uid
+    ){
+
+      showToast(
+        "You cannot rate this ride."
+      );
+
+      return;
+
+    }
+
+
+    if(
+      ride.status !==
+      "completed"
+    ){
+
+      showToast(
+        "Only completed rides can be rated."
+      );
+
+      return;
+
+    }
+
+
+    if(!ride.driverId){
+
+      showToast(
+        "Driver information unavailable."
+      );
+
+      return;
+
+    }
+
+
+    /*
+      Prevent duplicate rating.
+    */
+
+    const existing =
+      await getDocs(
+        query(
+          collection(
+            db,
+            "ratings"
+          ),
+          where(
+            "rideId",
+            "==",
+            ratingRideId
+          ),
+          limit(1)
+        )
+      );
+
+
+    if(!existing.empty){
+
+      showToast(
+        "This ride is already rated."
+      );
+
+      closeRatingModal();
+
+      return;
+
+    }
+
+
+    await addDoc(
+      collection(
+        db,
+        "ratings"
+      ),
+      {
+
+        rideId:
+          ratingRideId,
+
+        customerId:
+          currentUser.uid,
+
+        driverId:
+          ride.driverId,
+
+        rating:
+          selectedRatingValue,
+
+        review:
+          review.slice(
+            0,
+            500
+          ),
+
+        createdAt:
+          serverTimestamp()
+
+      }
+    );
+
+
+    /*
+      Update driver's average rating.
+
+      This is kept lightweight. Admin/driver
+      can recalculate from ratings later.
+    */
+
+    try{
+
+      const ratingsSnap =
+        await getDocs(
+          query(
+            collection(
+              db,
+              "ratings"
+            ),
+            where(
+              "driverId",
+              "==",
+              ride.driverId
+            ),
+            limit(100)
+          )
+        );
+
+
+      let total = 0;
+      let count = 0;
+
+
+      ratingsSnap.forEach(
+        item => {
+
+          const data =
+            item.data();
+
+
+          const rating =
+            Number(
+              data.rating
+            );
+
+
+          if(
+            rating >= 1 &&
+            rating <= 5
+          ){
+
+            total += rating;
+            count++;
+
+          }
+
+        }
+      );
+
+
+      if(count){
+
+        await updateDoc(
+          doc(
+            db,
+            "drivers",
+            ride.driverId
+          ),
+          {
+
+            rating:
+              Number(
+                (
+                  total / count
+                ).toFixed(2)
+              ),
+
+            ratingCount:
+              count,
+
+            updatedAt:
+              serverTimestamp()
+
+          }
+        );
+
+      }
+
+    }
+    catch(error){
+
+      console.warn(
+        "Driver rating update:",
+        error
+      );
+
+    }
+
+
+    closeRatingModal();
+
+    showToast(
+      "Thank you for your rating!"
+    );
+
+
+    await loadHistory();
+
+  }
+  catch(error){
+
+    console.error(
+      "Rating:",
+      error
+    );
+
+    showToast(
+      "Could not submit rating."
+    );
+
+  }
+
+};
+
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+window.openNotifications =
+async function(){
+
+  hideSections();
+
+  document.getElementById(
+    "notificationsSection"
+  ).style.display =
+    "block";
+
+
+  await loadNotifications();
+
+};
+
+
+async function loadNotifications(){
+
+  if(!currentUser)
+    return;
+
+
+  const box =
+    document.getElementById(
+      "notificationList"
+    );
+
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        query(
+          collection(
+            db,
+            "notifications"
+          ),
+          where(
+            "userId",
+            "==",
+            currentUser.uid
+          ),
+          limit(50)
+        )
+      );
+
+
+    const notifications =
+      snapshot.docs
+        .map(
+          item => ({
+            id:item.id,
+            ...item.data()
+          })
+        )
+        .sort(
+          (a,b) =>
+            timestampValue(
+              b.createdAt
+            ) -
+            timestampValue(
+              a.createdAt
+            )
+        );
+
+
+    if(!notifications.length){
+
+      box.innerHTML =
+        `<div class="empty">
+          <div class="empty-icon">🔔</div>
+          No notifications yet.
+        </div>`;
+
+      return;
+
+    }
+
+
+    box.innerHTML =
+      notifications.map(
+        notification => `
+
+          <div class="notification ${
+            notification.read
+              ? ""
+              : "unread"
+          }">
+
+            <div class="notification-title">
+              ${escapeHTML(
+                notification.title ||
+                "E RIDE"
+              )}
+            </div>
+
+            <div class="notification-body">
+              ${escapeHTML(
+                notification.body ||
+                ""
+              )}
+            </div>
+
+          </div>
+
+        `
+      ).join("");
+
+
+    /*
+      Mark notifications read.
+    */
+
+    for(
+      const notification
+      of notifications
+    ){
+
+      if(
+        !notification.read
+      ){
+
+        try{
+
+          await updateDoc(
+            doc(
+              db,
+              "notifications",
+              notification.id
+            ),
+            {
+              read:true
+            }
+          );
+
+        }
+        catch(error){
+
+          console.warn(
+            "Notification read:",
+            error
+          );
+
+        }
+
+      }
+
+    }
+
+  }
+  catch(error){
+
+    console.error(
+      "Notifications:",
+      error
+    );
+
+    box.innerHTML =
+      `<div class="empty">
+        Unable to load notifications.
+      </div>`;
+
+  }
+
+}
+
+
+/* =========================================================
+   SUPPORT
+========================================================= */
+
+window.openSupport =
+function(){
+
+  hideSections();
+
+  document.getElementById(
+    "supportSection"
+  ).classList.add(
+    "show"
+  );
+
+};
+
+
+window.submitSupport =
+async function(){
+
+  const subject =
+    document.getElementById(
+      "supportSubject"
+    ).value.trim();
+
+
+  const message =
+    document.getElementById(
+      "supportMessage"
+    ).value.trim();
+
+
+  if(!subject || !message){
+
+    showToast(
+      "Subject and message are required."
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    await addDoc(
+      collection(
+        db,
+        "support"
+      ),
+      {
+
+        userId:
+          currentUser.uid,
+
+        userName:
+          customerData?.name ||
+          currentUser.displayName ||
+          "Customer",
+
+        userEmail:
+          currentUser.email ||
+          "",
+
+        subject:
+          subject.slice(0,120),
+
+        message:
+          message.slice(0,1000),
+
+        status:
+          "open",
+
+        createdAt:
+          serverTimestamp(),
+
+        updatedAt:
+          serverTimestamp()
+
+      }
+    );
+
+
+    document.getElementById(
+      "supportSubject"
+    ).value =
+      "";
+
+    document.getElementById(
+      "supportMessage"
+    ).value =
+      "";
+
+
+    showToast(
+      "Support request submitted."
+    );
+
+  }
+  catch(error){
+
+    console.error(
+      "Support:",
+      error
+    );
+
+    showToast(
+      "Could not submit support request."
+    );
+
+  }
+
+};
+
+
+/* =========================================================
+   OFFERS
+========================================================= */
+
+window.openOffers =
+function(){
+
+  hideSections();
+
+  document.getElementById(
+    "offersSection"
+  ).style.display =
+    "block";
+
+};
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+window.openProfile =
+function(){
+
+  hideSections();
+
+  document.getElementById(
+    "profileSection"
+  ).classList.add(
+    "show"
+  );
+
+};
+
+
+window.showHome =
+function(){
+
+  hideSections();
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+};
+
+
+function hideSections(){
+
+  document.getElementById(
+    "historySection"
+  ).style.display =
+    "none";
+
+
+  document.getElementById(
+    "notificationsSection"
+  ).style.display =
+    "none";
+
+
+  document.getElementById(
+    "offersSection"
+  ).style.display =
+    "none";
+
+
+  document.getElementById(
+    "supportSection"
+  ).classList.remove(
+    "show"
+  );
+
+
+  document.getElementById(
+    "profileSection"
+  ).classList.remove(
+    "show"
+  );
+
+}
+
+
+/* =========================================================
+   INFO MODAL
+========================================================= */
+
+function openInfoModal(
+  title,
+  body
+){
+
+  document.getElementById(
+    "infoModalTitle"
+  ).textContent =
+    title;
+
+
+  document.getElementById(
+    "infoModalBody"
+  ).innerHTML =
+    `<div class="modal-row">
+      <div class="modal-value">
+        ${escapeHTML(body)}
+      </div>
+    </div>`;
+
+
+  document.getElementById(
+    "infoModal"
+  ).classList.add(
+    "show"
+  );
+
+}
+
+
+window.closeInfoModal =
+function(){
+
+  document.getElementById(
+    "infoModal"
+  ).classList.remove(
+    "show"
+  );
+
+};
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+window.logout =
+async function(){
+
+  try{
+
+    if(unsubscribeRide){
+
+      unsubscribeRide();
+
+      unsubscribeRide =
+        null;
+
+    }
+
+
+    if(unsubscribeDriver){
+
+      unsubscribeDriver();
+
+      unsubscribeDriver =
+        null;
+
+    }
+
+
+    await signOut(
+      auth
+    );
+
+
+    window.location.replace(
+      "index.html"
+    );
+
+  }
+  catch(error){
+
+    console.error(
+      "Logout:",
+      error
+    );
+
+    showToast(
+      "Could not sign out."
+    );
+
+  }
+
+};
+
+
+/* =========================================================
+   GLOBAL ERROR HANDLING
+========================================================= */
+
+window.addEventListener(
+  "unhandledrejection",
+  event => {
+
+    console.error(
+      "Unhandled:",
+      event.reason
+    );
+
+  }
+);
+
+
+/* =========================================================
+   SERVICE WORKER
+========================================================= */
+
+if(
+  "serviceWorker" in navigator
+){
+
+  window.addEventListener(
+    "load",
+    () => {
+
+      navigator
+        .serviceWorker
+        .register(
+          "./sw.js"
+        )
+        .catch(
+          error =>
+            console.warn(
+              "Service worker:",
+              error
+            )
+        );
+
+    }
+  );
+
+}
+
+</script>
 
 </body>
 </html>
