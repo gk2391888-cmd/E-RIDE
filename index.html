@@ -53,12 +53,7 @@ body{
     var(--bg);
 
   color:var(--text);
-
-  font-family:
-    Inter,
-    Arial,
-    sans-serif;
-
+  font-family:Inter,Arial,sans-serif;
   min-height:100vh;
 }
 
@@ -95,12 +90,9 @@ button:disabled{
 .logo{
   width:74px;
   height:74px;
-
   margin:0 auto 14px;
-
   display:grid;
   place-items:center;
-
   border-radius:24px;
 
   background:
@@ -140,9 +132,7 @@ button:disabled{
     var(--card);
 
   border:1px solid var(--border);
-
   border-radius:26px;
-
   padding:25px;
 
   box-shadow:
@@ -166,12 +156,9 @@ button:disabled{
 .role-title{
   margin-top:23px;
   margin-bottom:10px;
-
   font-size:10px;
   font-weight:800;
-
   color:var(--muted);
-
   text-transform:uppercase;
   letter-spacing:.7px;
 }
@@ -184,19 +171,12 @@ button:disabled{
 
 .role{
   position:relative;
-
   padding:15px;
-
   border:1px solid var(--border);
-
   background:var(--card2);
-
   color:white;
-
   border-radius:16px;
-
   text-align:left;
-
   transition:.2s;
 }
 
@@ -206,9 +186,7 @@ button:disabled{
 
 .role.selected{
   border-color:var(--green);
-
-  background:
-    rgba(34,197,94,.08);
+  background:rgba(34,197,94,.08);
 
   box-shadow:
     inset 0 0 0 1px rgba(34,197,94,.15);
@@ -236,14 +214,12 @@ button:disabled{
 .login-btn{
   width:100%;
   height:52px;
-
   margin-top:20px;
 
   border:0;
   border-radius:15px;
 
   background:var(--green);
-
   color:#041008;
 
   font-size:12px;
@@ -259,6 +235,7 @@ button:disabled{
 
 .login-btn:hover{
   transform:translateY(-1px);
+
   box-shadow:
     0 12px 30px rgba(34,197,94,.18);
 }
@@ -268,6 +245,7 @@ button:disabled{
   height:20px;
 
   background:white;
+  color:#4285f4;
 
   border-radius:50%;
 
@@ -275,13 +253,13 @@ button:disabled{
   place-items:center;
 
   font-size:13px;
+  font-weight:800;
 }
 
 /* INFO */
 
 .info{
   margin-top:17px;
-
   padding:12px 13px;
 
   border-radius:13px;
@@ -292,9 +270,7 @@ button:disabled{
   color:var(--muted);
 
   font-size:9px;
-
   line-height:1.6;
-
   text-align:center;
 }
 
@@ -302,7 +278,6 @@ button:disabled{
 
 .status{
   display:none;
-
   margin-top:14px;
 
   padding:12px;
@@ -310,9 +285,7 @@ button:disabled{
   border-radius:13px;
 
   font-size:10px;
-
   text-align:center;
-
   line-height:1.5;
 }
 
@@ -347,12 +320,11 @@ button:disabled{
   margin-top:18px;
 }
 
-/* LOADING SCREEN */
+/* BOOT SCREEN */
 
 #bootScreen{
   position:fixed;
   inset:0;
-
   z-index:9999;
 
   display:flex;
@@ -396,9 +368,7 @@ button:disabled{
 
 .boot-text{
   margin-top:14px;
-
   color:var(--muted);
-
   font-size:10px;
 }
 
@@ -409,13 +379,11 @@ button:disabled{
   margin:14px auto 0;
 
   border:2px solid rgba(255,255,255,.1);
-
   border-top-color:var(--green);
 
   border-radius:50%;
 
-  animation:
-    spin .8s linear infinite;
+  animation:spin .8s linear infinite;
 }
 
 @keyframes spin{
@@ -434,17 +402,14 @@ button:disabled{
 
   z-index:10000;
 
-  width:
-    min(
-      calc(100% - 30px),
-      430px
-    );
+  width:min(
+    calc(100% - 30px),
+    430px
+  );
 
-  transform:
-    translate(-50%,20px);
+  transform:translate(-50%,20px);
 
   opacity:0;
-
   pointer-events:none;
 
   padding:13px 15px;
@@ -452,11 +417,9 @@ button:disabled{
   border-radius:14px;
 
   background:#1c2431;
-
   border:1px solid var(--border);
 
   font-size:10px;
-
   text-align:center;
 
   transition:.25s;
@@ -464,8 +427,7 @@ button:disabled{
 
 .toast.show{
   opacity:1;
-  transform:
-    translate(-50%,0);
+  transform:translate(-50%,0);
 }
 
 /* MOBILE */
@@ -530,8 +492,6 @@ button:disabled{
 
   <div class="login-wrap">
 
-    <!-- BRAND -->
-
     <div class="brand">
 
       <div class="logo">
@@ -548,8 +508,6 @@ button:disabled{
 
     </div>
 
-
-    <!-- LOGIN CARD -->
 
     <div class="card">
 
@@ -616,7 +574,7 @@ button:disabled{
       </div>
 
 
-      <!-- LOGIN BUTTON -->
+      <!-- LOGIN -->
 
       <button
         type="button"
@@ -644,13 +602,9 @@ button:disabled{
       ></div>
 
 
-      <!-- INFO -->
-
       <div class="info">
-
         New drivers may require admin approval before they can start accepting rides.
         Existing accounts will keep their previously assigned role.
-
       </div>
 
     </div>
@@ -710,12 +664,13 @@ from
 
 /* =========================================
    FIREBASE CONFIG
+   EXACT CONFIG FROM FIREBASE CONSOLE
 ========================================= */
 
 const firebaseConfig = {
 
   apiKey:
-    "AIzaSyBKuGjmLBUbPCEAQglZK7PcfXh1bnh7OF4",
+    "AIzaSyBKuGjmLBUbPCEAQglZK7pCFxH1bnh7OF4",
 
   authDomain:
     "e-ride-70342.firebaseapp.com",
@@ -754,7 +709,6 @@ const db =
 const provider =
   new GoogleAuthProvider();
 
-
 provider.setCustomParameters({
   prompt:"select_account"
 });
@@ -764,17 +718,13 @@ provider.setCustomParameters({
    VARIABLES
 ========================================= */
 
-let selectedRole =
-  "customer";
+let selectedRole = "customer";
 
-let persistenceReady =
-  false;
+let persistenceReady = false;
 
-let loginInProgress =
-  false;
+let loginInProgress = false;
 
-let redirecting =
-  false;
+let redirecting = false;
 
 
 /* =========================================
@@ -782,24 +732,16 @@ let redirecting =
 ========================================= */
 
 const bootScreen =
-  document.getElementById(
-    "bootScreen"
-  );
+  document.getElementById("bootScreen");
 
 const loginBtn =
-  document.getElementById(
-    "loginBtn"
-  );
+  document.getElementById("loginBtn");
 
 const loginBtnText =
-  document.getElementById(
-    "loginBtnText"
-  );
+  document.getElementById("loginBtnText");
 
 const statusBox =
-  document.getElementById(
-    "status"
-  );
+  document.getElementById("status");
 
 
 /* =========================================
@@ -822,8 +764,7 @@ function setStatus(
 
 function clearStatus(){
 
-  statusBox.textContent =
-    "";
+  statusBox.textContent = "";
 
   statusBox.className =
     "status";
@@ -852,20 +793,18 @@ function(role){
 
 
   document
-    .getElementById(
-      "customerRole"
-    )
-    .classList.toggle(
+    .getElementById("customerRole")
+    .classList
+    .toggle(
       "selected",
       role === "customer"
     );
 
 
   document
-    .getElementById(
-      "driverRole"
-    )
-    .classList.toggle(
+    .getElementById("driverRole")
+    .classList
+    .toggle(
       "selected",
       role === "driver"
     );
@@ -874,43 +813,33 @@ function(role){
 
 
 /* =========================================
-   REDIRECT
+   ROLE REDIRECT
 ========================================= */
 
-function redirectByRole(
-  data
-){
+function redirectByRole(data){
 
-  if(redirecting)
+  if(redirecting){
     return;
+  }
 
+  redirecting = true;
 
-  redirecting =
-    true;
-
-
-  let target =
-    "customer.html";
+  let target = "customer.html";
 
 
   if(data?.role === "admin"){
 
-    target =
-      "admin.html";
+    target = "admin.html";
 
   }
-  else if(
-    data?.role === "driver"
-  ){
+  else if(data?.role === "driver"){
 
-    target =
-      "driver.html";
+    target = "driver.html";
 
   }
   else{
 
-    target =
-      "customer.html";
+    target = "customer.html";
 
   }
 
@@ -923,9 +852,7 @@ function redirectByRole(
 
   setTimeout(() => {
 
-    window.location.replace(
-      target
-    );
+    window.location.replace(target);
 
   },150);
 
@@ -933,7 +860,7 @@ function redirectByRole(
 
 
 /* =========================================
-   CREATE/FETCH USER PROFILE
+   USER PROFILE
 ========================================= */
 
 async function getOrCreateUserProfile(
@@ -964,12 +891,7 @@ async function getOrCreateUserProfile(
 
 
     /*
-      IMPORTANT:
-
-      Existing role is ALWAYS preserved.
-
-      Login page selection does NOT
-      overwrite existing role.
+      Existing role is NEVER overwritten.
     */
 
     if(
@@ -983,10 +905,7 @@ async function getOrCreateUserProfile(
     }
 
 
-    /*
-      If old account exists but has
-      no valid role, repair it.
-    */
+    /* Repair invalid/old role */
 
     const repairedRole =
       roleForNewUser === "driver"
@@ -1052,25 +971,27 @@ async function getOrCreateUserProfile(
      NEW USER
   ======================================= */
 
+  const newRole =
+    roleForNewUser === "driver"
+      ? "driver"
+      : "customer";
+
+
   const newData = {
 
     uid:
       user.uid,
 
     role:
-      roleForNewUser === "driver"
-        ? "driver"
-        : "customer",
+      newRole,
 
     accountStatus:
-      roleForNewUser === "driver"
+      newRole === "driver"
         ? "pending"
         : "active",
 
     driverApproved:
-      roleForNewUser === "driver"
-        ? false
-        : false,
+      false,
 
     name:
       user.displayName ||
@@ -1106,19 +1027,14 @@ async function getOrCreateUserProfile(
   );
 
 
-  /*
-    Driver profile is created separately.
+  /* =======================================
+     DRIVER PROFILE
+  ======================================= */
 
-    This makes driver.html/admin.html
-    able to work with a predictable
-    driver document.
-  */
-
-  if(
-    newData.role === "driver"
-  ){
+  if(newRole === "driver"){
 
     await setDoc(
+
       doc(
         db,
         "drivers",
@@ -1181,6 +1097,7 @@ async function getOrCreateUserProfile(
       },
 
       {merge:true}
+
     );
 
   }
@@ -1198,8 +1115,9 @@ async function getOrCreateUserProfile(
 window.loginWithGoogle =
 async function(){
 
-  if(loginInProgress)
+  if(loginInProgress){
     return;
+  }
 
 
   if(!persistenceReady){
@@ -1214,13 +1132,9 @@ async function(){
   }
 
 
-  loginInProgress =
-    true;
+  loginInProgress = true;
 
-
-  loginBtn.disabled =
-    true;
-
+  loginBtn.disabled = true;
 
   loginBtnText.textContent =
     "Signing in...";
@@ -1267,15 +1181,9 @@ async function(){
       );
 
 
-    /*
-      Existing account role is preserved.
-      New account uses selectedRole.
-    */
-
     redirectByRole(
       userData
     );
-
 
   }
   catch(error){
@@ -1285,11 +1193,6 @@ async function(){
       error
     );
 
-
-    /*
-      If popup was closed manually,
-      don't show a scary error.
-    */
 
     if(
       error?.code ===
@@ -1302,6 +1205,7 @@ async function(){
       );
 
     }
+
     else if(
       error?.code ===
       "auth/popup-blocked"
@@ -1313,17 +1217,19 @@ async function(){
       );
 
     }
+
     else if(
       error?.code ===
       "auth/api-key-not-valid"
     ){
 
       setStatus(
-        "Firebase API key is invalid. Check Firebase project configuration.",
+        "Firebase API key is invalid. Please check the Firebase configuration.",
         "error"
       );
 
     }
+
     else if(
       error?.code ===
       "auth/unauthorized-domain"
@@ -1335,6 +1241,19 @@ async function(){
       );
 
     }
+
+    else if(
+      error?.code ===
+      "auth/network-request-failed"
+    ){
+
+      setStatus(
+        "Network error. Please check your internet connection and try again.",
+        "error"
+      );
+
+    }
+
     else{
 
       setStatus(
@@ -1346,11 +1265,9 @@ async function(){
     }
 
 
-    loginInProgress =
-      false;
+    loginInProgress = false;
 
-    loginBtn.disabled =
-      false;
+    loginBtn.disabled = false;
 
     loginBtnText.textContent =
       "Continue with Google";
@@ -1369,16 +1286,18 @@ onAuthStateChanged(
   async user => {
 
     /*
-      Do not redirect before persistence
-      initialization has completed.
+      Wait until local persistence
+      has been configured.
     */
 
     if(!persistenceReady){
-
       return;
-
     }
 
+
+    /*
+      Not logged in.
+    */
 
     if(!user){
 
@@ -1392,21 +1311,17 @@ onAuthStateChanged(
 
 
     /*
-      A fresh login is already handling
+      Fresh Google login handles
       its own redirect.
     */
 
     if(loginInProgress){
-
       return;
-
     }
 
 
     if(redirecting){
-
       return;
-
     }
 
 
@@ -1429,8 +1344,7 @@ onAuthStateChanged(
 
 
       /*
-        If authenticated but profile doesn't
-        exist, sign out instead of guessing.
+        Auth exists but profile missing.
       */
 
       if(!snap.exists()){
@@ -1451,6 +1365,10 @@ onAuthStateChanged(
       const data =
         snap.data();
 
+
+      /*
+        Validate role.
+      */
 
       if(
         data.role !== "admin" &&
@@ -1486,6 +1404,7 @@ onAuthStateChanged(
         error
       );
 
+
       setStatus(
         "Could not restore your E RIDE session.",
         "error"
@@ -1498,7 +1417,7 @@ onAuthStateChanged(
 
 
 /* =========================================
-   FIREBASE LOCAL PERSISTENCE
+   LOCAL AUTH PERSISTENCE
 ========================================= */
 
 async function initializeAuthPersistence(){
@@ -1506,14 +1425,15 @@ async function initializeAuthPersistence(){
   try{
 
     /*
-      This is the key part for:
+      browserLocalPersistence means:
 
       Browser close
       Tab close
       PWA close
       App reopen
 
-      → Firebase keeps the login session
+      → Login remains active
+
       until explicit logout.
     */
 
@@ -1523,14 +1443,12 @@ async function initializeAuthPersistence(){
     );
 
 
-    persistenceReady =
-      true;
+    persistenceReady = true;
 
 
     bootScreen
       .classList
       .add("hide");
-
 
   }
   catch(error){
@@ -1541,8 +1459,7 @@ async function initializeAuthPersistence(){
     );
 
 
-    persistenceReady =
-      false;
+    persistenceReady = false;
 
 
     bootScreen
@@ -1561,14 +1478,14 @@ async function initializeAuthPersistence(){
 
 
 /* =========================================
-   START
+   START AUTH
 ========================================= */
 
 initializeAuthPersistence();
 
 
 /* =========================================
-   GLOBAL ERROR PROTECTION
+   GLOBAL ERROR HANDLER
 ========================================= */
 
 window.addEventListener(
@@ -1592,9 +1509,7 @@ window.addEventListener(
 
 <script>
 
-if(
-  "serviceWorker" in navigator
-){
+if("serviceWorker" in navigator){
 
   window.addEventListener(
     "load",
@@ -1603,13 +1518,22 @@ if(
       navigator
         .serviceWorker
         .register("./sw.js")
-        .catch(
-          error =>
-            console.warn(
-              "Service worker registration failed:",
-              error
-            )
-        );
+        .then(registration => {
+
+          console.log(
+            "E RIDE service worker registered:",
+            registration.scope
+          );
+
+        })
+        .catch(error => {
+
+          console.warn(
+            "Service worker registration failed:",
+            error
+          );
+
+        });
 
     }
   );
