@@ -2,190 +2,324 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="description" content="E RIDE Admin Dashboard">
 
-<title>E RIDE — Admin</title>
+<title>E RIDE — Admin Dashboard</title>
+
+<link rel="manifest" href="./manifest.json">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 
 <style>
 *{
   box-sizing:border-box;
   margin:0;
   padding:0;
-  -webkit-tap-highlight-color:transparent;
 }
 
 :root{
-  --bg:#070a10;
-  --card:#10151f;
-  --card2:#151b27;
-  --border:rgba(255,255,255,.08);
-  --text:#fff;
-  --muted:#8f9aaa;
-  --green:#22c55e;
-  --red:#ef4444;
-  --blue:#3b82f6;
-  --yellow:#f59e0b;
+  --bg:#070b14;
+  --panel:#0f1726;
+  --panel2:#111c2e;
+  --border:#1e293b;
+  --text:#f8fafc;
+  --muted:#94a3b8;
+  --primary:#2563eb;
+  --primary2:#1d4ed8;
+  --success:#22c55e;
+  --danger:#ef4444;
+  --warning:#f59e0b;
+  --purple:#8b5cf6;
+  --cyan:#06b6d4;
+  --shadow:0 15px 45px rgba(0,0,0,.25);
+  --radius:18px;
 }
 
 body{
+  font-family:Inter,system-ui,sans-serif;
   background:var(--bg);
   color:var(--text);
-  font-family:Inter,Arial,sans-serif;
   min-height:100vh;
+}
+
+button,
+input,
+select,
+textarea{
+  font:inherit;
 }
 
 button{
-  font-family:inherit;
   cursor:pointer;
 }
 
-.app{
-  max-width:1100px;
-  margin:auto;
-  min-height:100vh;
-  padding-bottom:40px;
+a{
+  color:inherit;
+  text-decoration:none;
 }
 
-/* HEADER */
+/* LOADING */
 
-.header{
-  position:sticky;
-  top:0;
-  z-index:1000;
-
-  height:70px;
-
+#loadingScreen{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  background:#070b14;
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:15px;
+}
 
-  padding:0 22px;
+.loader{
+  width:42px;
+  height:42px;
+  border:4px solid #1e293b;
+  border-top-color:#3b82f6;
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
 
-  background:rgba(7,10,16,.94);
-  backdrop-filter:blur(18px);
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
 
-  border-bottom:1px solid var(--border);
+/* APP */
+
+#app{
+  display:none;
+}
+
+.layout{
+  min-height:100vh;
+  display:flex;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+  width:260px;
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  background:#0a101c;
+  border-right:1px solid var(--border);
+  padding:22px 15px;
+  z-index:1000;
+  overflow-y:auto;
 }
 
 .brand{
   display:flex;
   align-items:center;
-  gap:11px;
+  gap:12px;
+  padding:5px 10px 25px;
 }
 
-.logo{
-  width:42px;
-  height:42px;
-  display:grid;
-  place-items:center;
+.brandIcon{
+  width:43px;
+  height:43px;
   border-radius:13px;
-  background:linear-gradient(135deg,#22c55e,#86efac);
-  font-size:22px;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  font-size:20px;
 }
 
-.brand-name{
+.brandText strong{
+  display:block;
   font-size:18px;
-  font-weight:800;
 }
 
-.brand-sub{
-  font-size:9px;
+.brandText span{
+  display:block;
   color:var(--muted);
+  font-size:11px;
   margin-top:2px;
-  letter-spacing:.8px;
 }
 
-.admin-btn{
-  border:1px solid var(--border);
-  background:var(--card2);
+.navTitle{
+  color:#64748b;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.3px;
+  padding:12px 12px 8px;
+}
+
+.navBtn{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#94a3b8;
+  text-align:left;
+  padding:12px;
+  border-radius:11px;
+  margin-bottom:3px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  font-weight:600;
+  transition:.2s;
+}
+
+.navBtn:hover{
+  background:#111b2b;
   color:white;
-  padding:10px 14px;
-  border-radius:12px;
-  font-size:11px;
+}
+
+.navBtn.active{
+  background:#172554;
+  color:#60a5fa;
+}
+
+.navIcon{
+  width:22px;
+  text-align:center;
+}
+
+.sidebarBottom{
+  margin-top:25px;
+  padding-top:15px;
+  border-top:1px solid var(--border);
+}
+
+.adminMini{
+  padding:12px;
+  background:#0f1726;
+  border:1px solid var(--border);
+  border-radius:14px;
+  margin-bottom:10px;
+}
+
+.adminMini small{
+  color:var(--muted);
+  display:block;
+  margin-bottom:5px;
+}
+
+.adminMini div{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:13px;
+}
+
+.logoutBtn{
+  width:100%;
+  padding:11px;
+  border:1px solid #3f1d25;
+  border-radius:11px;
+  background:#1f1015;
+  color:#f87171;
   font-weight:700;
+}
+
+/* MOBILE TOP */
+
+.mobileTop{
+  display:none;
 }
 
 /* MAIN */
 
 .main{
-  padding:22px;
+  margin-left:260px;
+  width:calc(100% - 260px);
+  min-height:100vh;
+  padding:25px;
 }
 
-.page-title{
-  font-size:28px;
-  font-weight:800;
-}
-
-.page-sub{
-  color:var(--muted);
-  font-size:11px;
-  margin-top:6px;
-  margin-bottom:22px;
-}
-
-/* STATS */
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  margin-bottom:25px;
-}
-
-.stat{
-  padding:18px;
-  border:1px solid var(--border);
-  background:var(--card);
-  border-radius:19px;
-}
-
-.stat-icon{
-  font-size:20px;
-  margin-bottom:12px;
-}
-
-.stat-value{
-  font-size:24px;
-  font-weight:800;
-}
-
-.stat-label{
-  color:var(--muted);
-  font-size:9px;
-  margin-top:4px;
-}
-
-/* TABS */
-
-.tabs{
+.topbar{
   display:flex;
-  gap:8px;
-  overflow-x:auto;
-  margin-bottom:17px;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+  gap:15px;
 }
 
-.tab{
-  white-space:nowrap;
-  border:1px solid var(--border);
-  background:var(--card);
+.pageTitle h1{
+  font-size:25px;
+  font-weight:800;
+}
+
+.pageTitle p{
   color:var(--muted);
-  padding:11px 15px;
-  border-radius:12px;
-  font-size:10px;
+  font-size:13px;
+  margin-top:5px;
+}
+
+.topActions{
+  display:flex;
+  gap:9px;
+  align-items:center;
+}
+
+.btn{
+  border:1px solid var(--border);
+  background:#111827;
+  color:#fff;
+  padding:10px 14px;
+  border-radius:10px;
   font-weight:700;
+  font-size:13px;
 }
 
-.tab.active{
-  background:var(--green);
-  color:#041008;
-  border-color:var(--green);
+.btn:hover{
+  background:#182236;
 }
 
-/* SECTION */
+.btn.primary{
+  background:var(--primary);
+  border-color:var(--primary);
+}
+
+.btn.primary:hover{
+  background:var(--primary2);
+}
+
+.btn.success{
+  background:#14532d;
+  border-color:#166534;
+  color:#bbf7d0;
+}
+
+.btn.danger{
+  background:#3f1218;
+  border-color:#7f1d1d;
+  color:#fecaca;
+}
+
+.btn.warning{
+  background:#422006;
+  border-color:#78350f;
+  color:#fde68a;
+}
+
+.btn.purple{
+  background:#2e1065;
+  border-color:#4c1d95;
+  color:#ddd6fe;
+}
+
+.btn.small{
+  padding:7px 9px;
+  font-size:11px;
+}
+
+/* SECTIONS */
 
 .section{
   display:none;
@@ -195,778 +329,4375 @@ button{
   display:block;
 }
 
-.section-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:12px;
+/* STATS */
+
+.statsGrid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:20px;
 }
 
-.section-title{
-  font-size:16px;
+.statCard{
+  background:linear-gradient(145deg,#101827,#0d1421);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+
+.statTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
+}
+
+.statIcon{
+  width:39px;
+  height:39px;
+  border-radius:11px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+}
+
+.blue{background:#172554;color:#60a5fa}
+.green{background:#052e16;color:#4ade80}
+.orange{background:#431407;color:#fb923c}
+.purpleBg{background:#2e1065;color:#c084fc}
+.cyanBg{background:#083344;color:#22d3ee}
+.redBg{background:#450a0a;color:#f87171}
+
+.statLabel{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:600;
+}
+
+.statValue{
+  font-size:26px;
   font-weight:800;
 }
 
-.refresh{
+.statSub{
+  color:#64748b;
+  font-size:11px;
+  margin-top:4px;
+}
+
+/* CARDS */
+
+.card{
+  background:var(--panel);
   border:1px solid var(--border);
-  background:var(--card);
-  color:white;
-  padding:9px 12px;
-  border-radius:10px;
+  border-radius:var(--radius);
+  padding:19px;
+  box-shadow:var(--shadow);
+  margin-bottom:18px;
+}
+
+.cardHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.cardHeader h2{
+  font-size:16px;
+}
+
+.cardHeader p{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:4px;
+}
+
+.cardActions{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+
+/* GRID */
+
+.twoCol{
+  display:grid;
+  grid-template-columns:1.35fr .65fr;
+  gap:18px;
+}
+
+.equalGrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
+}
+
+.threeGrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
+
+/* TABLE */
+
+.tableWrap{
+  overflow:auto;
+  border:1px solid var(--border);
+  border-radius:13px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:700px;
+}
+
+th{
+  text-align:left;
+  color:#64748b;
   font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+  padding:12px;
+  background:#0b1220;
+  border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+
+td{
+  padding:12px;
+  border-bottom:1px solid #172033;
+  font-size:12px;
+  color:#dbeafe;
+}
+
+tr:last-child td{
+  border-bottom:0;
+}
+
+tr:hover td{
+  background:#101a2b;
+}
+
+/* BADGES */
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  border-radius:999px;
+  padding:5px 8px;
+  font-size:10px;
+  font-weight:800;
+  text-transform:capitalize;
+}
+
+.badge.green{
+  background:#052e16;
+  color:#4ade80;
+}
+
+.badge.red{
+  background:#450a0a;
+  color:#f87171;
+}
+
+.badge.yellow{
+  background:#422006;
+  color:#fbbf24;
+}
+
+.badge.blue{
+  background:#172554;
+  color:#60a5fa;
+}
+
+.badge.gray{
+  background:#1e293b;
+  color:#cbd5e1;
+}
+
+.badge.purple{
+  background:#2e1065;
+  color:#c084fc;
+}
+
+/* FORMS */
+
+.formGrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:13px;
+}
+
+.formGroup{
+  margin-bottom:13px;
+}
+
+.formGroup.full{
+  grid-column:1/-1;
+}
+
+label{
+  display:block;
+  color:#94a3b8;
+  font-size:11px;
+  font-weight:700;
+  margin-bottom:6px;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  border:1px solid var(--border);
+  background:#0b1220;
+  color:white;
+  border-radius:10px;
+  padding:11px 12px;
+  outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:#2563eb;
+}
+
+textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+/* SEARCH */
+
+.searchRow{
+  display:flex;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.searchRow input{
+  max-width:400px;
 }
 
 /* DRIVER */
 
-.driver-list{
-  display:grid;
-  gap:12px;
-}
-
-.driver-card{
-  padding:17px;
-  border:1px solid var(--border);
-  background:var(--card);
-  border-radius:19px;
-}
-
-.driver-top{
+.driverCell{
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-
-.driver-user{
-  display:flex;
-  align-items:center;
-  gap:11px;
+  gap:9px;
 }
 
 .avatar{
-  width:45px;
-  height:45px;
+  width:35px;
+  height:35px;
   border-radius:50%;
-  background:#202938;
-  display:grid;
-  place-items:center;
-  overflow:hidden;
-  font-weight:800;
-}
-
-.avatar img{
-  width:100%;
-  height:100%;
+  background:#1e293b;
   object-fit:cover;
-}
-
-.driver-name{
-  font-size:13px;
-  font-weight:800;
-}
-
-.driver-email{
-  color:var(--muted);
-  font-size:9px;
-  margin-top:3px;
-}
-
-.badge{
-  padding:6px 9px;
-  border-radius:999px;
-  font-size:8px;
-  font-weight:800;
-}
-
-.badge.pending{
-  color:#fcd34d;
-  background:rgba(245,158,11,.1);
-}
-
-.badge.active{
-  color:#86efac;
-  background:rgba(34,197,94,.1);
-}
-
-.badge.rejected{
-  color:#fca5a5;
-  background:rgba(239,68,68,.1);
-}
-
-.driver-info{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin:15px 0;
-}
-
-.info{
-  padding:10px;
-  background:rgba(255,255,255,.035);
-  border-radius:11px;
-}
-
-.info-label{
-  color:var(--muted);
-  font-size:8px;
-  margin-bottom:4px;
-}
-
-.info-value{
-  font-size:10px;
-  font-weight:700;
-  word-break:break-word;
-}
-
-.driver-actions{
   display:flex;
-  gap:8px;
-}
-
-.approve,
-.reject,
-.view{
-  flex:1;
-  height:43px;
-  border-radius:12px;
-  font-size:10px;
-  font-weight:800;
-}
-
-.approve{
-  border:0;
-  background:var(--green);
-  color:#041008;
-}
-
-.reject{
-  border:1px solid rgba(239,68,68,.2);
-  background:rgba(239,68,68,.07);
-  color:#fca5a5;
-}
-
-.view{
-  border:1px solid var(--border);
-  background:var(--card2);
-  color:white;
-}
-
-/* RIDES */
-
-.ride-list{
-  display:grid;
-  gap:12px;
-}
-
-.ride-card{
-  padding:16px;
-  border:1px solid var(--border);
-  background:var(--card);
-  border-radius:18px;
-}
-
-.ride-top{
-  display:flex;
-  justify-content:space-between;
   align-items:center;
-  margin-bottom:12px;
-}
-
-.ride-id{
-  color:var(--muted);
-  font-size:9px;
-}
-
-.ride-status{
-  font-size:8px;
-  padding:6px 9px;
-  border-radius:999px;
-  background:rgba(59,130,246,.1);
+  justify-content:center;
   color:#93c5fd;
   font-weight:800;
-}
-
-.route{
-  font-size:11px;
-  line-height:1.7;
-}
-
-.route span{
-  color:var(--muted);
-  font-size:8px;
-  text-transform:uppercase;
+  flex:none;
 }
 
 /* EMPTY */
 
 .empty{
-  padding:40px 20px;
   text-align:center;
-  color:var(--muted);
-  border:1px dashed rgba(255,255,255,.1);
-  border-radius:18px;
+  padding:40px 15px;
+  color:#64748b;
 }
 
-.empty-icon{
+.emptyIcon{
   font-size:35px;
   margin-bottom:10px;
+}
+
+/* MAP */
+
+#adminMap{
+  height:440px;
+  width:100%;
+  border-radius:14px;
+  overflow:hidden;
+}
+
+/* RIDE CARD */
+
+.rideCards{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+
+.rideCard{
+  border:1px solid var(--border);
+  background:#0b1220;
+  border-radius:15px;
+  padding:15px;
+}
+
+.rideHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+
+.route{
+  border-left:2px solid #2563eb;
+  padding-left:13px;
+  margin:12px 0;
+}
+
+.routeRow{
+  margin-bottom:11px;
+}
+
+.routeRow:last-child{
+  margin-bottom:0;
+}
+
+.routeLabel{
+  color:#64748b;
+  font-size:9px;
+  text-transform:uppercase;
+  font-weight:800;
+}
+
+.routeText{
+  font-size:12px;
+  margin-top:3px;
+}
+
+.rideMeta{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  margin-top:12px;
+}
+
+.metaBox{
+  background:#111827;
+  padding:8px;
+  border-radius:8px;
+}
+
+.metaBox small{
+  display:block;
+  color:#64748b;
+  font-size:9px;
+}
+
+.metaBox strong{
+  display:block;
+  margin-top:3px;
+  font-size:12px;
 }
 
 /* MODAL */
 
 .modal{
+  display:none;
   position:fixed;
   inset:0;
   z-index:5000;
-  display:none;
-  align-items:flex-end;
+  background:rgba(0,0,0,.72);
+  padding:20px;
+  align-items:center;
   justify-content:center;
-  background:rgba(0,0,0,.75);
 }
 
 .modal.show{
   display:flex;
 }
 
-.modal-card{
-  width:100%;
-  max-width:600px;
-  max-height:85vh;
+.modalBox{
+  width:min(700px,100%);
+  max-height:90vh;
   overflow:auto;
-  padding:22px;
-  background:#111722;
-  border-radius:25px 25px 0 0;
+  background:#0d1523;
   border:1px solid var(--border);
+  border-radius:20px;
+  box-shadow:0 30px 100px rgba(0,0,0,.5);
+  padding:20px;
 }
 
-.modal-title{
-  font-size:18px;
-  font-weight:800;
+.modalHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
   margin-bottom:18px;
 }
 
-.modal-row{
-  padding:13px;
-  background:rgba(255,255,255,.04);
-  border-radius:13px;
-  margin-bottom:8px;
-}
-
-.modal-label{
-  color:var(--muted);
-  font-size:8px;
-  margin-bottom:4px;
-}
-
-.modal-value{
-  font-size:11px;
-  font-weight:700;
-  word-break:break-word;
-}
-
 .close{
-  width:100%;
-  height:48px;
-  margin-top:10px;
   border:0;
-  border-radius:13px;
-  background:rgba(255,255,255,.07);
+  background:#1e293b;
   color:white;
-  font-weight:700;
+  width:33px;
+  height:33px;
+  border-radius:9px;
 }
 
 /* TOAST */
 
-.toast{
+#toastContainer{
   position:fixed;
-  z-index:9000;
-  left:50%;
-  bottom:25px;
-  transform:translate(-50%,20px);
-  width:calc(100% - 30px);
-  max-width:450px;
-  padding:13px 15px;
-  border-radius:14px;
-  background:#1c2431;
+  right:18px;
+  bottom:18px;
+  z-index:10000;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  width:min(370px,calc(100% - 30px));
+}
+
+.toast{
+  background:#111827;
   border:1px solid var(--border);
+  border-radius:13px;
+  padding:13px;
+  box-shadow:0 15px 40px rgba(0,0,0,.35);
+  animation:toastIn .2s ease;
+}
+
+.toast strong{
+  display:block;
+  font-size:13px;
+}
+
+.toast span{
+  display:block;
+  color:#94a3b8;
   font-size:11px;
-  opacity:0;
-  pointer-events:none;
-  transition:.25s;
+  margin-top:3px;
 }
 
-.toast.show{
-  opacity:1;
-  transform:translate(-50%,0);
+.toast.success{
+  border-color:#166534;
 }
 
-/* MOBILE */
+.toast.error{
+  border-color:#7f1d1d;
+}
 
-@media(max-width:700px){
-
-  .main{
-    padding:17px;
+@keyframes toastIn{
+  from{
+    opacity:0;
+    transform:translateY(10px);
   }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
 
-  .stats{
+/* LOGIN BLOCK */
+
+.blocked{
+  min-height:100vh;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:#070b14;
+}
+
+.blockedBox{
+  max-width:450px;
+  width:100%;
+  text-align:center;
+  background:#0f1726;
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:30px;
+}
+
+.blockedBox h2{
+  margin-bottom:8px;
+}
+
+.blockedBox p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+  margin-bottom:20px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+  .statsGrid{
     grid-template-columns:repeat(2,1fr);
   }
 
-  .driver-info{
+  .twoCol,
+  .equalGrid{
+    grid-template-columns:1fr;
+  }
+
+  .rideCards{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:800px){
+  .sidebar{
+    display:none;
+  }
+
+  .main{
+    margin-left:0;
+    width:100%;
+    padding:15px;
+    padding-top:75px;
+  }
+
+  .mobileTop{
+    display:flex;
+    position:fixed;
+    left:0;
+    right:0;
+    top:0;
+    z-index:2000;
+    height:60px;
+    background:#0a101c;
+    border-bottom:1px solid var(--border);
+    align-items:center;
+    justify-content:space-between;
+    padding:0 14px;
+  }
+
+  .mobileBrand{
+    font-weight:800;
+  }
+
+  .mobileMenu{
+    border:1px solid var(--border);
+    background:#111827;
+    color:white;
+    width:38px;
+    height:38px;
+    border-radius:10px;
+  }
+
+  .mobileNav{
+    display:none;
+    position:fixed;
+    top:60px;
+    left:0;
+    right:0;
+    z-index:1900;
+    background:#0a101c;
+    border-bottom:1px solid var(--border);
+    padding:10px;
+    max-height:75vh;
+    overflow:auto;
+  }
+
+  .mobileNav.show{
+    display:block;
+  }
+
+  .topbar{
+    align-items:flex-start;
+  }
+
+  .topActions{
+    display:none;
+  }
+
+  .statsGrid{
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+  }
+
+  .statCard{
+    padding:13px;
+  }
+
+  .statValue{
+    font-size:21px;
+  }
+
+  .formGrid{
+    grid-template-columns:1fr;
+  }
+
+  .formGroup.full{
+    grid-column:auto;
+  }
+
+  .threeGrid{
+    grid-template-columns:1fr;
+  }
+
+  #adminMap{
+    height:350px;
+  }
+}
+
+@media(max-width:500px){
+  .statsGrid{
     grid-template-columns:1fr 1fr;
   }
 
-  .header{
-    padding:0 15px;
+  .card{
+    padding:14px;
+    border-radius:15px;
   }
 
-  .page-title{
-    font-size:23px;
+  .pageTitle h1{
+    font-size:21px;
   }
 
+  .searchRow{
+    flex-direction:column;
+  }
+
+  .searchRow input{
+    max-width:none;
+  }
+
+  .rideMeta{
+    grid-template-columns:1fr 1fr 1fr;
+  }
 }
-
-
-/* ===== E RIDE V2 ADMIN ===== */
-.admin-grid-v2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-.setting-card-v2{padding:16px;border:1px solid var(--border);background:var(--card);border-radius:17px}
-.setting-label-v2{font-size:9px;color:var(--muted);margin-bottom:7px}.setting-input-v2{width:100%;height:43px;background:var(--card2);border:1px solid var(--border);border-radius:12px;color:#fff;padding:0 11px;outline:none}
-.save-setting-v2{height:43px;margin-top:9px;width:100%;border:0;border-radius:12px;background:var(--green);color:#041008;font-weight:800;font-size:10px}
-.admin-action-v2{height:38px;border:1px solid var(--border);background:var(--card2);color:#fff;border-radius:10px;font-size:9px;font-weight:700;padding:0 10px}
-.notice-box-v2{padding:13px;border:1px solid rgba(59,130,246,.18);background:rgba(59,130,246,.06);border-radius:14px;margin-bottom:15px;font-size:10px;color:#bfdbfe}
-@media(max-width:700px){.admin-grid-v2{grid-template-columns:1fr}}
-
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<!-- LOADING -->
 
-<header class="header">
+<div id="loadingScreen">
+  <div class="loader"></div>
+  <strong>Loading E RIDE Admin...</strong>
+  <span style="color:#64748b;font-size:12px">Please wait</span>
+</div>
 
-  <div class="brand">
+<!-- BLOCKED -->
 
-    <div class="logo">🛺</div>
+<div id="blockedScreen" class="blocked">
+  <div class="blockedBox">
+    <div style="font-size:45px;margin-bottom:12px">🔐</div>
+    <h2 id="blockedTitle">Access Denied</h2>
+    <p id="blockedText">
+      You don't have permission to access the E RIDE admin dashboard.
+    </p>
+    <button class="btn primary" onclick="goHome()">Go to Login</button>
+  </div>
+</div>
 
-    <div>
-      <div class="brand-name">E RIDE</div>
-      <div class="brand-sub">ADMIN CONTROL CENTER</div>
-    </div>
+<!-- APP -->
 
+<div id="app">
+
+  <div class="mobileTop">
+    <div class="mobileBrand">🚕 E RIDE <span style="color:#60a5fa">ADMIN</span></div>
+    <button class="mobileMenu" onclick="toggleMobileNav()">☰</button>
   </div>
 
-  <button
-    class="admin-btn"
-    onclick="logout()"
-  >
-    Sign Out
-  </button>
-
-</header>
-
-
-<main class="main">
-
-  <div class="page-title">
-    Admin Dashboard
+  <div class="mobileNav" id="mobileNav">
+    <button class="navBtn active" onclick="showSection('dashboard');closeMobileNav()">📊 Dashboard</button>
+    <button class="navBtn" onclick="showSection('drivers');closeMobileNav()">🚕 Drivers</button>
+    <button class="navBtn" onclick="showSection('customers');closeMobileNav()">👤 Customers</button>
+    <button class="navBtn" onclick="showSection('rides');closeMobileNav()">🚗 Rides</button>
+    <button class="navBtn" onclick="showSection('ratings');closeMobileNav()">⭐ Ratings</button>
+    <button class="navBtn" onclick="showSection('support');closeMobileNav()">🎫 Support</button>
+    <button class="navBtn" onclick="showSection('fare');closeMobileNav()">💰 Fare</button>
+    <button class="navBtn" onclick="showSection('announcements');closeMobileNav()">📢 Announcements</button>
+    <button class="navBtn" onclick="logout()">🚪 Logout</button>
   </div>
 
-  <div class="page-sub">
-    Manage drivers, rides and E RIDE operations.
-  </div>
+  <div class="layout">
 
+    <!-- SIDEBAR -->
 
-  <!-- STATS -->
+    <aside class="sidebar">
 
-  <section class="stats">
-
-    <div class="stat">
-      <div class="stat-icon">🧑‍✈️</div>
-      <div class="stat-value" id="totalDrivers">0</div>
-      <div class="stat-label">Total Drivers</div>
-    </div>
-
-    <div class="stat">
-      <div class="stat-icon">⏳</div>
-      <div class="stat-value" id="pendingDrivers">0</div>
-      <div class="stat-label">Pending Approval</div>
-    </div>
-
-    <div class="stat">
-      <div class="stat-icon">🟢</div>
-      <div class="stat-value" id="onlineDrivers">0</div>
-      <div class="stat-label">Online Drivers</div>
-    </div>
-
-    <div class="stat">
-      <div class="stat-icon">🚕</div>
-      <div class="stat-value" id="totalRides">0</div>
-      <div class="stat-label">Total Rides</div>
-    </div>
-
-  </section>
-
-
-  <!-- TABS -->
-
-  
-<section class="admin-grid-v2">
-  <div class="setting-card-v2">
-    <div class="setting-label-v2">Base fare (₹)</div><input class="setting-input-v2" id="baseFareInput" type="number" min="0" step="1" value="20">
-    <div class="setting-label-v2" style="margin-top:10px">Per KM (₹)</div><input class="setting-input-v2" id="perKmInput" type="number" min="0" step="1" value="12">
-    <button class="save-setting-v2" onclick="saveFareSettingsV2()">SAVE FARE SETTINGS</button>
-  </div>
-  <div class="setting-card-v2">
-    <div class="setting-label-v2">Push/in-app announcement</div>
-    <input class="setting-input-v2" id="noticeTitleInput" placeholder="Title">
-    <input class="setting-input-v2" id="noticeBodyInput" placeholder="Message" style="margin-top:8px">
-    <button class="save-setting-v2" onclick="sendAdminNoticeV2()">SEND ANNOUNCEMENT</button>
-  </div>
-</section>
-
-<div class="tabs">
-
-    <button
-      class="tab active"
-      onclick="showTab('drivers',this)"
-    >
-      Drivers
-    </button>
-
-    <button
-      class="tab"
-      onclick="showTab('pending',this)"
-    >
-      Pending
-    </button>
-
-    <button
-      class="tab"
-      onclick="showTab('rides',this)"
-    >
-      Rides
-    </button>
-
-  </div>
-
-
-  <!-- ALL DRIVERS -->
-
-  <section
-    class="section active"
-    id="driversSection"
-  >
-
-    <div class="section-head">
-
-      <div class="section-title">
-        All Drivers
+      <div class="brand">
+        <div class="brandIcon">E</div>
+        <div class="brandText">
+          <strong>E RIDE</strong>
+          <span>ADMIN CONTROL</span>
+        </div>
       </div>
 
-      <button
-        class="refresh"
-        onclick="loadDrivers()"
-      >
-        ↻ Refresh
+      <div class="navTitle">OVERVIEW</div>
+
+      <button class="navBtn active" data-section="dashboard" onclick="showSection('dashboard')">
+        <span class="navIcon">📊</span>
+        Dashboard
       </button>
 
-    </div>
+      <div class="navTitle">MANAGEMENT</div>
 
-    <div
-      class="driver-list"
-      id="driverList"
-    ></div>
+      <button class="navBtn" data-section="drivers" onclick="showSection('drivers')">
+        <span class="navIcon">🚕</span>
+        Drivers
+      </button>
 
-  </section>
+      <button class="navBtn" data-section="customers" onclick="showSection('customers')">
+        <span class="navIcon">👤</span>
+        Customers
+      </button>
 
+      <button class="navBtn" data-section="rides" onclick="showSection('rides')">
+        <span class="navIcon">🚗</span>
+        Rides
+      </button>
 
-  <!-- PENDING -->
+      <button class="navBtn" data-section="ratings" onclick="showSection('ratings')">
+        <span class="navIcon">⭐</span>
+        Ratings
+      </button>
 
-  <section
-    class="section"
-    id="pendingSection"
-  >
+      <button class="navBtn" data-section="support" onclick="showSection('support')">
+        <span class="navIcon">🎫</span>
+        Support
+      </button>
 
-    <div class="section-head">
+      <div class="navTitle">BUSINESS</div>
 
-      <div class="section-title">
-        Driver Applications
+      <button class="navBtn" data-section="fare" onclick="showSection('fare')">
+        <span class="navIcon">💰</span>
+        Fare Settings
+      </button>
+
+      <button class="navBtn" data-section="announcements" onclick="showSection('announcements')">
+        <span class="navIcon">📢</span>
+        Announcements
+      </button>
+
+      <div class="sidebarBottom">
+
+        <div class="adminMini">
+          <small>Signed in as</small>
+          <div id="adminEmail">Loading...</div>
+        </div>
+
+        <button class="logoutBtn" onclick="logout()">
+          🚪 Sign Out
+        </button>
+
       </div>
 
-      <button
-        class="refresh"
-        onclick="loadDrivers()"
-      >
-        ↻ Refresh
-      </button>
+    </aside>
 
-    </div>
+    <!-- MAIN -->
 
-    <div
-      class="driver-list"
-      id="pendingList"
-    ></div>
+    <main class="main">
 
-  </section>
+      <!-- TOP -->
 
+      <div class="topbar">
 
-  <!-- RIDES -->
+        <div class="pageTitle">
+          <h1 id="pageHeading">Dashboard</h1>
+          <p id="pageSubheading">E RIDE platform overview</p>
+        </div>
 
-  <section
-    class="section"
-    id="ridesSection"
-  >
+        <div class="topActions">
+          <button class="btn" onclick="refreshAll()">↻ Refresh</button>
+          <button class="btn danger" onclick="logout()">Logout</button>
+        </div>
 
-    <div class="section-head">
-
-      <div class="section-title">
-        Ride Monitoring
       </div>
 
-      <button
-        class="refresh"
-        onclick="loadRides()"
-      >
-        ↻ Refresh
-      </button>
+      <!-- ================= DASHBOARD ================= -->
 
+      <section id="section-dashboard" class="section active">
+
+        <div class="statsGrid">
+
+          <div class="statCard">
+            <div class="statTop">
+              <span class="statLabel">TOTAL USERS</span>
+              <div class="statIcon blue">👥</div>
+            </div>
+            <div class="statValue" id="statUsers">0</div>
+            <div class="statSub">All registered users</div>
+          </div>
+
+          <div class="statCard">
+            <div class="statTop">
+              <span class="statLabel">DRIVERS</span>
+              <div class="statIcon green">🚕</div>
+            </div>
+            <div class="statValue" id="statDrivers">0</div>
+            <div class="statSub">
+              <span id="statOnlineDrivers">0</span> online
+            </div>
+          </div>
+
+          <div class="statCard">
+            <div class="statTop">
+              <span class="statLabel">CUSTOMERS</span>
+              <div class="statIcon purpleBg">👤</div>
+            </div>
+            <div class="statValue" id="statCustomers">0</div>
+            <div class="statSub">Registered customers</div>
+          </div>
+
+          <div class="statCard">
+            <div class="statTop">
+              <span class="statLabel">PENDING DRIVERS</span>
+              <div class="statIcon orange">⏳</div>
+            </div>
+            <div class="statValue" id="statPending">0</div>
+            <div class="statSub">Awaiting approval</div>
+          </div>
+
+          <div class="statCard">
+            <div class="statTop">
+              <span class="statLabel">TOTAL RIDES</span>
+              <div class="statIcon cyanBg">🚗</div>
+            </div>
+            <div class="statValue" id="statRides">0</div>
+            <div class="statSub">All ride requests</div>
+          </div>
+
+          <div class="statCard">
+            <div class="statTop">
+              <span class="statLabel">COMPLETED</span>
+              <div class="statIcon green">✓</div>
+            </div>
+            <div class="statValue" id="statCompleted">0</div>
+            <div class="statSub">Successful rides</div>
+          </div>
+
+          <div class="statCard">
+            <div class="statTop">
+              <span class="statLabel">CANCELLED</span>
+              <div class="statIcon redBg">✕</div>
+            </div>
+            <div class="statValue" id="statCancelled">0</div>
+            <div class="statSub">Cancelled rides</div>
+          </div>
+
+          <div class="statCard">
+            <div class="statTop">
+              <span class="statLabel">REVENUE</span>
+              <div class="statIcon purpleBg">₹</div>
+            </div>
+            <div class="statValue" id="statRevenue">₹0</div>
+            <div class="statSub">Completed ride value</div>
+          </div>
+
+        </div>
+
+        <div class="twoCol">
+
+          <div class="card">
+
+            <div class="cardHeader">
+              <div>
+                <h2>Live Ride Monitor</h2>
+                <p>Current active/searching rides</p>
+              </div>
+
+              <button class="btn small" onclick="loadRides()">Refresh</button>
+            </div>
+
+            <div id="liveRideCards" class="rideCards"></div>
+
+          </div>
+
+          <div class="card">
+
+            <div class="cardHeader">
+              <div>
+                <h2>Quick Actions</h2>
+                <p>Admin shortcuts</p>
+              </div>
+            </div>
+
+            <div style="display:grid;gap:9px">
+
+              <button class="btn primary" onclick="showSection('drivers')">
+                🚕 Manage Drivers
+              </button>
+
+              <button class="btn" onclick="showSection('customers')">
+                👤 Manage Customers
+              </button>
+
+              <button class="btn" onclick="showSection('rides')">
+                🚗 View All Rides
+              </button>
+
+              <button class="btn purple" onclick="showSection('fare')">
+                💰 Update Fare
+              </button>
+
+              <button class="btn warning" onclick="showSection('announcements')">
+                📢 Send Announcement
+              </button>
+
+              <button class="btn" onclick="showSection('support')">
+                🎫 Open Support
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ================= DRIVERS ================= -->
+
+      <section id="section-drivers" class="section">
+
+        <div class="card">
+
+          <div class="cardHeader">
+            <div>
+              <h2>Driver Management</h2>
+              <p>Approve, disable, inspect and manage E RIDE drivers.</p>
+            </div>
+
+            <div class="cardActions">
+              <button class="btn small" onclick="loadDrivers()">↻ Refresh</button>
+              <button class="btn warning small" onclick="filterDrivers('pending')">
+                Pending
+              </button>
+              <button class="btn small" onclick="filterDrivers('all')">
+                All
+              </button>
+            </div>
+          </div>
+
+          <div class="searchRow">
+            <input
+              id="driverSearch"
+              placeholder="Search driver by name, email, phone..."
+              oninput="renderDrivers()"
+            >
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Driver</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Online</th>
+                  <th>Vehicle</th>
+                  <th>Rating</th>
+                  <th>Joined</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="driversTable"></tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ================= CUSTOMERS ================= -->
+
+      <section id="section-customers" class="section">
+
+        <div class="card">
+
+          <div class="cardHeader">
+            <div>
+              <h2>Customer Management</h2>
+              <p>View registered customers and ride activity.</p>
+            </div>
+
+            <button class="btn small" onclick="loadUsers()">↻ Refresh</button>
+          </div>
+
+          <div class="searchRow">
+            <input
+              id="customerSearch"
+              placeholder="Search customer..."
+              oninput="renderCustomers()"
+            >
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Joined</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="customersTable"></tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ================= RIDES ================= -->
+
+      <section id="section-rides" class="section">
+
+        <div class="card">
+
+          <div class="cardHeader">
+            <div>
+              <h2>All Rides</h2>
+              <p>Monitor ride status, customer, driver and fare.</p>
+            </div>
+
+            <button class="btn small" onclick="loadRides()">↻ Refresh</button>
+          </div>
+
+          <div class="searchRow">
+
+            <input
+              id="rideSearch"
+              placeholder="Search ride ID, customer, driver..."
+              oninput="renderRides()"
+            >
+
+            <select id="rideStatusFilter" onchange="renderRides()">
+              <option value="all">All statuses</option>
+              <option value="searching">Searching</option>
+              <option value="accepted">Accepted</option>
+              <option value="arrived">Arrived</option>
+              <option value="started">Started</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ride</th>
+                  <th>Customer</th>
+                  <th>Driver</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Fare</th>
+                  <th>Created</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="ridesTable"></tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="cardHeader">
+            <div>
+              <h2>Ride Map</h2>
+              <p>Pickup, destination and driver locations where available.</p>
+            </div>
+          </div>
+
+          <div id="adminMap"></div>
+
+        </div>
+
+      </section>
+
+      <!-- ================= RATINGS ================= -->
+
+      <section id="section-ratings" class="section">
+
+        <div class="statsGrid">
+
+          <div class="statCard">
+            <div class="statTop">
+              <span class="statLabel">TOTAL RATINGS</span>
+              <div class="statIcon purpleBg">⭐</div>
+            </div>
+            <div class="statValue" id="ratingCount">0</div>
+          </div>
+
+          <div class="statCard">
+            <div class="statTop">
+              <span class="statLabel">AVERAGE</span>
+              <div class="statIcon orange">★</div>
+            </div>
+            <div class="statValue" id="ratingAverage">0.0</div>
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="cardHeader">
+            <div>
+              <h2>Customer Ratings & Reviews</h2>
+              <p>Review feedback received after completed rides.</p>
+            </div>
+
+            <button class="btn small" onclick="loadRatings()">↻ Refresh</button>
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rating</th>
+                  <th>Customer</th>
+                  <th>Driver</th>
+                  <th>Review</th>
+                  <th>Ride</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody id="ratingsTable"></tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ================= SUPPORT ================= -->
+
+      <section id="section-support" class="section">
+
+        <div class="card">
+
+          <div class="cardHeader">
+            <div>
+              <h2>Help & Support</h2>
+              <p>Manage customer and driver support requests.</p>
+            </div>
+
+            <button class="btn small" onclick="loadSupport()">↻ Refresh</button>
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ticket</th>
+                  <th>User</th>
+                  <th>Subject</th>
+                  <th>Message</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody id="supportTable"></tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ================= FARE ================= -->
+
+      <section id="section-fare" class="section">
+
+        <div class="equalGrid">
+
+          <div class="card">
+
+            <div class="cardHeader">
+              <div>
+                <h2>Fare Settings</h2>
+                <p>These values are used by the customer ride calculator.</p>
+              </div>
+            </div>
+
+            <div class="formGroup">
+              <label>Base Fare (₹)</label>
+              <input id="baseFare" type="number" min="0" step="1">
+            </div>
+
+            <div class="formGroup">
+              <label>Per KM Fare (₹)</label>
+              <input id="perKmFare" type="number" min="0" step="0.5">
+            </div>
+
+            <button class="btn primary" onclick="saveFareSettings()">
+              💾 Save Fare Settings
+            </button>
+
+          </div>
+
+          <div class="card">
+
+            <div class="cardHeader">
+              <div>
+                <h2>Fare Preview</h2>
+                <p>Example calculation.</p>
+              </div>
+            </div>
+
+            <div class="formGroup">
+              <label>Distance (KM)</label>
+              <input id="previewDistance" type="number" value="5" min="0" oninput="updateFarePreview()">
+            </div>
+
+            <div style="font-size:30px;font-weight:800;margin:20px 0" id="farePreview">
+              ₹80
+            </div>
+
+            <div style="color:#64748b;font-size:11px">
+              Formula: Base Fare + (Distance × Per KM)
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="cardHeader">
+            <div>
+              <h2>Business Summary</h2>
+              <p>Fare configuration currently used by E RIDE.</p>
+            </div>
+          </div>
+
+          <div class="threeGrid">
+
+            <div class="metaBox">
+              <small>BASE FARE</small>
+              <strong id="fareSummaryBase">₹0</strong>
+            </div>
+
+            <div class="metaBox">
+              <small>PER KM</small>
+              <strong id="fareSummaryKm">₹0</strong>
+            </div>
+
+            <div class="metaBox">
+              <small>PAYMENT</small>
+              <strong>Cash</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ================= ANNOUNCEMENTS ================= -->
+
+      <section id="section-announcements" class="section">
+
+        <div class="equalGrid">
+
+          <div class="card">
+
+            <div class="cardHeader">
+              <div>
+                <h2>Send Announcement</h2>
+                <p>Send an in-app notification to selected users or everyone.</p>
+              </div>
+            </div>
+
+            <div class="formGroup">
+              <label>Title</label>
+              <input id="noticeTitle" placeholder="E RIDE Update">
+            </div>
+
+            <div class="formGroup">
+              <label>Message</label>
+              <textarea id="noticeBody" placeholder="Write your announcement..."></textarea>
+            </div>
+
+            <div class="formGroup">
+              <label>Audience</label>
+              <select id="noticeAudience">
+                <option value="all">Everyone</option>
+                <option value="drivers">Drivers only</option>
+                <option value="customers">Customers only</option>
+              </select>
+            </div>
+
+            <button class="btn primary" onclick="sendAnnouncement()">
+              📢 Send Announcement
+            </button>
+
+          </div>
+
+          <div class="card">
+
+            <div class="cardHeader">
+              <div>
+                <h2>Notification Info</h2>
+                <p>How announcements work.</p>
+              </div>
+            </div>
+
+            <div style="line-height:1.8;color:#94a3b8;font-size:12px">
+
+              <p>✓ Announcement is stored in Firestore.</p>
+              <p>✓ Target users see it in their notification area.</p>
+              <p>✓ Admin can send to everyone.</p>
+              <p>✓ Driver-only announcements are supported.</p>
+              <p>✓ Customer-only announcements are supported.</p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- MODAL -->
+
+<div class="modal" id="modal">
+
+  <div class="modalBox">
+
+    <div class="modalHeader">
+      <h2 id="modalTitle">Details</h2>
+      <button class="close" onclick="closeModal()">✕</button>
     </div>
 
-    <div
-      class="ride-list"
-      id="rideList"
-    ></div>
+    <div id="modalBody"></div>
 
-  </section>
-
-</main>
+  </div>
 
 </div>
 
-
-<!-- DRIVER DETAILS MODAL -->
-
-<div
-  class="modal"
-  id="driverModal"
-  onclick="closeModalOutside(event)"
->
-
-  <div class="modal-card">
-
-    <div class="modal-title">
-      Driver Details
-    </div>
-
-    <div id="driverDetails"></div>
-
-    <button
-      class="close"
-      onclick="closeDriverModal()"
-    >
-      Close
-    </button>
-
-  </div>
-
-</div>
-
-
-<div
-  class="toast"
-  id="toast"
-></div>
-
+<div id="toastContainer"></div>
 
 <script type="module">
 
+/* =========================================================
+   FIREBASE
+========================================================= */
+
 import {
   initializeApp
-} from
-"https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 
 import {
   getAuth,
   onAuthStateChanged,
+  setPersistence,
+  browserLocalPersistence,
   signOut
-} from
-"https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 import {
   getFirestore,
   collection,
-  getDocs,
-  getDoc,
   doc,
-  updateDoc,
-  setDoc,
+  getDoc,
+  getDocs,
   addDoc,
-  serverTimestamp,
+  setDoc,
+  updateDoc,
+  deleteDoc,
   query,
+  where,
+  limit,
   orderBy,
-  limit
-} from
-"https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+  serverTimestamp,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
-
-/* ==========================================
-   FIREBASE
-========================================== */
 
 const firebaseConfig = {
-
-  apiKey:
-    "AIzaSyBKuGjmLBUbPCEAQglZK7pCFxH1bnh7OF4",
-
-  authDomain:
-    "e-ride-70342.firebaseapp.com",
-
-  projectId:
-    "e-ride-70342",
-
-  storageBucket:
-    "e-ride-70342.firebasestorage.app",
-
-  messagingSenderId:
-    "946431084655",
-
-  appId:
-    "1:946431084655:web:eddcb4fffe883d4fdf659a",
-
-  measurementId:
-    "G-WZ5YPZ4YZD"
-
+  apiKey: "AIzaSyBKuGjmLBUbPCEAQglZK7PcfXh1bnh7OF4",
+  authDomain: "e-ride-70342.firebaseapp.com",
+  projectId: "e-ride-70342",
+  storageBucket: "e-ride-70342.firebasestorage.app",
+  messagingSenderId: "946431084655",
+  appId: "1:946431084655:web:eddcb4fffe883d4fdf659a",
+  measurementId: "G-WZ5YPZ4YZD"
 };
 
-
-const app =
-  initializeApp(firebaseConfig);
-
-const auth =
-  getAuth(app);
-
-const db =
-  getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 
-/* ==========================================
-   VARIABLES
-========================================== */
+/* =========================================================
+   GLOBAL STATE
+========================================================= */
 
 let currentUser = null;
+let adminProfile = null;
 
-let drivers = [];
+let allUsers = [];
+let allDrivers = [];
+let allRides = [];
+let allRatings = [];
+let allSupport = [];
 
-let rides = [];
+let driverFilter = "all";
+
+let rideMap = null;
+let mapLayers = [];
+
+let activeListeners = [];
 
 
-/* ==========================================
-   AUTH + ADMIN SECURITY
-========================================== */
+/* =========================================================
+   HELPERS
+========================================================= */
 
-onAuthStateChanged(
-  auth,
-  async user => {
+function $(id){
+  return document.getElementById(id);
+}
 
-    if (!user) {
+function escapeHTML(value){
+  if(value === null || value === undefined) return "";
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
 
-      window.location.href =
-        "index.html";
+function formatDate(value){
 
-      return;
+  if(!value) return "—";
 
+  try{
+
+    let date;
+
+    if(value?.toDate){
+      date = value.toDate();
+    }else if(value instanceof Date){
+      date = value;
+    }else{
+      date = new Date(value);
     }
 
+    if(isNaN(date.getTime())) return "—";
+
+    return date.toLocaleString("en-IN",{
+      day:"2-digit",
+      month:"short",
+      year:"numeric",
+      hour:"2-digit",
+      minute:"2-digit"
+    });
+
+  }catch{
+    return "—";
+  }
+}
+
+function money(value){
+  const n = Number(value || 0);
+  return "₹" + Math.round(n).toLocaleString("en-IN");
+}
+
+function shortId(id){
+  if(!id) return "—";
+  return id.length > 10 ? id.slice(0,8)+"..." : id;
+}
+
+function statusBadge(status){
+
+  const s = String(status || "unknown").toLowerCase();
+
+  let cls = "gray";
+
+  if(
+    ["completed","active","online","approved"].includes(s)
+  ) cls = "green";
+
+  if(
+    ["cancelled","disabled","rejected","offline"].includes(s)
+  ) cls = "red";
+
+  if(
+    ["pending","searching","arrived"].includes(s)
+  ) cls = "yellow";
+
+  if(
+    ["accepted","started"].includes(s)
+  ) cls = "blue";
+
+  return `<span class="badge ${cls}">${escapeHTML(s)}</span>`;
+}
+
+function toast(title,message,type=""){
+
+  const box = document.createElement("div");
+
+  box.className = `toast ${type}`;
+
+  box.innerHTML = `
+    <strong>${escapeHTML(title)}</strong>
+    <span>${escapeHTML(message)}</span>
+  `;
+
+  $("toastContainer").appendChild(box);
+
+  setTimeout(()=>{
+    box.remove();
+  },4500);
+}
+
+function goHome(){
+  location.href = "./index.html";
+}
+
+window.goHome = goHome;
+
+
+/* =========================================================
+   AUTH BOOT
+========================================================= */
+
+async function bootAuth(){
+
+  try{
+
+    await setPersistence(
+      auth,
+      browserLocalPersistence
+    );
+
+  }catch(error){
+
+    console.error("Persistence error:",error);
+
+  }
+
+  onAuthStateChanged(auth, async(user)=>{
+
+    if(!user){
+
+      currentUser = null;
+
+      $("loadingScreen").style.display = "none";
+      $("app").style.display = "none";
+      $("blockedScreen").style.display = "flex";
+
+      $("blockedTitle").textContent = "Login Required";
+      $("blockedText").textContent =
+        "Please sign in with your E RIDE administrator Google account.";
+
+      return;
+    }
 
     currentUser = user;
 
+    try{
 
-    try {
+      const adminRef = doc(db,"users",user.uid);
+      const adminSnap = await getDoc(adminRef);
 
-      const userRef =
-        doc(
-          db,
-          "users",
-          user.uid
-        );
+      if(
+        !adminSnap.exists() ||
+        adminSnap.data().role !== "admin"
+      ){
 
-
-      const snap =
-        await getDoc(userRef);
-
-
-      if (!snap.exists()) {
-
-        showToast(
-          "User profile not found."
-        );
-
-        await signOut(auth);
+        await checkAdminCollection(user);
 
         return;
+      }
+
+      adminProfile = adminSnap.data();
+
+      await startAdmin();
+
+    }catch(error){
+
+      console.error(error);
+
+      $("loadingScreen").style.display = "none";
+      $("blockedScreen").style.display = "flex";
+
+      $("blockedTitle").textContent = "Access Error";
+      $("blockedText").textContent =
+        "Unable to verify administrator access.";
+
+    }
+
+  });
+
+}
+
+async function checkAdminCollection(user){
+
+  try{
+
+    const adminSnap = await getDoc(
+      doc(db,"admins",user.uid)
+    );
+
+    if(
+      adminSnap.exists() &&
+      adminSnap.data().role === "admin"
+    ){
+
+      adminProfile = adminSnap.data();
+
+      await startAdmin();
+
+      return;
+    }
+
+    $("loadingScreen").style.display = "none";
+    $("app").style.display = "none";
+    $("blockedScreen").style.display = "flex";
+
+    $("blockedTitle").textContent = "Admin Access Required";
+    $("blockedText").textContent =
+      "This Google account is not registered as an E RIDE administrator.";
+
+  }catch(error){
+
+    console.error(error);
+
+    $("loadingScreen").style.display = "none";
+    $("blockedScreen").style.display = "flex";
+
+    $("blockedTitle").textContent = "Access Denied";
+    $("blockedText").textContent =
+      "Your account does not have admin permissions.";
+
+  }
+
+}
+
+
+/* =========================================================
+   START ADMIN
+========================================================= */
+
+async function startAdmin(){
+
+  $("loadingScreen").style.display = "none";
+  $("blockedScreen").style.display = "none";
+  $("app").style.display = "block";
+
+  $("adminEmail").textContent =
+    currentUser?.email || "Administrator";
+
+  initMap();
+
+  await refreshAll();
+
+  registerServiceWorker();
+
+  listenForLiveRides();
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+const pageInfo = {
+
+  dashboard:[
+    "Dashboard",
+    "E RIDE platform overview"
+  ],
+
+  drivers:[
+    "Drivers",
+    "Driver approval and management"
+  ],
+
+  customers:[
+    "Customers",
+    "Registered E RIDE customers"
+  ],
+
+  rides:[
+    "Rides",
+    "Monitor all ride activity"
+  ],
+
+  ratings:[
+    "Ratings",
+    "Customer feedback and reviews"
+  ],
+
+  support:[
+    "Support",
+    "Customer and driver support"
+  ],
+
+  fare:[
+    "Fare Settings",
+    "Configure E RIDE fare calculation"
+  ],
+
+  announcements:[
+    "Announcements",
+    "Send platform notifications"
+  ]
+
+};
+
+function showSection(section){
+
+  document.querySelectorAll(".section")
+    .forEach(el=>el.classList.remove("active"));
+
+  const target = $("section-"+section);
+
+  if(target){
+    target.classList.add("active");
+  }
+
+  document.querySelectorAll(".navBtn[data-section]")
+    .forEach(btn=>{
+      btn.classList.toggle(
+        "active",
+        btn.dataset.section === section
+      );
+    });
+
+  const info = pageInfo[section] || ["E RIDE","Admin"];
+
+  $("pageHeading").textContent = info[0];
+  $("pageSubheading").textContent = info[1];
+
+  if(section === "drivers") loadDrivers();
+  if(section === "customers") loadUsers();
+  if(section === "rides") loadRides();
+  if(section === "ratings") loadRatings();
+  if(section === "support") loadSupport();
+  if(section === "fare") loadFareSettings();
+
+  closeMobileNav();
+
+}
+
+window.showSection = showSection;
+
+
+/* =========================================================
+   MOBILE NAV
+========================================================= */
+
+function toggleMobileNav(){
+  $("mobileNav").classList.toggle("show");
+}
+
+function closeMobileNav(){
+  $("mobileNav").classList.remove("show");
+}
+
+window.toggleMobileNav = toggleMobileNav;
+window.closeMobileNav = closeMobileNav;
+
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+async function refreshAll(){
+
+  try{
+
+    await Promise.all([
+      loadUsers(),
+      loadDrivers(),
+      loadRides(),
+      loadRatings(),
+      loadSupport(),
+      loadFareSettings()
+    ]);
+
+    updateStats();
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Refresh failed",
+      error.message || "Unable to load data",
+      "error"
+    );
+
+  }
+
+}
+
+window.refreshAll = refreshAll;
+
+
+/* =========================================================
+   USERS
+========================================================= */
+
+async function loadUsers(){
+
+  try{
+
+    const snap = await getDocs(
+      collection(db,"users")
+    );
+
+    allUsers = [];
+
+    snap.forEach(item=>{
+
+      allUsers.push({
+        id:item.id,
+        ...item.data()
+      });
+
+    });
+
+    renderCustomers();
+    updateStats();
+
+  }catch(error){
+
+    console.error("Users:",error);
+
+    toast(
+      "Users error",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+function renderCustomers(){
+
+  const tbody = $("customersTable");
+
+  if(!tbody) return;
+
+  const search =
+    ($("customerSearch")?.value || "")
+    .toLowerCase()
+    .trim();
+
+  const customers = allUsers.filter(user=>{
+
+    if(user.role === "driver" || user.role === "admin"){
+      return false;
+    }
+
+    if(!search) return true;
+
+    const text = [
+      user.name,
+      user.displayName,
+      user.email,
+      user.phone,
+      user.uid
+    ].join(" ").toLowerCase();
+
+    return text.includes(search);
+
+  });
+
+  if(!customers.length){
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6">
+          <div class="empty">
+            <div class="emptyIcon">👤</div>
+            No customers found.
+          </div>
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tbody.innerHTML = customers.map(user=>{
+
+    const name =
+      user.name ||
+      user.displayName ||
+      "Customer";
+
+    const photo =
+      user.photoURL ||
+      "";
+
+    const avatar = photo
+      ? `<img class="avatar" src="${escapeHTML(photo)}">`
+      : `<div class="avatar">${escapeHTML(name.charAt(0).toUpperCase())}</div>`;
+
+    const status =
+      user.accountStatus ||
+      "active";
+
+    return `
+      <tr>
+
+        <td>
+          <div class="driverCell">
+            ${avatar}
+            <div>
+              <strong>${escapeHTML(name)}</strong>
+              <div style="color:#64748b;font-size:10px">
+                ${shortId(user.id)}
+              </div>
+            </div>
+          </div>
+        </td>
+
+        <td>${escapeHTML(user.email || "—")}</td>
+
+        <td>${escapeHTML(user.phone || "—")}</td>
+
+        <td>${statusBadge(status)}</td>
+
+        <td>${formatDate(user.createdAt)}</td>
+
+        <td>
+          <button
+            class="btn small"
+            onclick="viewUser('${user.id}')"
+          >
+            View
+          </button>
+        </td>
+
+      </tr>
+    `;
+
+  }).join("");
+
+}
+
+window.renderCustomers = renderCustomers;
+
+
+/* =========================================================
+   DRIVERS
+========================================================= */
+
+async function loadDrivers(){
+
+  try{
+
+    const snap = await getDocs(
+      collection(db,"drivers")
+    );
+
+    allDrivers = [];
+
+    snap.forEach(item=>{
+
+      allDrivers.push({
+        id:item.id,
+        ...item.data()
+      });
+
+    });
+
+    renderDrivers();
+    updateStats();
+
+  }catch(error){
+
+    console.error("Drivers:",error);
+
+    toast(
+      "Drivers error",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+function filterDrivers(filter){
+
+  driverFilter = filter;
+
+  renderDrivers();
+
+}
+
+window.filterDrivers = filterDrivers;
+
+function renderDrivers(){
+
+  const tbody = $("driversTable");
+
+  if(!tbody) return;
+
+  const search =
+    ($("driverSearch")?.value || "")
+    .toLowerCase()
+    .trim();
+
+  let drivers = [...allDrivers];
+
+  if(driverFilter === "pending"){
+
+    drivers = drivers.filter(driver=>
+      (driver.accountStatus || "pending") === "pending"
+    );
+
+  }
+
+  if(search){
+
+    drivers = drivers.filter(driver=>{
+
+      const text = [
+        driver.name,
+        driver.email,
+        driver.phone,
+        driver.vehicleNumber,
+        driver.vehicleType,
+        driver.id
+      ].join(" ").toLowerCase();
+
+      return text.includes(search);
+
+    });
+
+  }
+
+  if(!drivers.length){
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8">
+          <div class="empty">
+            <div class="emptyIcon">🚕</div>
+            No drivers found.
+          </div>
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tbody.innerHTML = drivers.map(driver=>{
+
+    const name =
+      driver.name ||
+      "Driver";
+
+    const status =
+      driver.accountStatus ||
+      "pending";
+
+    const vehicle =
+      driver.vehicleNumber ||
+      driver.vehicleType ||
+      "Not added";
+
+    const rating =
+      Number(driver.rating || 0);
+
+    const photo =
+      driver.photoURL ||
+      "";
+
+    const avatar = photo
+      ? `<img class="avatar" src="${escapeHTML(photo)}">`
+      : `<div class="avatar">${escapeHTML(name.charAt(0).toUpperCase())}</div>`;
+
+    return `
+      <tr>
+
+        <td>
+          <div class="driverCell">
+
+            ${avatar}
+
+            <div>
+              <strong>${escapeHTML(name)}</strong>
+
+              <div style="color:#64748b;font-size:10px">
+                ${escapeHTML(driver.email || shortId(driver.id))}
+              </div>
+
+            </div>
+
+          </div>
+        </td>
+
+        <td>${escapeHTML(driver.phone || "—")}</td>
+
+        <td>${statusBadge(status)}</td>
+
+        <td>
+          ${
+            driver.online
+              ? `<span class="badge green">● Online</span>`
+              : `<span class="badge gray">Offline</span>`
+          }
+        </td>
+
+        <td>${escapeHTML(vehicle)}</td>
+
+        <td>
+          ⭐ ${rating ? rating.toFixed(1) : "0.0"}
+        </td>
+
+        <td>${formatDate(driver.createdAt)}</td>
+
+        <td>
+
+          <div style="display:flex;gap:5px;flex-wrap:wrap">
+
+            <button
+              class="btn small"
+              onclick="viewDriver('${driver.id}')"
+            >
+              View
+            </button>
+
+            ${
+              status === "pending"
+              ? `
+                <button
+                  class="btn success small"
+                  onclick="approveDriver('${driver.id}')"
+                >
+                  Approve
+                </button>
+
+                <button
+                  class="btn danger small"
+                  onclick="rejectDriver('${driver.id}')"
+                >
+                  Reject
+                </button>
+              `
+              : ""
+            }
+
+            ${
+              status === "active"
+              ? `
+                <button
+                  class="btn danger small"
+                  onclick="disableDriver('${driver.id}')"
+                >
+                  Disable
+                </button>
+              `
+              : ""
+            }
+
+            ${
+              status === "disabled"
+              ? `
+                <button
+                  class="btn success small"
+                  onclick="enableDriver('${driver.id}')"
+                >
+                  Enable
+                </button>
+              `
+              : ""
+            }
+
+          </div>
+
+        </td>
+
+      </tr>
+    `;
+
+  }).join("");
+
+}
+
+window.renderDrivers = renderDrivers;
+
+
+/* =========================================================
+   DRIVER APPROVAL
+========================================================= */
+
+async function approveDriver(uid){
+
+  if(!confirm("Approve this driver?")) return;
+
+  try{
+
+    await updateDoc(
+      doc(db,"drivers",uid),
+      {
+        accountStatus:"active",
+        approvedAt:serverTimestamp(),
+        approvedBy:currentUser.uid,
+        available:false,
+        online:false,
+        updatedAt:serverTimestamp()
+      }
+    );
+
+    await updateUserRoleStatus(
+      uid,
+      {
+        accountStatus:"active"
+      }
+    );
+
+    await sendUserNotification(
+      uid,
+      "Driver Account Approved",
+      "Your E RIDE driver account has been approved. You can now go online."
+    );
+
+    toast(
+      "Driver approved",
+      "The driver can now use E RIDE.",
+      "success"
+    );
+
+    await loadDrivers();
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Approval failed",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+window.approveDriver = approveDriver;
+
+
+async function rejectDriver(uid){
+
+  const reason =
+    prompt(
+      "Reason for rejecting this driver:",
+      "Profile verification required"
+    );
+
+  if(reason === null) return;
+
+  try{
+
+    await updateDoc(
+      doc(db,"drivers",uid),
+      {
+        accountStatus:"rejected",
+        rejectionReason:reason,
+        rejectedAt:serverTimestamp(),
+        rejectedBy:currentUser.uid,
+        online:false,
+        available:false,
+        updatedAt:serverTimestamp()
+      }
+    );
+
+    await updateUserRoleStatus(
+      uid,
+      {
+        accountStatus:"rejected"
+      }
+    );
+
+    await sendUserNotification(
+      uid,
+      "Driver Application Update",
+      `Your driver application was rejected. Reason: ${reason}`
+    );
+
+    toast(
+      "Driver rejected",
+      "Driver status updated.",
+      "success"
+    );
+
+    await loadDrivers();
+
+  }catch(error){
+
+    toast(
+      "Reject failed",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+window.rejectDriver = rejectDriver;
+
+
+async function disableDriver(uid){
+
+  if(!confirm("Disable this driver account?")) return;
+
+  try{
+
+    await updateDoc(
+      doc(db,"drivers",uid),
+      {
+        accountStatus:"disabled",
+        online:false,
+        available:false,
+        disabledAt:serverTimestamp(),
+        disabledBy:currentUser.uid,
+        updatedAt:serverTimestamp()
+      }
+    );
+
+    await updateUserRoleStatus(
+      uid,
+      {
+        accountStatus:"disabled"
+      }
+    );
+
+    await sendUserNotification(
+      uid,
+      "Driver Account Disabled",
+      "Your E RIDE driver account has been temporarily disabled by admin."
+    );
+
+    toast(
+      "Driver disabled",
+      "Driver has been taken offline.",
+      "success"
+    );
+
+    await loadDrivers();
+
+  }catch(error){
+
+    toast(
+      "Disable failed",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+window.disableDriver = disableDriver;
+
+
+async function enableDriver(uid){
+
+  if(!confirm("Enable this driver account?")) return;
+
+  try{
+
+    await updateDoc(
+      doc(db,"drivers",uid),
+      {
+        accountStatus:"active",
+        enabledAt:serverTimestamp(),
+        enabledBy:currentUser.uid,
+        updatedAt:serverTimestamp()
+      }
+    );
+
+    await updateUserRoleStatus(
+      uid,
+      {
+        accountStatus:"active"
+      }
+    );
+
+    await sendUserNotification(
+      uid,
+      "Driver Account Enabled",
+      "Your E RIDE driver account has been enabled again."
+    );
+
+    toast(
+      "Driver enabled",
+      "Driver can now go online.",
+      "success"
+    );
+
+    await loadDrivers();
+
+  }catch(error){
+
+    toast(
+      "Enable failed",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+window.enableDriver = enableDriver;
+
+
+/* =========================================================
+   USER STATUS
+========================================================= */
+
+async function updateUserRoleStatus(uid,data){
+
+  try{
+
+    await updateDoc(
+      doc(db,"users",uid),
+      {
+        ...data,
+        updatedAt:serverTimestamp()
+      }
+    );
+
+  }catch(error){
+
+    console.warn(
+      "User status sync failed:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   DRIVER DETAILS
+========================================================= */
+
+function viewDriver(uid){
+
+  const driver =
+    allDrivers.find(item=>item.id === uid);
+
+  if(!driver) return;
+
+  const rating =
+    Number(driver.rating || 0);
+
+  $("modalTitle").textContent =
+    "Driver Details";
+
+  $("modalBody").innerHTML = `
+
+    <div style="display:flex;gap:15px;align-items:center;margin-bottom:20px">
+
+      ${
+        driver.photoURL
+        ? `<img src="${escapeHTML(driver.photoURL)}"
+             style="width:70px;height:70px;border-radius:50%;object-fit:cover">`
+        : `
+          <div class="avatar" style="width:70px;height:70px;font-size:24px">
+            ${escapeHTML((driver.name || "D").charAt(0).toUpperCase())}
+          </div>
+        `
+      }
+
+      <div>
+        <h2>${escapeHTML(driver.name || "Driver")}</h2>
+        <div style="color:#64748b;font-size:12px">
+          ${escapeHTML(driver.email || "—")}
+        </div>
+        <div style="margin-top:5px">
+          ${statusBadge(driver.accountStatus || "pending")}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="threeGrid">
+
+      <div class="metaBox">
+        <small>PHONE</small>
+        <strong>${escapeHTML(driver.phone || "—")}</strong>
+      </div>
+
+      <div class="metaBox">
+        <small>VEHICLE TYPE</small>
+        <strong>${escapeHTML(driver.vehicleType || "—")}</strong>
+      </div>
+
+      <div class="metaBox">
+        <small>VEHICLE NUMBER</small>
+        <strong>${escapeHTML(driver.vehicleNumber || "—")}</strong>
+      </div>
+
+      <div class="metaBox">
+        <small>RATING</small>
+        <strong>⭐ ${rating.toFixed(1)}</strong>
+      </div>
+
+      <div class="metaBox">
+        <small>ONLINE</small>
+        <strong>${driver.online ? "Yes" : "No"}</strong>
+      </div>
+
+      <div class="metaBox">
+        <small>AVAILABLE</small>
+        <strong>${driver.available ? "Yes" : "No"}</strong>
+      </div>
+
+    </div>
+
+    <div style="margin-top:18px">
+
+      <label>Driver UID</label>
+
+      <input
+        value="${escapeHTML(uid)}"
+        readonly
+      >
+
+    </div>
+
+    ${
+      driver.latitude && driver.longitude
+      ? `
+        <div style="margin-top:15px;color:#94a3b8;font-size:12px">
+          📍 Last location:
+          ${Number(driver.latitude).toFixed(6)},
+          ${Number(driver.longitude).toFixed(6)}
+        </div>
+      `
+      : ""
+    }
+
+  `;
+
+  openModal();
+
+}
+
+window.viewDriver = viewDriver;
+
+
+/* =========================================================
+   USER DETAILS
+========================================================= */
+
+function viewUser(uid){
+
+  const user =
+    allUsers.find(item=>item.id === uid);
+
+  if(!user) return;
+
+  $("modalTitle").textContent =
+    "Customer Details";
+
+  $("modalBody").innerHTML = `
+
+    <div style="display:flex;gap:15px;align-items:center;margin-bottom:20px">
+
+      ${
+        user.photoURL
+        ? `<img src="${escapeHTML(user.photoURL)}"
+             style="width:65px;height:65px;border-radius:50%;object-fit:cover">`
+        : `
+          <div class="avatar" style="width:65px;height:65px;font-size:22px">
+            ${escapeHTML((user.name || user.displayName || "C").charAt(0).toUpperCase())}
+          </div>
+        `
+      }
+
+      <div>
+
+        <h2>
+          ${escapeHTML(user.name || user.displayName || "Customer")}
+        </h2>
+
+        <div style="color:#64748b;font-size:12px">
+          ${escapeHTML(user.email || "—")}
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="threeGrid">
+
+      <div class="metaBox">
+        <small>PHONE</small>
+        <strong>${escapeHTML(user.phone || "—")}</strong>
+      </div>
+
+      <div class="metaBox">
+        <small>ROLE</small>
+        <strong>${escapeHTML(user.role || "customer")}</strong>
+      </div>
+
+      <div class="metaBox">
+        <small>STATUS</small>
+        <strong>${escapeHTML(user.accountStatus || "active")}</strong>
+      </div>
+
+    </div>
+
+    <div style="margin-top:15px">
+
+      <label>UID</label>
+
+      <input value="${escapeHTML(uid)}" readonly>
+
+    </div>
+
+  `;
+
+  openModal();
+
+}
+
+window.viewUser = viewUser;
+
+
+/* =========================================================
+   RIDES
+========================================================= */
+
+async function loadRides(){
+
+  try{
+
+    const snap = await getDocs(
+      collection(db,"rides")
+    );
+
+    allRides = [];
+
+    snap.forEach(item=>{
+
+      allRides.push({
+        id:item.id,
+        ...item.data()
+      });
+
+    });
+
+    allRides.sort((a,b)=>{
+      const aTime =
+        a.createdAt?.toMillis?.() || 0;
+
+      const bTime =
+        b.createdAt?.toMillis?.() || 0;
+
+      return bTime-aTime;
+    });
+
+    renderRides();
+    renderLiveRides();
+    updateStats();
+    updateMap();
+
+  }catch(error){
+
+    console.error("Rides:",error);
+
+    toast(
+      "Rides error",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+function renderRides(){
+
+  const tbody = $("ridesTable");
+
+  if(!tbody) return;
+
+  const search =
+    ($("rideSearch")?.value || "")
+    .toLowerCase()
+    .trim();
+
+  const status =
+    $("rideStatusFilter")?.value || "all";
+
+  let rides = [...allRides];
+
+  if(status !== "all"){
+
+    rides = rides.filter(
+      ride => ride.status === status
+    );
+
+  }
+
+  if(search){
+
+    rides = rides.filter(ride=>{
+
+      const text = [
+
+        ride.id,
+        ride.customerId,
+        ride.customerName,
+        ride.customerPhone,
+        ride.driverId,
+        ride.driverName,
+        ride.pickupAddress,
+        ride.destinationAddress,
+        ride.vehicleType
+
+      ].join(" ").toLowerCase();
+
+      return text.includes(search);
+
+    });
+
+  }
+
+  if(!rides.length){
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8">
+          <div class="empty">
+            <div class="emptyIcon">🚗</div>
+            No rides found.
+          </div>
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tbody.innerHTML = rides.slice(0,300).map(ride=>{
+
+    const fare =
+      ride.finalFare ??
+      ride.estimatedFare ??
+      ride.fare ??
+      0;
+
+    return `
+      <tr>
+
+        <td>
+          <strong>${escapeHTML(shortId(ride.id))}</strong>
+        </td>
+
+        <td>
+          ${escapeHTML(ride.customerName || shortId(ride.customerId))}
+        </td>
+
+        <td>
+          ${
+            ride.driverName
+            ? escapeHTML(ride.driverName)
+            : '<span style="color:#64748b">Not assigned</span>'
+          }
+        </td>
+
+        <td>
+          ${escapeHTML(ride.vehicleType || "Toto")}
+        </td>
+
+        <td>
+          ${statusBadge(ride.status)}
+        </td>
+
+        <td>
+          ${money(fare)}
+        </td>
+
+        <td>
+          ${formatDate(ride.createdAt)}
+        </td>
+
+        <td>
+
+          <div style="display:flex;gap:5px">
+
+            <button
+              class="btn small"
+              onclick="viewRide('${ride.id}')"
+            >
+              View
+            </button>
+
+            ${
+              !["completed","cancelled"].includes(ride.status)
+              ? `
+                <button
+                  class="btn danger small"
+                  onclick="adminCancelRide('${ride.id}')"
+                >
+                  Cancel
+                </button>
+              `
+              : ""
+            }
+
+          </div>
+
+        </td>
+
+      </tr>
+    `;
+
+  }).join("");
+
+}
+
+window.renderRides = renderRides;
+
+
+/* =========================================================
+   LIVE RIDES
+========================================================= */
+
+function renderLiveRides(){
+
+  const container =
+    $("liveRideCards");
+
+  if(!container) return;
+
+  const live =
+    allRides.filter(ride=>
+      ["searching","accepted","arrived","started"]
+        .includes(ride.status)
+    );
+
+  if(!live.length){
+
+    container.innerHTML = `
+      <div class="empty">
+        <div class="emptyIcon">🚗</div>
+        No active rides right now.
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML =
+    live.slice(0,12).map(ride=>{
+
+      return `
+
+        <div class="rideCard">
+
+          <div class="rideHeader">
+
+            <strong>
+              ${escapeHTML(shortId(ride.id))}
+            </strong>
+
+            ${statusBadge(ride.status)}
+
+          </div>
+
+          <div class="route">
+
+            <div class="routeRow">
+
+              <div class="routeLabel">
+                Pickup
+              </div>
+
+              <div class="routeText">
+                ${escapeHTML(ride.pickupAddress || "Pickup location")}
+              </div>
+
+            </div>
+
+            <div class="routeRow">
+
+              <div class="routeLabel">
+                Destination
+              </div>
+
+              <div class="routeText">
+                ${escapeHTML(ride.destinationAddress || "Destination")}
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="rideMeta">
+
+            <div class="metaBox">
+              <small>Customer</small>
+              <strong>
+                ${escapeHTML(ride.customerName || "—")}
+              </strong>
+            </div>
+
+            <div class="metaBox">
+              <small>Driver</small>
+              <strong>
+                ${escapeHTML(ride.driverName || "Searching")}
+              </strong>
+            </div>
+
+            <div class="metaBox">
+              <small>Fare</small>
+              <strong>
+                ${money(ride.estimatedFare || ride.fare)}
+              </strong>
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+}
+
+
+/* =========================================================
+   LIVE RIDE FIRESTORE LISTENER
+========================================================= */
+
+function listenForLiveRides(){
+
+  try{
+
+    const q = query(
+      collection(db,"rides"),
+      where("status","in",[
+        "searching",
+        "accepted",
+        "arrived",
+        "started"
+      ])
+    );
+
+    const unsub = onSnapshot(
+      q,
+      snapshot=>{
+
+        const map =
+          new Map(
+            allRides.map(r=>[r.id,r])
+          );
+
+        snapshot.forEach(item=>{
+
+          map.set(
+            item.id,
+            {
+              id:item.id,
+              ...item.data()
+            }
+          );
+
+        });
+
+        allRides =
+          Array.from(map.values());
+
+        renderLiveRides();
+        renderRides();
+        updateStats();
+        updateMap();
+
+      },
+      error=>{
+
+        console.warn(
+          "Live ride listener:",
+          error
+        );
+
+      }
+    );
+
+    activeListeners.push(unsub);
+
+  }catch(error){
+
+    console.warn(error);
+
+  }
+
+}
+
+
+/* =========================================================
+   RIDE DETAILS
+========================================================= */
+
+function viewRide(rideId){
+
+  const ride =
+    allRides.find(item=>item.id === rideId);
+
+  if(!ride) return;
+
+  const fare =
+    ride.finalFare ??
+    ride.estimatedFare ??
+    ride.fare ??
+    0;
+
+  $("modalTitle").textContent =
+    "Ride Details";
+
+  $("modalBody").innerHTML = `
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px">
+
+      <div>
+        <div style="font-size:11px;color:#64748b">
+          RIDE ID
+        </div>
+
+        <strong>
+          ${escapeHTML(ride.id)}
+        </strong>
+      </div>
+
+      ${statusBadge(ride.status)}
+
+    </div>
+
+    <div class="route">
+
+      <div class="routeRow">
+        <div class="routeLabel">Pickup</div>
+        <div class="routeText">
+          ${escapeHTML(ride.pickupAddress || "—")}
+        </div>
+      </div>
+
+      <div class="routeRow">
+        <div class="routeLabel">Destination</div>
+        <div class="routeText">
+          ${escapeHTML(ride.destinationAddress || "—")}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="threeGrid">
+
+      <div class="metaBox">
+        <small>CUSTOMER</small>
+        <strong>
+          ${escapeHTML(ride.customerName || "—")}
+        </strong>
+      </div>
+
+      <div class="metaBox">
+        <small>DRIVER</small>
+        <strong>
+          ${escapeHTML(ride.driverName || "Not assigned")}
+        </strong>
+      </div>
+
+      <div class="metaBox">
+        <small>VEHICLE</small>
+        <strong>
+          ${escapeHTML(ride.vehicleType || "Toto")}
+        </strong>
+      </div>
+
+      <div class="metaBox">
+        <small>DISTANCE</small>
+        <strong>
+          ${Number(ride.distanceKm || 0).toFixed(2)} km
+        </strong>
+      </div>
+
+      <div class="metaBox">
+        <small>FARE</small>
+        <strong>${money(fare)}</strong>
+      </div>
+
+      <div class="metaBox">
+        <small>PAYMENT</small>
+        <strong>
+          ${escapeHTML(ride.paymentMethod || "Cash")}
+        </strong>
+      </div>
+
+    </div>
+
+    <div style="margin-top:18px">
+
+      <label>Customer Phone</label>
+
+      <input
+        value="${escapeHTML(ride.customerPhone || "")}"
+        readonly
+      >
+
+    </div>
+
+    <div style="margin-top:12px">
+
+      <label>Driver Phone</label>
+
+      <input
+        value="${escapeHTML(ride.driverPhone || "")}"
+        readonly
+      >
+
+    </div>
+
+    ${
+      ride.cancelReason
+      ? `
+        <div style="
+          margin-top:15px;
+          padding:12px;
+          border:1px solid #7f1d1d;
+          background:#1f1015;
+          border-radius:10px;
+        ">
+          <strong style="color:#fca5a5">
+            Cancellation Reason
+          </strong>
+
+          <div style="color:#94a3b8;font-size:12px;margin-top:5px">
+            ${escapeHTML(ride.cancelReason)}
+          </div>
+        </div>
+      `
+      : ""
+    }
+
+  `;
+
+  openModal();
+
+}
+
+window.viewRide = viewRide;
+
+
+/* =========================================================
+   ADMIN CANCEL RIDE
+========================================================= */
+
+async function adminCancelRide(rideId){
+
+  const ride =
+    allRides.find(item=>item.id === rideId);
+
+  if(!ride) return;
+
+  const reason =
+    prompt(
+      "Reason for cancelling this ride:",
+      "Cancelled by E RIDE admin"
+    );
+
+  if(reason === null) return;
+
+  try{
+
+    await updateDoc(
+      doc(db,"rides",rideId),
+      {
+        status:"cancelled",
+        cancelledBy:"admin",
+        cancelledById:currentUser.uid,
+        cancelReason:reason,
+        cancelledAt:serverTimestamp(),
+        updatedAt:serverTimestamp()
+      }
+    );
+
+    if(ride.driverId){
+
+      try{
+
+        await updateDoc(
+          doc(db,"drivers",ride.driverId),
+          {
+            online:true,
+            available:true,
+            activeRideId:null,
+            updatedAt:serverTimestamp()
+          }
+        );
+
+      }catch(error){
+
+        console.warn(
+          "Driver restore failed:",
+          error
+        );
 
       }
 
+    }
+
+    await sendUserNotification(
+      ride.customerId,
+      "Ride Cancelled",
+      `Your ride was cancelled by E RIDE admin. ${reason}`
+    );
+
+    if(ride.driverId){
+
+      await sendUserNotification(
+        ride.driverId,
+        "Ride Cancelled",
+        "This ride was cancelled by E RIDE admin."
+      );
+
+    }
+
+    toast(
+      "Ride cancelled",
+      "Ride and driver availability updated.",
+      "success"
+    );
+
+    await loadRides();
+    await loadDrivers();
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Cancellation failed",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+window.adminCancelRide = adminCancelRide;
+
+
+/* =========================================================
+   RATINGS
+========================================================= */
+
+async function loadRatings(){
+
+  try{
+
+    const snap =
+      await getDocs(
+        collection(db,"ratings")
+      );
+
+    allRatings = [];
+
+    snap.forEach(item=>{
+
+      allRatings.push({
+        id:item.id,
+        ...item.data()
+      });
+
+    });
+
+    allRatings.sort((a,b)=>{
+
+      const aTime =
+        a.createdAt?.toMillis?.() || 0;
+
+      const bTime =
+        b.createdAt?.toMillis?.() || 0;
+
+      return bTime-aTime;
+
+    });
+
+    renderRatings();
+
+  }catch(error){
+
+    console.error("Ratings:",error);
+
+    toast(
+      "Ratings error",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+function renderRatings(){
+
+  const tbody =
+    $("ratingsTable");
+
+  if(!tbody) return;
+
+  const count =
+    allRatings.length;
+
+  const average =
+    count
+    ? allRatings.reduce(
+        (sum,item)=>
+          sum + Number(item.rating || 0),
+        0
+      ) / count
+    : 0;
+
+  $("ratingCount").textContent =
+    count;
+
+  $("ratingAverage").textContent =
+    average.toFixed(1);
+
+  if(!count){
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7">
+          <div class="empty">
+            <div class="emptyIcon">⭐</div>
+            No ratings yet.
+          </div>
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tbody.innerHTML =
+    allRatings.slice(0,300).map(rating=>{
+
+      const stars =
+        "★".repeat(
+          Math.max(
+            0,
+            Math.min(
+              5,
+              Number(rating.rating || 0)
+            )
+          )
+        );
+
+      return `
+        <tr>
+
+          <td>
+            <strong style="color:#fbbf24">
+              ${stars}
+            </strong>
+
+            <div style="font-size:10px;color:#64748b">
+              ${Number(rating.rating || 0)}/5
+            </div>
+          </td>
+
+          <td>
+            ${escapeHTML(
+              rating.customerName ||
+              shortId(rating.customerId)
+            )}
+          </td>
+
+          <td>
+            ${escapeHTML(
+              rating.driverName ||
+              shortId(rating.driverId)
+            )}
+          </td>
+
+          <td style="max-width:300px">
+            ${escapeHTML(rating.review || "—")}
+          </td>
+
+          <td>
+            ${escapeHTML(
+              shortId(rating.rideId)
+            )}
+          </td>
+
+          <td>
+            ${formatDate(rating.createdAt)}
+          </td>
+
+          <td>
+
+            <button
+              class="btn danger small"
+              onclick="deleteRating('${rating.id}')"
+            >
+              Delete
+            </button>
+
+          </td>
+
+        </tr>
+      `;
+
+    }).join("");
+
+}
+
+window.renderRatings = renderRatings;
+
+
+async function deleteRating(id){
+
+  if(!confirm("Delete this rating/review?")) return;
+
+  try{
+
+    await deleteDoc(
+      doc(db,"ratings",id)
+    );
+
+    toast(
+      "Rating deleted",
+      "Review removed.",
+      "success"
+    );
+
+    await loadRatings();
+
+  }catch(error){
+
+    toast(
+      "Delete failed",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+window.deleteRating = deleteRating;
+
+
+/* =========================================================
+   SUPPORT
+========================================================= */
+
+async function loadSupport(){
+
+  try{
+
+    const snap =
+      await getDocs(
+        collection(db,"support")
+      );
+
+    allSupport = [];
+
+    snap.forEach(item=>{
+
+      allSupport.push({
+        id:item.id,
+        ...item.data()
+      });
+
+    });
+
+    allSupport.sort((a,b)=>{
+
+      const aTime =
+        a.createdAt?.toMillis?.() || 0;
+
+      const bTime =
+        b.createdAt?.toMillis?.() || 0;
+
+      return bTime-aTime;
+
+    });
+
+    renderSupport();
+
+  }catch(error){
+
+    console.error("Support:",error);
+
+    toast(
+      "Support error",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+function renderSupport(){
+
+  const tbody =
+    $("supportTable");
+
+  if(!tbody) return;
+
+  if(!allSupport.length){
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7">
+          <div class="empty">
+            <div class="emptyIcon">🎫</div>
+            No support requests.
+          </div>
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tbody.innerHTML =
+    allSupport.map(ticket=>{
+
+      const status =
+        ticket.status || "open";
+
+      return `
+        <tr>
+
+          <td>
+            <strong>${escapeHTML(shortId(ticket.id))}</strong>
+          </td>
+
+          <td>
+            ${escapeHTML(
+              ticket.userName ||
+              shortId(ticket.userId)
+            )}
+          </td>
+
+          <td>
+            ${escapeHTML(ticket.subject || "Support")}
+          </td>
+
+          <td style="max-width:280px">
+            ${escapeHTML(ticket.message || "—")}
+          </td>
+
+          <td>
+            ${statusBadge(status)}
+          </td>
+
+          <td>
+            ${formatDate(ticket.createdAt)}
+          </td>
+
+          <td>
+
+            ${
+              status !== "resolved"
+              ? `
+                <button
+                  class="btn success small"
+                  onclick="resolveSupport('${ticket.id}')"
+                >
+                  Resolve
+                </button>
+              `
+              : `
+                <span class="badge green">
+                  Resolved
+                </span>
+              `
+            }
+
+          </td>
+
+        </tr>
+      `;
+
+    }).join("");
+
+}
+
+window.renderSupport = renderSupport;
+
+
+async function resolveSupport(id){
+
+  try{
+
+    await updateDoc(
+      doc(db,"support",id),
+      {
+        status:"resolved",
+        resolvedAt:serverTimestamp(),
+        resolvedBy:currentUser.uid,
+        updatedAt:serverTimestamp()
+      }
+    );
+
+    toast(
+      "Support resolved",
+      "Ticket marked as resolved.",
+      "success"
+    );
+
+    await loadSupport();
+
+  }catch(error){
+
+    toast(
+      "Update failed",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+window.resolveSupport = resolveSupport;
+
+
+/* =========================================================
+   FARE
+========================================================= */
+
+async function loadFareSettings(){
+
+  try{
+
+    const snap =
+      await getDoc(
+        doc(db,"settings","fare")
+      );
+
+    let base = 20;
+    let perKm = 12;
+
+    if(snap.exists()){
 
       const data =
         snap.data();
 
+      base =
+        Number(data.baseFare ?? 20);
 
-      /*
-        Only users with:
-        role: admin
+      perKm =
+        Number(data.perKm ?? 12);
 
-        can enter admin.html.
-      */
+    }
 
-      if (
-        data.role !==
-        "admin"
-      ) {
+    $("baseFare").value = base;
+    $("perKmFare").value = perKm;
 
-        showToast(
-          "Admin access denied."
+    $("fareSummaryBase").textContent =
+      money(base);
+
+    $("fareSummaryKm").textContent =
+      money(perKm);
+
+    updateFarePreview();
+
+  }catch(error){
+
+    console.error("Fare:",error);
+
+  }
+
+}
+
+async function saveFareSettings(){
+
+  const baseFare =
+    Number($("baseFare").value);
+
+  const perKm =
+    Number($("perKmFare").value);
+
+  if(!Number.isFinite(baseFare) || baseFare < 0){
+
+    toast(
+      "Invalid base fare",
+      "Enter a valid amount.",
+      "error"
+    );
+
+    return;
+  }
+
+  if(!Number.isFinite(perKm) || perKm < 0){
+
+    toast(
+      "Invalid per KM fare",
+      "Enter a valid amount.",
+      "error"
+    );
+
+    return;
+  }
+
+  try{
+
+    await setDoc(
+      doc(db,"settings","fare"),
+      {
+        baseFare,
+        perKm,
+        updatedAt:serverTimestamp(),
+        updatedBy:currentUser.uid
+      },
+      {
+        merge:true
+      }
+    );
+
+    $("fareSummaryBase").textContent =
+      money(baseFare);
+
+    $("fareSummaryKm").textContent =
+      money(perKm);
+
+    updateFarePreview();
+
+    toast(
+      "Fare updated",
+      "Customer fare calculation will use these settings.",
+      "success"
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Fare update failed",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+window.saveFareSettings = saveFareSettings;
+
+
+function updateFarePreview(){
+
+  const base =
+    Number($("baseFare")?.value || 0);
+
+  const perKm =
+    Number($("perKmFare")?.value || 0);
+
+  const distance =
+    Number($("previewDistance")?.value || 0);
+
+  const total =
+    base + (distance * perKm);
+
+  if($("farePreview")){
+    $("farePreview").textContent =
+      money(total);
+  }
+
+}
+
+window.updateFarePreview = updateFarePreview;
+
+
+/* =========================================================
+   ANNOUNCEMENTS
+========================================================= */
+
+async function sendAnnouncement(){
+
+  const title =
+    $("noticeTitle").value.trim();
+
+  const body =
+    $("noticeBody").value.trim();
+
+  const audience =
+    $("noticeAudience").value;
+
+  if(!title){
+
+    toast(
+      "Title required",
+      "Enter an announcement title.",
+      "error"
+    );
+
+    return;
+  }
+
+  if(!body){
+
+    toast(
+      "Message required",
+      "Enter an announcement message.",
+      "error"
+    );
+
+    return;
+  }
+
+  let recipients = [];
+
+  if(audience === "all"){
+
+    recipients =
+      allUsers.filter(
+        user => user.role !== "admin"
+      );
+
+  }else if(audience === "drivers"){
+
+    recipients =
+      allUsers.filter(
+        user => user.role === "driver"
+      );
+
+    if(!recipients.length){
+
+      recipients =
+        allDrivers.map(driver=>({
+          id:driver.id,
+          role:"driver"
+        }));
+
+    }
+
+  }else if(audience === "customers"){
+
+    recipients =
+      allUsers.filter(
+        user =>
+          user.role !== "driver" &&
+          user.role !== "admin"
+      );
+
+  }
+
+  if(!recipients.length){
+
+    toast(
+      "No recipients",
+      "There are no users in the selected audience.",
+      "error"
+    );
+
+    return;
+  }
+
+  if(
+    !confirm(
+      `Send this announcement to ${recipients.length} user(s)?`
+    )
+  ) return;
+
+  try{
+
+    let sent = 0;
+
+    for(const user of recipients){
+
+      try{
+
+        await addDoc(
+          collection(db,"notifications"),
+          {
+            userId:user.id,
+            title,
+            body,
+            read:false,
+            type:"announcement",
+            audience,
+            createdAt:serverTimestamp(),
+            createdBy:currentUser.uid
+          }
         );
 
-        setTimeout(() => {
+        sent++;
 
-          if (
-            data.role ===
-            "driver"
-          ) {
+      }catch(error){
 
-            window.location.href =
-              "driver.html";
-
-          } else {
-
-            window.location.href =
-              "customer.html";
-
-          }
-
-        },1000);
-
-        return;
+        console.warn(
+          "Notification failed for",
+          user.id,
+          error
+        );
 
       }
 
+    }
 
-      await loadDrivers();
+    $("noticeTitle").value = "";
+    $("noticeBody").value = "";
 
-      await loadFareSettingsV2();
-    loadRides();
+    toast(
+      "Announcement sent",
+      `${sent} notification(s) created.`,
+      "success"
+    );
 
-    } catch(error){
+  }catch(error){
 
-      console.error(error);
+    toast(
+      "Announcement failed",
+      error.message,
+      "error"
+    );
 
-      showToast(
-        "Unable to verify admin account."
+  }
+
+}
+
+window.sendAnnouncement = sendAnnouncement;
+
+
+/* =========================================================
+   USER NOTIFICATION
+========================================================= */
+
+async function sendUserNotification(
+  userId,
+  title,
+  body
+){
+
+  if(!userId) return;
+
+  try{
+
+    await addDoc(
+      collection(db,"notifications"),
+      {
+        userId,
+        title,
+        body,
+        read:false,
+        type:"system",
+        createdAt:serverTimestamp(),
+        createdBy:currentUser?.uid || "admin"
+      }
+    );
+
+  }catch(error){
+
+    console.warn(
+      "Notification write failed:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+function updateStats(){
+
+  const drivers =
+    allDrivers.length;
+
+  const pending =
+    allDrivers.filter(
+      driver =>
+        (driver.accountStatus || "pending")
+        === "pending"
+    ).length;
+
+  const online =
+    allDrivers.filter(
+      driver =>
+        driver.online === true &&
+        driver.accountStatus === "active"
+    ).length;
+
+  const customers =
+    allUsers.filter(
+      user =>
+        user.role !== "driver" &&
+        user.role !== "admin"
+    ).length;
+
+  const completed =
+    allRides.filter(
+      ride =>
+        ride.status === "completed"
+    );
+
+  const cancelled =
+    allRides.filter(
+      ride =>
+        ride.status === "cancelled"
+    );
+
+  const revenue =
+    completed.reduce(
+      (sum,ride)=>
+        sum +
+        Number(
+          ride.finalFare ??
+          ride.estimatedFare ??
+          ride.fare ??
+          0
+        ),
+      0
+    );
+
+  $("statUsers").textContent =
+    allUsers.length;
+
+  $("statDrivers").textContent =
+    drivers;
+
+  $("statOnlineDrivers").textContent =
+    online;
+
+  $("statCustomers").textContent =
+    customers;
+
+  $("statPending").textContent =
+    pending;
+
+  $("statRides").textContent =
+    allRides.length;
+
+  $("statCompleted").textContent =
+    completed.length;
+
+  $("statCancelled").textContent =
+    cancelled.length;
+
+  $("statRevenue").textContent =
+    money(revenue);
+
+}
+
+
+/* =========================================================
+   MAP
+========================================================= */
+
+function initMap(){
+
+  if(rideMap) return;
+
+  try{
+
+    rideMap =
+      L.map("adminMap").setView(
+        [25.2467,86.0947],
+        13
       );
+
+    L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        maxZoom:19,
+        attribution:"© OpenStreetMap"
+      }
+    ).addTo(rideMap);
+
+  }catch(error){
+
+    console.warn(
+      "Map init failed:",
+      error
+    );
+
+  }
+
+}
+
+function updateMap(){
+
+  if(!rideMap) return;
+
+  mapLayers.forEach(
+    layer=>{
+      try{
+        rideMap.removeLayer(layer);
+      }catch{}
+    }
+  );
+
+  mapLayers = [];
+
+  const points = [];
+
+  allRides
+    .filter(ride=>
+      ["searching","accepted","arrived","started"]
+      .includes(ride.status)
+    )
+    .forEach(ride=>{
+
+      const pickup =
+        ride.pickupLocation ||
+        ride.pickupCoords;
+
+      const destination =
+        ride.destinationLocation ||
+        ride.destinationCoords;
+
+      if(
+        pickup &&
+        Number.isFinite(Number(pickup.latitude)) &&
+        Number.isFinite(Number(pickup.longitude))
+      ){
+
+        const marker =
+          L.marker([
+            Number(pickup.latitude),
+            Number(pickup.longitude)
+          ])
+          .addTo(rideMap)
+          .bindPopup(`
+            <strong>Pickup</strong><br>
+            Ride: ${escapeHTML(shortId(ride.id))}<br>
+            Status: ${escapeHTML(ride.status)}
+          `);
+
+        mapLayers.push(marker);
+
+        points.push([
+          Number(pickup.latitude),
+          Number(pickup.longitude)
+        ]);
+
+      }
+
+      if(
+        destination &&
+        Number.isFinite(Number(destination.latitude)) &&
+        Number.isFinite(Number(destination.longitude))
+      ){
+
+        const marker =
+          L.marker([
+            Number(destination.latitude),
+            Number(destination.longitude)
+          ])
+          .addTo(rideMap)
+          .bindPopup(`
+            <strong>Destination</strong><br>
+            Ride: ${escapeHTML(shortId(ride.id))}
+          `);
+
+        mapLayers.push(marker);
+
+        points.push([
+          Number(destination.latitude),
+          Number(destination.longitude)
+        ]);
+
+      }
+
+      const driverLocation =
+        ride.driverLocation;
+
+      if(
+        driverLocation &&
+        Number.isFinite(Number(driverLocation.latitude)) &&
+        Number.isFinite(Number(driverLocation.longitude))
+      ){
+
+        const marker =
+          L.marker([
+            Number(driverLocation.latitude),
+            Number(driverLocation.longitude)
+          ])
+          .addTo(rideMap)
+          .bindPopup(`
+            <strong>🚕 Driver</strong><br>
+            ${escapeHTML(ride.driverName || "Driver")}<br>
+            Ride: ${escapeHTML(shortId(ride.id))}
+          `);
+
+        mapLayers.push(marker);
+
+        points.push([
+          Number(driverLocation.latitude),
+          Number(driverLocation.longitude)
+        ]);
+
+      }
+
+    });
+
+  if(points.length){
+
+    try{
+
+      rideMap.fitBounds(
+        L.latLngBounds(points),
+        {
+          padding:[35,35],
+          maxZoom:15
+        }
+      );
+
+    }catch{}
+
+  }
+
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function openModal(){
+  $("modal").classList.add("show");
+}
+
+function closeModal(){
+  $("modal").classList.remove("show");
+}
+
+window.openModal = openModal;
+window.closeModal = closeModal;
+
+$("modal").addEventListener(
+  "click",
+  event=>{
+    if(event.target === $("modal")){
+      closeModal();
+    }
+  }
+);
+
+
+/* =========================================================
+   SERVICE WORKER
+========================================================= */
+
+async function registerServiceWorker(){
+
+  if(!("serviceWorker" in navigator)) return;
+
+  try{
+
+    await navigator.serviceWorker.register(
+      "./sw.js"
+    );
+
+    console.log(
+      "E RIDE service worker registered."
+    );
+
+  }catch(error){
+
+    console.warn(
+      "Service worker:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+async function logout(){
+
+  if(!confirm("Sign out from E RIDE Admin?")) return;
+
+  try{
+
+    for(const unsubscribe of activeListeners){
+
+      try{
+        unsubscribe();
+      }catch{}
+
+    }
+
+    activeListeners = [];
+
+    await signOut(auth);
+
+    location.href =
+      "./index.html";
+
+  }catch(error){
+
+    toast(
+      "Logout failed",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+window.logout = logout;
+
+
+/* =========================================================
+   GLOBAL SEARCH KEY
+========================================================= */
+
+document.addEventListener(
+  "keydown",
+  event=>{
+
+    if(
+      event.key === "Escape" &&
+      $("modal").classList.contains("show")
+    ){
+
+      closeModal();
 
     }
 
@@ -974,1318 +4705,16 @@ onAuthStateChanged(
 );
 
 
-/* ==========================================
-   LOAD DRIVERS
-========================================== */
-
-window.loadDrivers =
-async function(){
-
-  try{
-
-    const snapshot =
-      await getDocs(
-        collection(
-          db,
-          "drivers"
-        )
-      );
-
-
-    drivers = [];
-
-
-    snapshot.forEach(
-      item => {
-
-        drivers.push({
-
-          id:
-            item.id,
-
-          ...item.data()
-
-        });
-
-      }
-    );
-
-
-    renderDrivers();
-
-    renderPending();
-
-    updateStats();
-
-  }catch(error){
-
-    console.error(
-      "Drivers:",
-      error
-    );
-
-    showToast(
-      "Could not load drivers."
-    );
-
-  }
-
-};
-
-
-/* ==========================================
-   RENDER ALL DRIVERS
-========================================== */
-
-function renderDrivers(){
-
-  const box =
-    document.getElementById(
-      "driverList"
-    );
-
-
-  if(!drivers.length){
-
-    box.innerHTML = emptyHTML(
-      "🧑‍✈️",
-      "No drivers registered yet."
-    );
-
-    return;
-
-  }
-
-
-  box.innerHTML =
-    drivers
-      .map(
-        driverCard
-      )
-      .join("");
-
-}
-
-
-/* ==========================================
-   RENDER PENDING
-========================================== */
-
-function renderPending(){
-
-  const box =
-    document.getElementById(
-      "pendingList"
-    );
-
-
-  const pending =
-    drivers.filter(
-      d =>
-        d.accountStatus ===
-        "pending"
-    );
-
-
-  if(!pending.length){
-
-    box.innerHTML =
-      emptyHTML(
-        "✅",
-        "No pending driver applications."
-      );
-
-    return;
-
-  }
-
-
-  box.innerHTML =
-    pending
-      .map(
-        driverCard
-      )
-      .join("");
-
-}
-
-
-/* ==========================================
-   DRIVER CARD
-========================================== */
-
-function driverCard(driver){
-
-  const status =
-    driver.accountStatus ||
-    "pending";
-
-
-  const name =
-    driver.name ||
-    "Unknown Driver";
-
-
-  const photo =
-    driver.photoURL ||
-    "";
-
-
-  const vehicle =
-    driver.vehicleType ||
-    "Toto";
-
-
-  const vehicleNumber =
-    driver.vehicleNumber ||
-    "Not provided";
-
-
-  let actions = "";
-
-
-  if(
-    status ===
-    "pending"
-  ){
-
-    actions = `
-
-      <button
-        class="approve"
-        onclick="approveDriver('${driver.id}')"
-      >
-        ✓ Approve
-      </button>
-
-      <button
-        class="reject"
-        onclick="rejectDriver('${driver.id}')"
-      >
-        ✕ Reject
-      </button>
-
-    `;
-
-  }
-
-
-  if(
-    status ===
-    "active"
-  ){
-
-    actions = `
-
-      <button
-        class="view"
-        onclick="viewDriver('${driver.id}')"
-      >
-        View Details
-      </button>
-
-      <button
-        class="reject"
-        onclick="disableDriver('${driver.id}')"
-      >
-        Disable
-      </button>
-
-    `;
-
-  }
-
-
-  if(
-    status ===
-    "rejected"
-  ){
-
-    actions = `
-
-      <button
-        class="approve"
-        onclick="approveDriver('${driver.id}')"
-      >
-        Re-approve
-      </button>
-
-      <button
-        class="view"
-        onclick="viewDriver('${driver.id}')"
-      >
-        View
-      </button>
-
-    `;
-
-  }
-
-
-  return `
-
-    <article class="driver-card">
-
-      <div class="driver-top">
-
-        <div class="driver-user">
-
-          <div class="avatar">
-
-            ${
-              photo
-              ?
-              `<img src="${escapeHTML(photo)}">`
-              :
-              `🧑‍✈️`
-            }
-
-          </div>
-
-          <div>
-
-            <div class="driver-name">
-              ${escapeHTML(name)}
-            </div>
-
-            <div class="driver-email">
-              ${escapeHTML(
-                driver.email || ""
-              )}
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="badge ${status}">
-          ${status.toUpperCase()}
-        </div>
-
-      </div>
-
-
-      <div class="driver-info">
-
-        <div class="info">
-
-          <div class="info-label">
-            VEHICLE
-          </div>
-
-          <div class="info-value">
-            ${escapeHTML(vehicle)}
-          </div>
-
-        </div>
-
-
-        <div class="info">
-
-          <div class="info-label">
-            VEHICLE NO.
-          </div>
-
-          <div class="info-value">
-            ${escapeHTML(vehicleNumber)}
-          </div>
-
-        </div>
-
-
-        <div class="info">
-
-          <div class="info-label">
-            RATING
-          </div>
-
-          <div class="info-value">
-            ${
-              driver.rating
-              ?
-              Number(driver.rating).toFixed(1)
-              :
-              "—"
-            }
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="driver-actions">
-
-        ${actions}
-
-      </div>
-
-    </article>
-
-  `;
-
-}
-
-
-/* ==========================================
-   APPROVE DRIVER
-========================================== */
-
-window.approveDriver =
-async function(driverId){
-
-  try{
-
-    const driver =
-      drivers.find(
-        d =>
-          d.id ===
-          driverId
-      );
-
-
-    if(!driver){
-
-      showToast(
-        "Driver not found."
-      );
-
-      return;
-
-    }
-
-
-    /*
-      Driver collection
-    */
-
-    await updateDoc(
-
-      doc(
-        db,
-        "drivers",
-        driverId
-      ),
-
-      {
-
-        accountStatus:
-          "active",
-
-        approvedAt:
-          new Date(),
-
-        approvedBy:
-          currentUser.uid,
-
-        available:
-          false,
-
-        online:
-          false
-
-      }
-
-    );
-
-
-    /*
-      User collection
-      */
-
-    await setDoc(
-
-      doc(
-        db,
-        "users",
-        driverId
-      ),
-
-      {
-
-        role:
-          "driver",
-
-        accountStatus:
-          "active",
-
-        driverApproved:
-          true,
-
-        approvedAt:
-          new Date(),
-
-        approvedBy:
-          currentUser.uid
-
-      },
-
-      {
-        merge:true
-      }
-
-    );
-
-
-    showToast(
-      "Driver approved successfully."
-    );
-
-
-    await loadDrivers();
-
-  }catch(error){
-
-    console.error(
-      "Approve:",
-      error
-    );
-
-    showToast(
-      "Could not approve driver."
-    );
-
-  }
-
-};
-
-
-/* ==========================================
-   REJECT DRIVER
-========================================== */
-
-window.rejectDriver =
-async function(driverId){
-
-  const ok =
-    confirm(
-      "Reject this driver application?"
-    );
-
-
-  if(!ok)
-    return;
-
-
-  try{
-
-    await updateDoc(
-
-      doc(
-        db,
-        "drivers",
-        driverId
-      ),
-
-      {
-
-        accountStatus:
-          "rejected",
-
-        available:
-          false,
-
-        online:
-          false,
-
-        rejectedAt:
-          new Date(),
-
-        rejectedBy:
-          currentUser.uid
-
-      }
-
-    );
-
-
-    await setDoc(
-
-      doc(
-        db,
-        "users",
-        driverId
-      ),
-
-      {
-
-        role:
-          "driver",
-
-        accountStatus:
-          "rejected",
-
-        driverApproved:
-          false
-
-      },
-
-      {
-        merge:true
-      }
-
-    );
-
-
-    showToast(
-      "Driver rejected."
-    );
-
-
-    await loadDrivers();
-
-  }catch(error){
-
-    console.error(
-      "Reject:",
-      error
-    );
-
-    showToast(
-      "Could not reject driver."
-    );
-
-  }
-
-};
-
-
-/* ==========================================
-   DISABLE DRIVER
-========================================== */
-
-window.disableDriver =
-async function(driverId){
-
-  const ok =
-    confirm(
-      "Disable this driver account?"
-    );
-
-
-  if(!ok)
-    return;
-
-
-  try{
-
-    await updateDoc(
-
-      doc(
-        db,
-        "drivers",
-        driverId
-      ),
-
-      {
-
-        accountStatus:
-          "disabled",
-
-        online:
-          false,
-
-        available:
-          false
-
-      }
-
-    );
-
-
-    await setDoc(
-
-      doc(
-        db,
-        "users",
-        driverId
-      ),
-
-      {
-
-        accountStatus:
-          "disabled",
-
-        driverApproved:
-          false
-
-      },
-
-      {
-        merge:true
-      }
-
-    );
-
-
-    showToast(
-      "Driver disabled."
-    );
-
-
-    await loadDrivers();
-
-  }catch(error){
-
-    console.error(error);
-
-    showToast(
-      "Could not disable driver."
-    );
-
-  }
-
-};
-
-
-/* ==========================================
-   VIEW DRIVER
-========================================== */
-
-window.viewDriver =
-function(driverId){
-
-  const driver =
-    drivers.find(
-      d =>
-        d.id ===
-        driverId
-    );
-
-
-  if(!driver)
-    return;
-
-
-  const details =
-    document.getElementById(
-      "driverDetails"
-    );
-
-
-  details.innerHTML = `
-
-    ${modalRow(
-      "Driver ID",
-      driver.id
-    )}
-
-    ${modalRow(
-      "Name",
-      driver.name
-    )}
-
-    ${modalRow(
-      "Email",
-      driver.email
-    )}
-
-    ${modalRow(
-      "Phone",
-      driver.phone
-    )}
-
-    ${modalRow(
-      "Vehicle Type",
-      driver.vehicleType
-    )}
-
-    ${modalRow(
-      "Vehicle Number",
-      driver.vehicleNumber
-    )}
-
-    ${modalRow(
-      "Status",
-      driver.accountStatus
-    )}
-
-    ${modalRow(
-      "Online",
-      driver.online
-        ? "Yes"
-        : "No"
-    )}
-
-    ${modalRow(
-      "Available",
-      driver.available
-        ? "Yes"
-        : "No"
-    )}
-
-    ${modalRow(
-      "Total Rides",
-      driver.totalRides || 0
-    )}
-
-    ${modalRow(
-      "Rating",
-      driver.rating || "—"
-    )}
-
-  `;
-
-
-  document
-    .getElementById(
-      "driverModal"
-    )
-    .classList.add(
-      "show"
-    );
-
-};
-
-
-/* ==========================================
-   MODAL ROW
-========================================== */
-
-function modalRow(
-  label,
-  value
-){
-
-  return `
-
-    <div class="modal-row">
-
-      <div class="modal-label">
-        ${escapeHTML(label)}
-      </div>
-
-      <div class="modal-value">
-        ${escapeHTML(
-          value ?? "Not provided"
-        )}
-      </div>
-
-    </div>
-
-  `;
-
-}
-
-
-window.closeDriverModal =
-function(){
-
-  document
-    .getElementById(
-      "driverModal"
-    )
-    .classList.remove(
-      "show"
-    );
-
-};
-
-
-window.closeModalOutside =
-function(event){
-
-  if(
-    event.target.id ===
-    "driverModal"
-  ){
-
-    closeDriverModal();
-
-  }
-
-};
-
-
-
-
-/* ==========================================
-   V2 SETTINGS + NOTIFICATIONS + RIDE ACTIONS
-========================================== */
-async function loadFareSettingsV2(){
-  try{
-    const s=await getDoc(doc(db,"settings","fare"));
-    if(s.exists()){
-      const d=s.data();
-      if(d.baseFare!=null)document.getElementById("baseFareInput").value=d.baseFare;
-      if(d.perKm!=null)document.getElementById("perKmInput").value=d.perKm;
-    }
-  }catch(e){console.error(e)}
-}
-window.saveFareSettingsV2=async function(){
-  try{
-    const base=Math.max(0,Number(document.getElementById("baseFareInput").value||0));
-    const km=Math.max(0,Number(document.getElementById("perKmInput").value||0));
-    await setDoc(doc(db,"settings","fare"),{baseFare:base,perKm:km,updatedAt:serverTimestamp(),updatedBy:currentUser.uid},{merge:true});
-    alert("Fare settings saved.");
-  }catch(e){console.error(e);alert("Could not save fare settings.")}
-};
-window.sendAdminNoticeV2=async function(){
-  const title=document.getElementById("noticeTitleInput").value.trim(), body=document.getElementById("noticeBodyInput").value.trim();
-  if(!title||!body){alert("Title and message required.");return;}
-  try{
-    const qs=await getDocs(collection(db,"users"));
-    let count=0;
-    for(const x of qs.docs){
-      await addDoc(collection(db,"notifications"),{userId:x.id,title,body,read:false,createdAt:serverTimestamp(),createdBy:currentUser.uid}); count++;
-    }
-    document.getElementById("noticeTitleInput").value="";document.getElementById("noticeBodyInput").value="";
-    alert(`Announcement sent to ${count} users.`);
-  }catch(e){console.error(e);alert("Could not send announcement.")}
-};
-window.adminCancelRideV2=async function(id){
-  try{
-    const ref=doc(db,"rides",id),s=await getDoc(ref); if(!s.exists())return;
-    const r=s.data(); if(["completed","cancelled"].includes(r.status)){alert("Ride already closed.");return;}
-    await updateDoc(ref,{status:"cancelled",cancelledBy:"admin",cancelReason:"Cancelled by admin",cancelledAt:serverTimestamp(),updatedAt:serverTimestamp()});
-    await loadRides(); alert("Ride cancelled.");
-  }catch(e){console.error(e);alert("Could not cancel ride.")}
-};
-
-/* ==========================================
-   LOAD RIDES
-========================================== */
-
-window.loadRides =
-async function(){
-
-  try{
-
-    const snapshot =
-      await getDocs(
-
-        query(
-
-          collection(
-            db,
-            "rides"
-          ),
-
-          orderBy(
-            "createdAt",
-            "desc"
-          ),
-
-          limit(100)
-
-        )
-
-      );
-
-
-    rides = [];
-
-
-    snapshot.forEach(
-      item => {
-
-        rides.push({
-
-          id:
-            item.id,
-
-          ...item.data()
-
-        });
-
-      }
-    );
-
-
-    renderRides();
-
-    updateStats();
-
-  }catch(error){
-
-    console.error(
-      "Rides:",
-      error
-    );
-
-    /*
-      If createdAt is missing on old
-      documents, fallback to normal
-      collection read.
-    */
-
-    try{
-
-      const snapshot =
-        await getDocs(
-          collection(
-            db,
-            "rides"
-          )
-        );
-
-
-      rides = [];
-
-
-      snapshot.forEach(
-        item => {
-
-          rides.push({
-
-            id:
-              item.id,
-
-            ...item.data()
-
-          });
-
-        }
-      );
-
-
-      renderRides();
-
-      updateStats();
-
-    }catch(secondError){
-
-      console.error(
-        secondError
-      );
-
-      showToast(
-        "Could not load rides."
-      );
-
-    }
-
-  }
-
-};
-
-
-/* ==========================================
-   RENDER RIDES
-========================================== */
-
-function renderRides(){
-
-  const box =
-    document.getElementById(
-      "rideList"
-    );
-
-
-  if(!rides.length){
-
-    box.innerHTML =
-      emptyHTML(
-        "🚕",
-        "No rides found."
-      );
-
-    return;
-
-  }
-
-
-  box.innerHTML =
-    rides.map(
-      ride => {
-
-        const pickup =
-          ride.pickup?.address ||
-          "Pickup not available";
-
-
-        const destination =
-          ride.destination?.address ||
-          "Destination not available";
-
-
-        const status =
-          ride.status ||
-          "unknown";
-
-
-        return `
-
-          <article class="ride-card">
-
-            <div class="ride-top">
-
-              <div class="ride-id">
-                #${escapeHTML(
-                  ride.id.slice(0,8)
-                )}
-              </div>
-
-              <div class="ride-status">
-                ${escapeHTML(
-                  status.toUpperCase()
-                )}
-              </div>
-
-            </div>
-
-
-            <div class="route">
-
-              <span>
-                Pickup
-              </span>
-
-              <br>
-
-              📍 ${escapeHTML(pickup)}
-
-              <br><br>
-
-              <span>
-                Destination
-              </span>
-
-              <br>
-
-              🏁 ${escapeHTML(destination)}
-
-            </div>
-
-          </article>
-
-        `;
-
-      }
-    ).join("");
-
-}
-
-
-/* ==========================================
-   STATS
-========================================== */
-
-function updateStats(){
-
-  const total =
-    drivers.length;
-
-
-  const pending =
-    drivers.filter(
-      d =>
-        d.accountStatus ===
-        "pending"
-    ).length;
-
-
-  const online =
-    drivers.filter(
-      d =>
-        d.online === true &&
-        d.accountStatus ===
-        "active"
-    ).length;
-
-
-  document.getElementById(
-    "totalDrivers"
-  ).textContent =
-    total;
-
-
-  document.getElementById(
-    "pendingDrivers"
-  ).textContent =
-    pending;
-
-
-  document.getElementById(
-    "onlineDrivers"
-  ).textContent =
-    online;
-
-
-  document.getElementById(
-    "totalRides"
-  ).textContent =
-    rides.length;
-
-}
-
-
-/* ==========================================
-   TABS
-========================================== */
-
-window.showTab =
-function(tab,button){
-
-  document
-    .querySelectorAll(
-      ".tab"
-    )
-    .forEach(
-      b =>
-        b.classList.remove(
-          "active"
-        )
-    );
-
-
-  button.classList.add(
-    "active"
-  );
-
-
-  document
-    .querySelectorAll(
-      ".section"
-    )
-    .forEach(
-      s =>
-        s.classList.remove(
-          "active"
-        )
-    );
-
-
-  document
-    .getElementById(
-      tab + "Section"
-    )
-    .classList.add(
-      "active"
-    );
-
-
-  if(tab === "rides")
-    loadRides();
-
-};
-
-
-/* ==========================================
-   LOGOUT
-========================================== */
-
-window.logout =
-async function(){
-
-  try{
-
-    await signOut(auth);
-
-    window.location.href =
-      "index.html";
-
-  }catch(error){
-
-    console.error(error);
-
-  }
-
-};
-
-
-/* ==========================================
-   EMPTY
-========================================== */
-
-function emptyHTML(
-  icon,
-  text
-){
-
-  return `
-
-    <div class="empty">
-
-      <div class="empty-icon">
-        ${icon}
-      </div>
-
-      <div>
-        ${escapeHTML(text)}
-      </div>
-
-    </div>
-
-  `;
-
-}
-
-
-/* ==========================================
-   ESCAPE
-========================================== */
-
-function escapeHTML(value){
-
-  return String(
-    value ?? ""
-  )
-  .replace(
-    /&/g,
-    "&amp;"
-  )
-  .replace(
-    /</g,
-    "&lt;"
-  )
-  .replace(
-    />/g,
-    "&gt;"
-  )
-  .replace(
-    /"/g,
-    "&quot;"
-  )
-  .replace(
-    /'/g,
-    "&#039;"
-  );
-
-}
-
-
-/* ==========================================
-   TOAST
-========================================== */
-
-window.showToast =
-function(message){
-
-  const toast =
-    document.getElementById(
-      "toast"
-    );
-
-
-  toast.textContent =
-    message;
-
-
-  toast.classList.add(
-    "show"
-  );
-
-
-  setTimeout(
-    () =>
-      toast.classList.remove(
-        "show"
-      ),
-    3000
-  );
-
-};
+/* =========================================================
+   START
+========================================================= */
+
+bootAuth();
 
 </script>
 
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(err => console.warn("SW registration:", err));
-  });
-}
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 </script>
 
 </body>
