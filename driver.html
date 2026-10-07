@@ -554,7 +554,7 @@
       margin-bottom: 13px;
     }
 
-    .customer-avatar {
+.customer-avatar {
       width: 40px;
       height: 40px;
 
@@ -743,83 +743,6 @@
       color: var(--muted);
       font-size: 9px;
       margin-top: 3px;
-    }
-
-    .profile-form {
-      display: grid;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .profile-field {
-      display: grid;
-      gap: 5px;
-    }
-
-    .profile-field label {
-      color: var(--muted);
-      font-size: 9px;
-      font-weight: 600;
-    }
-
-    .profile-field input,
-    .profile-field select {
-      width: 100%;
-      height: 44px;
-      padding: 0 12px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      outline: none;
-      background: rgba(255,255,255,.045);
-      color: white;
-      font: inherit;
-      font-size: 11px;
-    }
-
-    .profile-field input:focus,
-    .profile-field select:focus {
-      border-color: rgba(34,197,94,.55);
-    }
-
-    .profile-field select option {
-      background: #111722;
-      color: white;
-    }
-
-    .profile-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 7px;
-      margin-bottom: 14px;
-    }
-
-    .profile-stat {
-      padding: 9px 6px;
-      text-align: center;
-      border-radius: 12px;
-      background: rgba(255,255,255,.035);
-    }
-
-    .profile-stat-value {
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .profile-stat-label {
-      margin-top: 3px;
-      color: var(--muted);
-      font-size: 7px;
-    }
-
-    .save-profile-btn {
-      width: 100%;
-      height: 50px;
-      border: none;
-      border-radius: 15px;
-      background: linear-gradient(135deg, var(--green), var(--green2));
-      color: #041008;
-      font-weight: 800;
-      margin-bottom: 9px;
     }
 
     .logout-btn,
@@ -1094,7 +1017,7 @@
           👤
         </div>
 
-        <div>
+        <div style="min-width:0;flex:1;">
 
           <div
             class="customer-name"
@@ -1110,7 +1033,24 @@
             —
           </div>
 
+          <div
+            class="customer-phone"
+            id="activeCustomerPhone"
+          >
+            —
+          </div>
+
         </div>
+
+        <a
+          class="customer-call-btn"
+          id="callCustomerBtn"
+          href="#"
+          style="display:none;"
+          aria-label="Call customer"
+        >
+          📞
+        </a>
 
       </div>
 
@@ -1242,6 +1182,7 @@
       >
 
       <div>
+
         <div
           class="profile-name"
           id="profileName"
@@ -1255,99 +1196,10 @@
         >
           —
         </div>
+
       </div>
 
     </div>
-
-    <div class="profile-form">
-
-      <div class="profile-field">
-        <label for="profileDriverName">Full Name</label>
-        <input
-          id="profileDriverName"
-          type="text"
-          placeholder="Enter your full name"
-          autocomplete="name"
-        >
-      </div>
-
-      <div class="profile-field">
-        <label for="profileDriverPhone">Mobile Number</label>
-        <input
-          id="profileDriverPhone"
-          type="tel"
-          placeholder="Enter mobile number"
-          inputmode="tel"
-          maxlength="15"
-        >
-      </div>
-
-      <div class="profile-field">
-        <label for="profileDriverCity">City</label>
-        <input
-          id="profileDriverCity"
-          type="text"
-          placeholder="Surajgarha"
-        >
-      </div>
-
-      <div class="profile-field">
-        <label for="profileVehicleType">Vehicle Type</label>
-        <select id="profileVehicleType">
-          <option value="toto">E-Rickshaw / Toto</option>
-          <option value="auto">Auto Rickshaw</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-
-      <div class="profile-field">
-        <label for="profileVehicleNumber">Vehicle Number</label>
-        <input
-          id="profileVehicleNumber"
-          type="text"
-          placeholder="e.g. BR-XX-XX-1234"
-          autocomplete="off"
-        >
-      </div>
-
-      <div class="profile-field">
-        <label for="profilePhotoURL">Profile Photo URL (optional)</label>
-        <input
-          id="profilePhotoURL"
-          type="url"
-          placeholder="https://..."
-          autocomplete="url"
-        >
-      </div>
-
-    </div>
-
-    <div class="profile-stats">
-
-      <div class="profile-stat">
-        <div class="profile-stat-value" id="profileTotalRides">0</div>
-        <div class="profile-stat-label">TOTAL RIDES</div>
-      </div>
-
-      <div class="profile-stat">
-        <div class="profile-stat-value" id="profileRating">—</div>
-        <div class="profile-stat-label">RATING</div>
-      </div>
-
-      <div class="profile-stat">
-        <div class="profile-stat-value" id="profileEarnings">₹0</div>
-        <div class="profile-stat-label">TODAY EARNED</div>
-      </div>
-
-    </div>
-
-    <button
-      class="save-profile-btn"
-      id="saveProfileBtn"
-      onclick="saveDriverProfile()"
-    >
-      Save Profile
-    </button>
 
     <button
       class="logout-btn"
@@ -1366,6 +1218,7 @@
   </div>
 
 </div>
+
 
 <div
   class="toast"
@@ -1740,7 +1593,6 @@
 
 
         loadStats();
-        renderDriverProfile();
 
       } catch (error) {
 
@@ -2599,6 +2451,11 @@
               driverData.phone ||
               "",
 
+            driverPhotoURL:
+              driverData.photoURL ||
+              currentUser.photoURL ||
+              "",
+
             driverVehicleType:
               driverData.vehicleType ||
               "toto",
@@ -2756,6 +2613,20 @@
     ).textContent =
       currentRide.customerEmail ||
       "";
+
+    const customerPhone = currentRide.customerPhone || "";
+    const phoneEl = document.getElementById("activeCustomerPhone");
+    const callBtn = document.getElementById("callCustomerBtn");
+    phoneEl.textContent = customerPhone ? customerPhone : "Phone not available";
+    callBtn.style.display = customerPhone ? "grid" : "none";
+    callBtn.href = customerPhone ? "tel:" + customerPhone : "#";
+
+    const avatar = document.getElementById("customerAvatar");
+    if (currentRide.customerPhotoURL) {
+      avatar.innerHTML = "<img alt=\"Customer\" src=\"" + escapeHtml(currentRide.customerPhotoURL) + "\">";
+    } else {
+      avatar.textContent = "👤";
+    }
 
 
     const pickup =
@@ -3110,14 +2981,17 @@
   }
 
 
+  function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>\"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[char]));
+  }
+
+
   /* ==========================================
      PROFILE
   ========================================== */
 
   window.openProfile =
     function() {
-
-      renderDriverProfile();
 
       document
         .getElementById(
@@ -3153,184 +3027,6 @@
       ) {
 
         closeProfile();
-
-      }
-
-    };
-
-
-  function renderDriverProfile() {
-
-    if (!currentUser || !driverData) return;
-
-    const name =
-      driverData.name ||
-      currentUser.displayName ||
-      "Driver";
-
-    const photo =
-      driverData.photoURL ||
-      currentUser.photoURL ||
-      "";
-
-    document.getElementById("profileDriverName").value =
-      name;
-
-    document.getElementById("profileDriverPhone").value =
-      driverData.phone || "";
-
-    document.getElementById("profileDriverCity").value =
-      driverData.city || "Surajgarha";
-
-    document.getElementById("profileVehicleType").value =
-      driverData.vehicleType || "toto";
-
-    document.getElementById("profileVehicleNumber").value =
-      driverData.vehicleNumber || "";
-
-    document.getElementById("profilePhotoURL").value =
-      photo;
-
-    document.getElementById("profileTotalRides").textContent =
-      driverData.totalRides || 0;
-
-    document.getElementById("profileRating").textContent =
-      driverData.rating
-        ? Number(driverData.rating).toFixed(1)
-        : "—";
-
-    document.getElementById("profileEarnings").textContent =
-      "₹" + (driverData.todayEarnings || 0);
-
-    document.getElementById("profileName").textContent =
-      name;
-
-    document.getElementById("profileEmail").textContent =
-      currentUser.email || driverData.email || "—";
-
-    if (photo) {
-      document.getElementById("profileBig").src = photo;
-    } else {
-      document.getElementById("profileBig").removeAttribute("src");
-    }
-  }
-
-
-  window.saveDriverProfile =
-    async function() {
-
-      if (!currentUser || !driverData) {
-        showToast("Driver profile is not ready.");
-        return;
-      }
-
-      const btn =
-        document.getElementById("saveProfileBtn");
-
-      const name =
-        document.getElementById("profileDriverName").value.trim();
-
-      const phone =
-        document.getElementById("profileDriverPhone").value.trim();
-
-      const city =
-        document.getElementById("profileDriverCity").value.trim();
-
-      const vehicleType =
-        document.getElementById("profileVehicleType").value;
-
-      const vehicleNumber =
-        document.getElementById("profileVehicleNumber").value.trim().toUpperCase();
-
-      const photoURL =
-        document.getElementById("profilePhotoURL").value.trim();
-
-      if (!name) {
-        showToast("Please enter your name.");
-        return;
-      }
-
-      if (phone && !/^[0-9+()\-\s]{7,15}$/.test(phone)) {
-        showToast("Please enter a valid mobile number.");
-        return;
-      }
-
-      if (photoURL && !/^https?:\/\//i.test(photoURL)) {
-        showToast("Photo URL must start with http:// or https://");
-        return;
-      }
-
-      btn.disabled = true;
-      btn.textContent = "Saving...";
-
-      try {
-
-        const updates = {
-          name: name,
-          phone: phone,
-          city: city || "Surajgarha",
-          vehicleType: vehicleType || "toto",
-          vehicleNumber: vehicleNumber,
-          photoURL: photoURL,
-          updatedAt: serverTimestamp()
-        };
-
-        await updateDoc(
-          doc(db, "users", currentUser.uid),
-          updates
-        );
-
-        await updateDoc(
-          doc(db, "drivers", currentUser.uid),
-          updates
-        );
-
-        driverData = {
-          ...driverData,
-          ...updates
-        };
-
-        document.getElementById("welcomeName").textContent =
-          name.split(" ")[0];
-
-        document.getElementById("profileName").textContent =
-          name;
-
-        const image =
-          document.getElementById("profileImage");
-
-        const letter =
-          document.getElementById("profileLetter");
-
-        if (photoURL) {
-          image.src = photoURL;
-          image.style.display = "block";
-          letter.style.display = "none";
-          document.getElementById("profileBig").src = photoURL;
-        } else {
-          image.removeAttribute("src");
-          image.style.display = "none";
-          letter.style.display = "inline";
-          letter.textContent =
-            name.charAt(0).toUpperCase();
-          document.getElementById("profileBig").removeAttribute("src");
-        }
-
-        showToast("Profile updated successfully.");
-
-      } catch (error) {
-
-        console.error("Save driver profile:", error);
-        showToast(
-          error?.code === "permission-denied"
-            ? "Profile update permission denied."
-            : "Could not update profile."
-        );
-
-      } finally {
-
-        btn.disabled = false;
-        btn.textContent = "Save Profile";
 
       }
 
