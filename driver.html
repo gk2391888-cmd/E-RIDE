@@ -554,7 +554,7 @@
       margin-bottom: 13px;
     }
 
-.customer-avatar {
+    .customer-avatar {
       width: 40px;
       height: 40px;
 
@@ -566,6 +566,33 @@
       background: #263142;
 
       font-size: 18px;
+    }
+
+    .customer-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .customer-phone {
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 3px;
+    }
+
+    .customer-call-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      text-decoration: none;
+      background: rgba(34,197,94,.12);
+      border: 1px solid rgba(34,197,94,.22);
+      font-size: 18px;
+      flex: 0 0 auto;
     }
 
     .customer-name {
@@ -634,7 +661,7 @@
       height: 74px;
 
       display: grid;
-      grid-template-columns: repeat(4,1fr);
+      grid-template-columns: repeat(3,1fr);
 
       padding: 8px;
 
@@ -743,76 +770,6 @@
       color: var(--muted);
       font-size: 9px;
       margin-top: 3px;
-    }
-
-    .profile-form {
-      max-height: 52vh;
-      overflow-y: auto;
-      padding-right: 2px;
-      margin-bottom: 14px;
-    }
-
-    .profile-form-title {
-      font-size: 13px;
-      font-weight: 800;
-      margin-bottom: 11px;
-    }
-
-    .profile-form label {
-      display: block;
-      color: var(--muted);
-      font-size: 9px;
-      font-weight: 700;
-      margin: 10px 0 5px;
-    }
-
-    .profile-form input,
-    .profile-form select,
-    .profile-form textarea {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: #0b1018;
-      color: white;
-      padding: 12px;
-      outline: none;
-      font: inherit;
-      font-size: 11px;
-    }
-
-    .profile-form textarea {
-      resize: vertical;
-      min-height: 70px;
-    }
-
-    .profile-form input:focus,
-    .profile-form select:focus,
-    .profile-form textarea:focus {
-      border-color: rgba(34,197,94,.55);
-    }
-
-    .save-profile-btn {
-      width: 100%;
-      height: 48px;
-      margin-top: 14px;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg,var(--green),var(--green2));
-      color: #041008;
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .save-profile-btn:disabled {
-      opacity: .6;
-    }
-
-    .profile-save-note {
-      color: var(--muted);
-      font-size: 8px;
-      line-height: 1.5;
-      margin-top: 7px;
-      text-align: center;
     }
 
     .logout-btn,
@@ -1087,7 +1044,7 @@
           👤
         </div>
 
-        <div style="min-width:0;flex:1;">
+        <div>
 
           <div
             class="customer-name"
@@ -1103,24 +1060,7 @@
             —
           </div>
 
-          <div
-            class="customer-phone"
-            id="activeCustomerPhone"
-          >
-            —
-          </div>
-
         </div>
-
-        <a
-          class="customer-call-btn"
-          id="callCustomerBtn"
-          href="#"
-          style="display:none;"
-          aria-label="Call customer"
-        >
-          📞
-        </a>
 
       </div>
 
@@ -1244,41 +1184,31 @@
     </div>
 
     <div class="profile-info">
-      <img class="profile-big" id="profileBig" alt="Driver">
-      <div style="min-width:0;flex:1;">
-        <div class="profile-name" id="profileName">Driver</div>
-        <div class="profile-email" id="profileEmail">—</div>
+
+      <img
+        class="profile-big"
+        id="profileBig"
+        alt="Driver"
+      >
+
+      <div>
+
+        <div
+          class="profile-name"
+          id="profileName"
+        >
+          Driver
+        </div>
+
+        <div
+          class="profile-email"
+          id="profileEmail"
+        >
+          —
+        </div>
+
       </div>
-    </div>
 
-    <div class="profile-form">
-      <div class="profile-form-title">Driver details</div>
-
-      <label>Full Name</label>
-      <input id="profileFullName" type="text" placeholder="Enter full name" autocomplete="name">
-
-      <label>Phone Number</label>
-      <input id="profilePhone" type="tel" placeholder="10 digit mobile number" maxlength="10" autocomplete="tel">
-
-      <label>Vehicle Type</label>
-      <select id="profileVehicleType">
-        <option value="toto">Toto / E-Rickshaw</option>
-        <option value="goods">Goods Toto</option>
-      </select>
-
-      <label>Vehicle Number</label>
-      <input id="profileVehicleNumber" type="text" placeholder="e.g. BR01AB1234" maxlength="20" style="text-transform:uppercase;">
-
-      <label>Address</label>
-      <textarea id="profileAddress" rows="3" placeholder="Enter your address"></textarea>
-
-      <label>Driving Licence Number <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
-      <input id="profileLicence" type="text" placeholder="Enter licence number">
-
-      <button class="save-profile-btn" id="saveProfileBtn" onclick="saveDriverProfile()">
-        💾 Save Details
-      </button>
-      <div class="profile-save-note">Your account approval/status is controlled by E RIDE admin.</div>
     </div>
 
     <button
@@ -1329,7 +1259,6 @@
     getFirestore,
     doc,
     getDoc,
-    getDocs,
     setDoc,
     updateDoc,
     addDoc,
@@ -1402,6 +1331,8 @@
   let locationWatchId = null;
 
   let unsubscribeRides = null;
+
+  let unsubscribeActiveRide = null;
 
 
   /* ==========================================
@@ -1674,6 +1605,15 @@
 
 
         loadStats();
+
+        // Restore an active ride after page refresh.
+        try {
+          const savedDriver = await getDoc(doc(db, "drivers", user.uid));
+          const savedRideId = savedDriver.exists() ? savedDriver.data().currentRideId : null;
+          if (savedRideId) listenToActiveRide(savedRideId);
+        } catch (restoreError) {
+          console.warn("Active ride restore:", restoreError);
+        }
 
       } catch (error) {
 
@@ -2168,6 +2108,77 @@
 
 
   /* ==========================================
+     ACTIVE RIDE REALTIME LISTENER
+  ========================================== */
+
+  function listenToActiveRide(rideId) {
+    stopActiveRideListener();
+    if (!rideId) return;
+
+    unsubscribeActiveRide = onSnapshot(
+      doc(db, "rides", rideId),
+      snapshot => {
+        if (!snapshot.exists()) {
+          clearActiveRide("Ride no longer exists.");
+          return;
+        }
+
+        const ride = { id: snapshot.id, ...snapshot.data() };
+
+        if (ride.driverId && ride.driverId !== currentUser?.uid) {
+          clearActiveRide("This ride is no longer assigned to you.");
+          return;
+        }
+
+        if (ride.status === "accepted" || ride.status === "started") {
+          currentRide = ride;
+          showActiveRide();
+          return;
+        }
+
+        if (ride.status === "cancelled") {
+          clearActiveRide(ride.cancelledBy === "customer" ? "Customer cancelled the ride." : "Ride cancelled.");
+          return;
+        }
+
+        if (ride.status === "completed") {
+          clearActiveRide("Ride completed.");
+        }
+      },
+      error => console.error("Active ride listener:", error)
+    );
+  }
+
+  function stopActiveRideListener() {
+    if (unsubscribeActiveRide) {
+      unsubscribeActiveRide();
+      unsubscribeActiveRide = null;
+    }
+  }
+
+  async function clearActiveRide(message) {
+    stopActiveRideListener();
+    currentRide = null;
+    document.getElementById("activeRide")?.classList.remove("show");
+
+    try {
+      if (currentUser) {
+        await updateDoc(doc(db, "drivers", currentUser.uid), {
+          currentRideId: null,
+          available: true,
+          updatedAt: serverTimestamp()
+        });
+      }
+    } catch (error) {
+      console.warn("Clear active ride state:", error);
+    }
+
+    if (isOnline) listenForRides();
+    if (message) showToast(message);
+  }
+
+
+  /* ==========================================
      RENDER REQUESTS
   ========================================== */
 
@@ -2532,11 +2543,6 @@
               driverData.phone ||
               "",
 
-            driverPhotoURL:
-              driverData.photoURL ||
-              currentUser.photoURL ||
-              "",
-
             driverVehicleType:
               driverData.vehicleType ||
               "toto",
@@ -2612,6 +2618,7 @@
         updateOnlineUI();
 
         showActiveRide();
+        listenToActiveRide(rideId);
 
 
         showToast(
@@ -2694,20 +2701,6 @@
     ).textContent =
       currentRide.customerEmail ||
       "";
-
-    const customerPhone = currentRide.customerPhone || "";
-    const phoneEl = document.getElementById("activeCustomerPhone");
-    const callBtn = document.getElementById("callCustomerBtn");
-    phoneEl.textContent = customerPhone ? customerPhone : "Phone not available";
-    callBtn.style.display = customerPhone ? "grid" : "none";
-    callBtn.href = customerPhone ? "tel:" + customerPhone : "#";
-
-    const avatar = document.getElementById("customerAvatar");
-    if (currentRide.customerPhotoURL) {
-      avatar.innerHTML = "<img alt=\"Customer\" src=\"" + escapeHtml(currentRide.customerPhotoURL) + "\">";
-    } else {
-      avatar.textContent = "👤";
-    }
 
 
     const pickup =
@@ -2954,6 +2947,8 @@
         );
 
 
+        stopActiveRideListener();
+
         currentRide =
           null;
 
@@ -3076,77 +3071,6 @@
         .classList.add(
           "show"
         );
-
-      fillDriverProfileForm();
-
-    };
-
-
-  function fillDriverProfileForm() {
-
-    const d = driverData || {};
-
-    const user = currentUser || {};
-
-    const name = d.name || user.displayName || "";
-
-    document.getElementById("profileFullName").value = name;
-    document.getElementById("profilePhone").value = d.phone || user.phoneNumber || "";
-    document.getElementById("profileVehicleType").value = d.vehicleType || "toto";
-    document.getElementById("profileVehicleNumber").value = d.vehicleNumber || "";
-    document.getElementById("profileAddress").value = d.address || "";
-    document.getElementById("profileLicence").value = d.licenceNumber || "";
-
-  }
-
-
-  window.saveDriverProfile =
-    async function() {
-
-      if (!currentUser) return;
-
-      const name = document.getElementById("profileFullName").value.trim();
-      const phone = document.getElementById("profilePhone").value.trim();
-      const vehicleType = document.getElementById("profileVehicleType").value;
-      const vehicleNumber = document.getElementById("profileVehicleNumber").value.trim().toUpperCase();
-      const address = document.getElementById("profileAddress").value.trim();
-      const licenceNumber = document.getElementById("profileLicence").value.trim().toUpperCase();
-
-      if (!name) { showToast("Please enter your full name."); return; }
-      if (phone && !/^[6-9]\d{9}$/.test(phone)) { showToast("Enter a valid 10 digit phone number."); return; }
-      if (!vehicleNumber) { showToast("Please enter vehicle number."); return; }
-
-      const btn = document.getElementById("saveProfileBtn");
-      btn.disabled = true;
-      btn.textContent = "Saving...";
-
-      try {
-        const updates = {
-          name, phone, vehicleType, vehicleNumber, address, licenceNumber, updatedAt: serverTimestamp()
-        };
-
-        await updateDoc(doc(db, "users", currentUser.uid), updates);
-        await setDoc(doc(db, "drivers", currentUser.uid), {
-          uid: currentUser.uid,
-          name, phone, vehicleType, vehicleNumber, address, licenceNumber,
-          email: currentUser.email || "",
-          photoURL: driverData?.photoURL || currentUser.photoURL || "",
-          updatedAt: serverTimestamp()
-        }, { merge: true });
-
-        driverData = { ...driverData, ...updates };
-
-        document.getElementById("welcomeName").textContent = name.split(" ")[0];
-        document.getElementById("profileName").textContent = name;
-
-        showToast("Profile details saved successfully.");
-      } catch (error) {
-        console.error("Save driver profile:", error);
-        showToast("Could not save profile details.");
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "💾 Save Details";
-      }
 
     };
 
@@ -3344,11 +3268,6 @@
 
     }
   );
-
-
-  window.addEventListener("error", event => {
-    console.error("E RIDE Driver error:", event.error || event.message);
-  });
 
 </script>
 
