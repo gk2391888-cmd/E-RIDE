@@ -1,0 +1,2517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+
+  <title>E RIDE — Customer</title>
+
+  <meta name="theme-color" content="#070a10">
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- Leaflet Map -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  >
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg: #070a10;
+      --surface: #10151f;
+      --surface2: #151b27;
+      --border: rgba(255,255,255,.08);
+      --text: #ffffff;
+      --muted: #8f9aaa;
+      --green: #22c55e;
+      --green2: #16a34a;
+      --red: #ef4444;
+      --yellow: #f59e0b;
+      --blue: #3b82f6;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* =========================
+       APP
+    ========================= */
+
+    .app {
+      width: 100%;
+      max-width: 520px;
+      min-height: 100vh;
+      margin: auto;
+      background: var(--bg);
+      padding-bottom: 92px;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 17px 18px;
+
+      background: rgba(7,10,16,.90);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+
+      border-radius: 13px;
+
+      display: grid;
+      place-items: center;
+
+      background: linear-gradient(
+        135deg,
+        var(--green),
+        #86efac
+      );
+
+      font-size: 22px;
+
+      box-shadow:
+        0 10px 30px rgba(34,197,94,.20);
+    }
+
+    .brand-name {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .brand-sub {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+    }
+
+    .profile-btn {
+      width: 42px;
+      height: 42px;
+
+      border: 1px solid var(--border);
+      border-radius: 50%;
+
+      background: var(--surface2);
+
+      display: grid;
+      place-items: center;
+
+      overflow: hidden;
+    }
+
+    .profile-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .profile-letter {
+      font-weight: 700;
+      color: #d9dee7;
+    }
+
+    /* =========================
+       MAIN
+    ========================= */
+
+    .main {
+      padding: 18px;
+    }
+
+    .hello {
+      margin-bottom: 18px;
+    }
+
+    .hello-small {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .hello-name {
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: -.7px;
+    }
+
+    /* =========================
+       MAP
+    ========================= */
+
+    .map-card {
+      position: relative;
+
+      height: 245px;
+
+      border-radius: 24px;
+      overflow: hidden;
+
+      border: 1px solid var(--border);
+
+      background: #dfe8df;
+
+      box-shadow:
+        0 20px 50px rgba(0,0,0,.22);
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    .map-location-btn {
+      position: absolute;
+      z-index: 500;
+
+      right: 12px;
+      bottom: 12px;
+
+      width: 45px;
+      height: 45px;
+
+      border: 1px solid rgba(255,255,255,.8);
+      border-radius: 14px;
+
+      background: white;
+
+      color: #111827;
+
+      font-size: 18px;
+
+      box-shadow: 0 8px 20px rgba(0,0,0,.20);
+    }
+
+    /* =========================
+       BOOKING CARD
+    ========================= */
+
+    .booking-card {
+      position: relative;
+
+      margin-top: -25px;
+      z-index: 600;
+
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+      border-radius: 25px;
+
+      padding: 18px;
+
+      box-shadow:
+        0 20px 55px rgba(0,0,0,.35);
+    }
+
+    .booking-title {
+      font-size: 16px;
+      font-weight: 800;
+
+      margin-bottom: 14px;
+    }
+
+    /* =========================
+       SERVICE SELECTOR
+    ========================= */
+
+    .service-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      gap: 10px;
+
+      margin-bottom: 16px;
+    }
+
+    .service {
+      border: 1px solid var(--border);
+
+      background: rgba(255,255,255,.025);
+
+      border-radius: 16px;
+
+      padding: 13px;
+
+      color: white;
+
+      text-align: left;
+
+      transition: .2s ease;
+    }
+
+    .service.active {
+      border-color: rgba(34,197,94,.7);
+
+      background: rgba(34,197,94,.10);
+
+      box-shadow:
+        0 0 0 2px rgba(34,197,94,.06);
+    }
+
+    .service-icon {
+      font-size: 22px;
+      margin-bottom: 7px;
+    }
+
+    .service-title {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .service-description {
+      margin-top: 3px;
+
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    /* =========================
+       LOCATION INPUTS
+    ========================= */
+
+    .locations {
+      display: flex;
+      flex-direction: column;
+
+      gap: 9px;
+
+      margin-bottom: 15px;
+    }
+
+    .location-input {
+      position: relative;
+    }
+
+    .location-input .dot {
+      position: absolute;
+
+      left: 14px;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      width: 10px;
+      height: 10px;
+
+      border-radius: 50%;
+
+      background: var(--green);
+    }
+
+    .location-input.destination .dot {
+      background: var(--red);
+    }
+
+    .location-input input {
+      width: 100%;
+
+      height: 53px;
+
+      border: 1px solid var(--border);
+      border-radius: 15px;
+
+      outline: none;
+
+      padding:
+        0 14px 0 36px;
+
+      background: var(--surface2);
+
+      color: white;
+
+      font-size: 12px;
+    }
+
+    .location-input input::placeholder {
+      color: #70798a;
+    }
+
+    .location-input input:focus {
+      border-color: rgba(34,197,94,.5);
+    }
+
+    /* =========================
+       GOODS DETAILS
+    ========================= */
+
+    .goods-box {
+      display: none;
+
+      margin-bottom: 15px;
+    }
+
+    .goods-box.show {
+      display: block;
+    }
+
+    .goods-box textarea {
+      width: 100%;
+
+      min-height: 85px;
+
+      resize: none;
+
+      border: 1px solid var(--border);
+      border-radius: 15px;
+
+      outline: none;
+
+      padding: 13px;
+
+      background: var(--surface2);
+
+      color: white;
+
+      font-size: 12px;
+    }
+
+    .goods-box textarea::placeholder {
+      color: #70798a;
+    }
+
+    /* =========================
+       FARE
+    ========================= */
+
+    .fare-box {
+      display: none;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(34,197,94,.10),
+          rgba(34,197,94,.025)
+        );
+
+      border: 1px solid rgba(34,197,94,.14);
+
+      border-radius: 17px;
+
+      padding: 14px;
+
+      margin-bottom: 15px;
+    }
+
+    .fare-box.show {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .fare-label {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .fare-distance {
+      margin-top: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .fare-price {
+      font-size: 23px;
+      font-weight: 800;
+      color: #86efac;
+    }
+
+    /* =========================
+       BOOK BUTTON
+    ========================= */
+
+    .book-btn {
+      width: 100%;
+      height: 55px;
+
+      border: none;
+      border-radius: 16px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--green),
+          var(--green2)
+        );
+
+      color: #041008;
+
+      font-size: 14px;
+      font-weight: 800;
+
+      box-shadow:
+        0 12px 28px rgba(34,197,94,.18);
+
+      transition: .15s ease;
+    }
+
+    .book-btn:active {
+      transform: scale(.98);
+    }
+
+    .book-btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* =========================
+       QUICK ACTIONS
+    ========================= */
+
+    .section-title {
+      margin-top: 25px;
+      margin-bottom: 11px;
+
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+
+      gap: 9px;
+    }
+
+    .quick {
+      min-height: 78px;
+
+      border: 1px solid var(--border);
+      border-radius: 16px;
+
+      background: var(--surface);
+
+      color: white;
+
+      padding: 12px 8px;
+
+      text-align: center;
+    }
+
+    .quick-icon {
+      font-size: 20px;
+      margin-bottom: 7px;
+    }
+
+    .quick span {
+      display: block;
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    /* =========================
+       ACTIVE RIDE
+    ========================= */
+
+    .active-ride {
+      display: none;
+
+      margin-top: 22px;
+
+      padding: 17px;
+
+      border-radius: 20px;
+
+      border: 1px solid rgba(59,130,246,.18);
+
+      background: rgba(59,130,246,.07);
+    }
+
+    .active-ride.show {
+      display: block;
+    }
+
+    .active-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 13px;
+    }
+
+    .active-title {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .ride-status {
+      font-size: 9px;
+
+      color: #93c5fd;
+
+      background: rgba(59,130,246,.12);
+
+      border-radius: 999px;
+
+      padding: 6px 9px;
+    }
+
+    .ride-info {
+      color: var(--muted);
+
+      font-size: 11px;
+
+      line-height: 1.7;
+    }
+
+    /* =========================
+       BOTTOM NAV
+    ========================= */
+
+    .bottom-nav {
+      position: fixed;
+
+      z-index: 2000;
+
+      bottom: 0;
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      width: 100%;
+      max-width: 520px;
+
+      height: 75px;
+
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+
+      padding:
+        8px 10px
+        calc(8px + env(safe-area-inset-bottom));
+
+      background: rgba(12,16,24,.96);
+
+      backdrop-filter: blur(20px);
+
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-item {
+      border: none;
+      background: transparent;
+
+      color: #697384;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      gap: 4px;
+
+      font-size: 9px;
+    }
+
+    .nav-item .nav-icon {
+      font-size: 19px;
+    }
+
+    .nav-item.active {
+      color: var(--green);
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal {
+      display: none;
+
+      position: fixed;
+
+      z-index: 5000;
+
+      inset: 0;
+
+      background: rgba(0,0,0,.65);
+
+      align-items: flex-end;
+
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 520px;
+
+      background: #111722;
+
+      border-radius: 27px 27px 0 0;
+
+      border: 1px solid var(--border);
+
+      padding: 22px;
+
+      animation: slideUp .22s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 15px;
+    }
+
+    .profile-info {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+
+      padding: 14px;
+
+      border-radius: 17px;
+
+      background: rgba(255,255,255,.04);
+
+      margin-bottom: 15px;
+    }
+
+    .profile-big {
+      width: 48px;
+      height: 48px;
+
+      border-radius: 50%;
+
+      object-fit: cover;
+
+      background: var(--surface2);
+    }
+
+    .profile-name {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .profile-email {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 3px;
+    }
+
+    .logout-btn {
+      width: 100%;
+
+      height: 50px;
+
+      border: 1px solid rgba(239,68,68,.25);
+
+      border-radius: 15px;
+
+      background: rgba(239,68,68,.08);
+
+      color: #fca5a5;
+
+      font-weight: 700;
+    }
+
+    .close-btn {
+      width: 100%;
+
+      height: 50px;
+
+      border: none;
+
+      border-radius: 15px;
+
+      margin-top: 9px;
+
+      background: rgba(255,255,255,.06);
+
+      color: white;
+
+      font-weight: 700;
+    }
+
+    /* =========================
+       TOAST
+    ========================= */
+
+    .toast {
+      position: fixed;
+
+      z-index: 7000;
+
+      left: 50%;
+
+      bottom: 90px;
+
+      transform:
+        translateX(-50%)
+        translateY(20px);
+
+      width: calc(100% - 36px);
+
+      max-width: 480px;
+
+      padding: 13px 15px;
+
+      border-radius: 15px;
+
+      background: #1b2330;
+
+      border: 1px solid var(--border);
+
+      color: white;
+
+      font-size: 11px;
+
+      opacity: 0;
+
+      pointer-events: none;
+
+      transition: .25s ease;
+
+      box-shadow: 0 15px 40px rgba(0,0,0,.35);
+    }
+
+    .toast.show {
+      opacity: 1;
+
+      transform:
+        translateX(-50%)
+        translateY(0);
+    }
+
+    /* =========================
+       DESKTOP
+    ========================= */
+
+    @media (min-width: 700px) {
+
+      .app {
+        max-width: 1050px;
+      }
+
+      .main {
+        max-width: 850px;
+        margin: auto;
+      }
+
+      .map-card {
+        height: 380px;
+      }
+
+      .booking-card {
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .bottom-nav {
+        max-width: 520px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- HEADER -->
+    <header class="header">
+
+      <div class="brand">
+
+        <div class="brand-logo">
+          🛺
+        </div>
+
+        <div>
+          <div class="brand-name">
+            E RIDE
+          </div>
+
+          <div class="brand-sub">
+            Surajgarha • Lakhisarai
+          </div>
+        </div>
+
+      </div>
+
+      <button
+        class="profile-btn"
+        onclick="openProfile()"
+        aria-label="Profile"
+      >
+        <span
+          class="profile-letter"
+          id="profileLetter"
+        >
+          U
+        </span>
+
+        <img
+          id="profileImage"
+          alt="Profile"
+        >
+      </button>
+
+    </header>
+
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <section class="hello">
+
+        <div class="hello-small">
+          Welcome back 👋
+        </div>
+
+        <div
+          class="hello-name"
+          id="helloName"
+        >
+          Rider
+        </div>
+
+      </section>
+
+
+      <!-- MAP -->
+      <section class="map-card">
+
+        <div id="map"></div>
+
+        <button
+          class="map-location-btn"
+          onclick="locateMe()"
+          title="My location"
+        >
+          📍
+        </button>
+
+      </section>
+
+
+      <!-- BOOKING -->
+      <section class="booking-card">
+
+        <div class="booking-title">
+          Where are you going?
+        </div>
+
+
+        <!-- SERVICE -->
+        <div class="service-tabs">
+
+          <button
+            class="service active"
+            id="totoService"
+            onclick="selectService('toto')"
+          >
+
+            <div class="service-icon">
+              🛺
+            </div>
+
+            <div class="service-title">
+              Toto Ride
+            </div>
+
+            <div class="service-description">
+              Travel locally
+            </div>
+
+          </button>
+
+
+          <button
+            class="service"
+            id="goodsService"
+            onclick="selectService('goods')"
+          >
+
+            <div class="service-icon">
+              📦
+            </div>
+
+            <div class="service-title">
+              Goods
+            </div>
+
+            <div class="service-description">
+              Send goods locally
+            </div>
+
+          </button>
+
+        </div>
+
+
+        <!-- LOCATIONS -->
+        <div class="locations">
+
+          <div class="location-input">
+
+            <span class="dot"></span>
+
+            <input
+              id="pickup"
+              type="text"
+              placeholder="Pickup location"
+              autocomplete="off"
+            >
+
+          </div>
+
+
+          <div class="location-input destination">
+
+            <span class="dot"></span>
+
+            <input
+              id="destination"
+              type="text"
+              placeholder="Where should we go?"
+              autocomplete="off"
+            >
+
+          </div>
+
+        </div>
+
+
+        <!-- GOODS -->
+        <div
+          class="goods-box"
+          id="goodsBox"
+        >
+
+          <textarea
+            id="goodsDetails"
+            placeholder="Describe your goods — e.g. 2 boxes, furniture, parcel..."
+          ></textarea>
+
+        </div>
+
+
+        <!-- FARE -->
+        <div
+          class="fare-box"
+          id="fareBox"
+        >
+
+          <div>
+
+            <div class="fare-label">
+              Estimated fare
+            </div>
+
+            <div
+              class="fare-distance"
+              id="fareDistance"
+            >
+              Distance calculating...
+            </div>
+
+          </div>
+
+          <div
+            class="fare-price"
+            id="farePrice"
+          >
+            ₹ —
+          </div>
+
+        </div>
+
+
+        <!-- BOOK -->
+        <button
+          class="book-btn"
+          id="bookBtn"
+          onclick="bookRide()"
+        >
+          Find a Toto
+        </button>
+
+      </section>
+
+
+      <!-- ACTIVE RIDE -->
+      <section
+        class="active-ride"
+        id="activeRide"
+      >
+
+        <div class="active-header">
+
+          <div class="active-title">
+            Your active ride
+          </div>
+
+          <div
+            class="ride-status"
+            id="rideStatus"
+          >
+            Finding driver
+          </div>
+
+        </div>
+
+        <div
+          class="ride-info"
+          id="rideInfo"
+        >
+          Searching for nearby Toto drivers...
+        </div>
+
+      </section>
+
+
+      <!-- QUICK ACTIONS -->
+      <div class="section-title">
+        Quick actions
+      </div>
+
+      <section class="quick-actions">
+
+        <button
+          class="quick"
+          onclick="showComingSoon('Ride history')"
+        >
+
+          <div class="quick-icon">
+            📜
+          </div>
+
+          <span>
+            Ride History
+          </span>
+
+        </button>
+
+
+        <button
+          class="quick"
+          onclick="showComingSoon('Help & Support')"
+        >
+
+          <div class="quick-icon">
+            🆘
+          </div>
+
+          <span>
+            Help & Support
+          </span>
+
+        </button>
+
+
+        <button
+          class="quick"
+          onclick="showComingSoon('Offers')"
+        >
+
+          <div class="quick-icon">
+            🎁
+          </div>
+
+          <span>
+            Offers
+          </span>
+
+        </button>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+
+    <button
+      class="nav-item active"
+      onclick="scrollTopPage()"
+    >
+      <span class="nav-icon">🏠</span>
+      Home
+    </button>
+
+    <button
+      class="nav-item"
+      onclick="showComingSoon('Your rides')"
+    >
+      <span class="nav-icon">🛺</span>
+      Rides
+    </button>
+
+    <button
+      class="nav-item"
+      onclick="showComingSoon('Notifications')"
+    >
+      <span class="nav-icon">🔔</span>
+      Alerts
+    </button>
+
+    <button
+      class="nav-item"
+      onclick="openProfile()"
+    >
+      <span class="nav-icon">👤</span>
+      Profile
+    </button>
+
+  </nav>
+
+
+  <!-- PROFILE MODAL -->
+  <div
+    class="modal"
+    id="profileModal"
+    onclick="closeProfileOutside(event)"
+  >
+
+    <div class="modal-card">
+
+      <div class="modal-title">
+        Your Profile
+      </div>
+
+
+      <div class="profile-info">
+
+        <img
+          class="profile-big"
+          id="profileBig"
+          alt="Profile"
+        >
+
+        <div>
+
+          <div
+            class="profile-name"
+            id="profileName"
+          >
+            User
+          </div>
+
+          <div
+            class="profile-email"
+            id="profileEmail"
+          >
+            —
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="logout-btn"
+        onclick="logout()"
+      >
+        Sign Out
+      </button>
+
+
+      <button
+        class="close-btn"
+        onclick="closeProfile()"
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- TOAST -->
+  <div
+    class="toast"
+    id="toast"
+  ></div>
+
+
+  <!-- LEAFLET -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  ></script>
+
+
+  <!-- FIREBASE -->
+  <script type="module">
+
+    import {
+      initializeApp
+    } from
+      "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from
+      "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      addDoc,
+      collection,
+      serverTimestamp
+    } from
+      "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+
+    /* =================================
+       FIREBASE CONFIG
+    ================================= */
+
+    const firebaseConfig = {
+
+      apiKey:
+        "AIzaSyBKuGjmLBUbPCEAQglZK7pCFxH1bnh7OF4",
+
+      authDomain:
+        "e-ride-70342.firebaseapp.com",
+
+      projectId:
+        "e-ride-70342",
+
+      storageBucket:
+        "e-ride-70342.firebasestorage.app",
+
+      messagingSenderId:
+        "946431084655",
+
+      appId:
+        "1:946431084655:web:eddcb4fffe883d4fdf659a",
+
+      measurementId:
+        "G-WZ5YPZ4YZD"
+
+    };
+
+
+    /* =================================
+       FIREBASE
+    ================================= */
+
+    const app =
+      initializeApp(firebaseConfig);
+
+    const auth =
+      getAuth(app);
+
+    const db =
+      getFirestore(app);
+
+
+    /* =================================
+       GLOBAL VARIABLES
+    ================================= */
+
+    let currentUser = null;
+
+    let currentUserData = null;
+
+    let selectedService = "toto";
+
+    let map = null;
+
+    let userMarker = null;
+
+    let userLocation = null;
+
+    let destinationMarker = null;
+
+
+    /* =================================
+       MAP INIT
+    ================================= */
+
+    function initMap() {
+
+      /*
+        Default center:
+        Surajgarha / Lakhisarai area.
+
+        Exact location is updated
+        when user allows location access.
+      */
+
+      map = L.map("map", {
+        zoomControl: false
+      }).setView(
+        [25.3788, 86.0956],
+        13
+      );
+
+
+      L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          maxZoom: 19,
+          attribution:
+            '&copy; OpenStreetMap contributors'
+        }
+      ).addTo(map);
+
+
+      locateMe();
+
+    }
+
+
+    /* =================================
+       LOCATION
+    ================================= */
+
+    window.locateMe = function() {
+
+      if (!navigator.geolocation) {
+
+        showToast(
+          "Location is not supported by this browser."
+        );
+
+        return;
+      }
+
+
+      showToast(
+        "Getting your location..."
+      );
+
+
+      navigator.geolocation.getCurrentPosition(
+
+        position => {
+
+          const lat =
+            position.coords.latitude;
+
+          const lng =
+            position.coords.longitude;
+
+
+          userLocation = {
+            lat,
+            lng
+          };
+
+
+          if (userMarker) {
+
+            userMarker.setLatLng(
+              [lat, lng]
+            );
+
+          } else {
+
+            userMarker =
+              L.marker(
+                [lat, lng]
+              )
+              .addTo(map)
+              .bindPopup(
+                "📍 You are here"
+              );
+
+          }
+
+
+          map.setView(
+            [lat, lng],
+            16
+          );
+
+
+          document.getElementById(
+            "pickup"
+          ).value =
+            "My current location";
+
+
+          showToast(
+            "Current location detected."
+          );
+
+        },
+
+        error => {
+
+          console.warn(
+            "Location error:",
+            error
+          );
+
+          showToast(
+            "Location permission nahi mili. Pickup manually enter kar sakte ho."
+          );
+
+        },
+
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 30000
+        }
+
+      );
+
+    };
+
+
+    /* =================================
+       SERVICE SELECTION
+    ================================= */
+
+    window.selectService = function(service) {
+
+      selectedService = service;
+
+
+      const toto =
+        document.getElementById(
+          "totoService"
+        );
+
+      const goods =
+        document.getElementById(
+          "goodsService"
+        );
+
+      const goodsBox =
+        document.getElementById(
+          "goodsBox"
+        );
+
+      const bookBtn =
+        document.getElementById(
+          "bookBtn"
+        );
+
+
+      toto.classList.remove("active");
+
+      goods.classList.remove("active");
+
+
+      if (service === "toto") {
+
+        toto.classList.add("active");
+
+        goodsBox.classList.remove("show");
+
+        bookBtn.textContent =
+          "Find a Toto";
+
+      } else {
+
+        goods.classList.add("active");
+
+        goodsBox.classList.add("show");
+
+        bookBtn.textContent =
+          "Find a Goods Toto";
+
+      }
+
+    };
+
+
+    /* =================================
+       FARE CALCULATION
+    ================================= */
+
+    function calculateEstimatedFare(distanceKm) {
+
+      /*
+        Temporary launch fare.
+
+        This is NOT final pricing.
+        Later admin panel will control
+        the fare settings dynamically.
+      */
+
+      const baseFare = 20;
+
+      const perKm = 12;
+
+      let fare =
+        baseFare +
+        Math.max(distanceKm - 1, 0) * perKm;
+
+
+      /*
+        Round to nearest ₹5
+      */
+
+      fare =
+        Math.ceil(fare / 5) * 5;
+
+
+      return Math.max(
+        baseFare,
+        fare
+      );
+
+    }
+
+
+    /* =================================
+       DISTANCE
+    ================================= */
+
+    function calculateDistance(
+      lat1,
+      lon1,
+      lat2,
+      lon2
+    ) {
+
+      const R = 6371;
+
+      const dLat =
+        (lat2 - lat1) *
+        Math.PI / 180;
+
+      const dLon =
+        (lon2 - lon1) *
+        Math.PI / 180;
+
+
+      const a =
+        Math.sin(dLat / 2) ** 2 +
+
+        Math.cos(
+          lat1 * Math.PI / 180
+        ) *
+
+        Math.cos(
+          lat2 * Math.PI / 180
+        ) *
+
+        Math.sin(
+          dLon / 2
+        ) ** 2;
+
+
+      return (
+        R *
+        2 *
+        Math.atan2(
+          Math.sqrt(a),
+          Math.sqrt(1 - a)
+        )
+      );
+
+    }
+
+
+    /* =================================
+       DESTINATION GEOCODING
+    ================================= */
+
+    async function geocodeDestination(
+      text
+    ) {
+
+      try {
+
+        const url =
+          "https://nominatim.openstreetmap.org/search?" +
+          new URLSearchParams({
+
+            q:
+              text +
+              ", Surajgarha, Lakhisarai, Bihar",
+
+            format: "json",
+
+            limit: "1"
+
+          });
+
+
+        const response =
+          await fetch(url, {
+            headers: {
+              "Accept":
+                "application/json"
+            }
+          });
+
+
+        if (!response.ok) {
+          return null;
+        }
+
+
+        const results =
+          await response.json();
+
+
+        if (!results.length) {
+          return null;
+        }
+
+
+        return {
+
+          lat:
+            Number(results[0].lat),
+
+          lng:
+            Number(results[0].lon)
+
+        };
+
+      } catch (error) {
+
+        console.error(
+          "Geocoding error:",
+          error
+        );
+
+        return null;
+
+      }
+
+    }
+
+
+    /* =================================
+       FARE PREVIEW
+    ================================= */
+
+    async function previewFare() {
+
+      const pickup =
+        document.getElementById(
+          "pickup"
+        ).value.trim();
+
+
+      const destination =
+        document.getElementById(
+          "destination"
+        ).value.trim();
+
+
+      const fareBox =
+        document.getElementById(
+          "fareBox"
+        );
+
+
+      if (!pickup || !destination) {
+
+        fareBox.classList.remove(
+          "show"
+        );
+
+        return;
+
+      }
+
+
+      if (!userLocation) {
+
+        showToast(
+          "Pehle current location allow karo."
+        );
+
+        return;
+
+      }
+
+
+      const destinationLocation =
+        await geocodeDestination(
+          destination
+        );
+
+
+      if (!destinationLocation) {
+
+        showToast(
+          "Destination locate nahi ho paaya."
+        );
+
+        return;
+
+      }
+
+
+      const distance =
+        calculateDistance(
+
+          userLocation.lat,
+          userLocation.lng,
+
+          destinationLocation.lat,
+          destinationLocation.lng
+
+        );
+
+
+      if (destinationMarker) {
+
+        destinationMarker.setLatLng([
+          destinationLocation.lat,
+          destinationLocation.lng
+        ]);
+
+      } else {
+
+        destinationMarker =
+          L.marker([
+            destinationLocation.lat,
+            destinationLocation.lng
+          ])
+          .addTo(map)
+          .bindPopup(
+            "📍 Destination"
+          );
+
+      }
+
+
+      const fare =
+        calculateEstimatedFare(
+          distance
+        );
+
+
+      document.getElementById(
+        "fareDistance"
+      ).textContent =
+        distance.toFixed(1) +
+        " km approximately";
+
+
+      document.getElementById(
+        "farePrice"
+      ).textContent =
+        "₹ " + fare;
+
+
+      fareBox.classList.add(
+        "show"
+      );
+
+    }
+
+
+    /* =================================
+       DESTINATION CHANGE
+    ================================= */
+
+    document
+      .getElementById("destination")
+      .addEventListener(
+        "blur",
+        previewFare
+      );
+
+
+    /* =================================
+       BOOK RIDE
+    ================================= */
+
+    window.bookRide = async function() {
+
+      if (!currentUser) {
+
+        showToast(
+          "Please login first."
+        );
+
+        return;
+
+      }
+
+
+      const pickup =
+        document.getElementById(
+          "pickup"
+        ).value.trim();
+
+
+      const destination =
+        document.getElementById(
+          "destination"
+        ).value.trim();
+
+
+      const goodsDetails =
+        document.getElementById(
+          "goodsDetails"
+        ).value.trim();
+
+
+      if (!pickup) {
+
+        showToast(
+          "Pickup location enter karo."
+        );
+
+        return;
+
+      }
+
+
+      if (!destination) {
+
+        showToast(
+          "Destination enter karo."
+        );
+
+        return;
+
+      }
+
+
+      if (
+        selectedService === "goods" &&
+        !goodsDetails
+      ) {
+
+        showToast(
+          "Goods ka short description enter karo."
+        );
+
+        return;
+
+      }
+
+
+      const bookBtn =
+        document.getElementById(
+          "bookBtn"
+        );
+
+
+      bookBtn.disabled = true;
+
+      bookBtn.textContent =
+        "Finding nearby drivers...";
+
+
+      try {
+
+        let estimatedFare = null;
+
+        let distanceKm = null;
+
+
+        /*
+          Calculate destination
+          if current location exists.
+        */
+
+        if (userLocation) {
+
+          const destinationLocation =
+            await geocodeDestination(
+              destination
+            );
+
+
+          if (destinationLocation) {
+
+            distanceKm =
+              calculateDistance(
+
+                userLocation.lat,
+                userLocation.lng,
+
+                destinationLocation.lat,
+                destinationLocation.lng
+
+              );
+
+
+            estimatedFare =
+              calculateEstimatedFare(
+                distanceKm
+              );
+
+          }
+
+        }
+
+
+        /* =========================
+           RIDE DOCUMENT
+        ========================= */
+
+        const rideData = {
+
+          customerId:
+            currentUser.uid,
+
+          customerName:
+            currentUserData?.name ||
+            currentUser.displayName ||
+            "Customer",
+
+          customerEmail:
+            currentUser.email || "",
+
+
+          serviceType:
+            selectedService,
+
+
+          pickup: {
+
+            address:
+              pickup,
+
+            latitude:
+              userLocation?.lat ||
+              null,
+
+            longitude:
+              userLocation?.lng ||
+              null
+
+          },
+
+
+          destination: {
+
+            address:
+              destination
+
+          },
+
+
+          goodsDetails:
+            selectedService === "goods"
+              ? goodsDetails
+              : "",
+
+
+          distanceKm:
+            distanceKm,
+
+
+          estimatedFare:
+            estimatedFare,
+
+
+          paymentMethod:
+            "cash",
+
+
+          status:
+            "searching",
+
+
+          driverId:
+            null,
+
+
+          createdAt:
+            serverTimestamp(),
+
+
+          updatedAt:
+            serverTimestamp()
+
+        };
+
+
+        const rideRef =
+          await addDoc(
+            collection(
+              db,
+              "rides"
+            ),
+            rideData
+          );
+
+
+        console.log(
+          "Ride created:",
+          rideRef.id
+        );
+
+
+        /* =========================
+           ACTIVE RIDE UI
+        ========================= */
+
+        document
+          .getElementById(
+            "activeRide"
+          )
+          .classList.add("show");
+
+
+        document.getElementById(
+          "rideStatus"
+        ).textContent =
+          "Finding driver";
+
+
+        document.getElementById(
+          "rideInfo"
+        ).innerHTML =
+
+          "Searching for nearby " +
+
+          (
+            selectedService === "goods"
+              ? "Goods Toto"
+              : "Toto"
+          ) +
+
+          " drivers...<br><br>" +
+
+          "Ride ID: " +
+
+          rideRef.id;
+
+
+        showToast(
+          "Ride request successfully created."
+        );
+
+
+        bookBtn.textContent =
+          "Ride Request Sent";
+
+
+      } catch (error) {
+
+        console.error(
+          "Booking error:",
+          error
+        );
+
+
+        showToast(
+          "Ride booking failed. Please try again."
+        );
+
+
+        bookBtn.disabled = false;
+
+        bookBtn.textContent =
+          selectedService === "goods"
+            ? "Find a Goods Toto"
+            : "Find a Toto";
+
+      }
+
+    };
+
+
+    /* =================================
+       AUTH STATE
+    ================================= */
+
+    onAuthStateChanged(
+      auth,
+      async user => {
+
+        if (!user) {
+
+          window.location.href =
+            "index.html";
+
+          return;
+
+        }
+
+
+        currentUser = user;
+
+
+        try {
+
+          const userRef =
+            doc(
+              db,
+              "users",
+              user.uid
+            );
+
+
+          const userSnap =
+            await getDoc(
+              userRef
+            );
+
+
+          if (
+            !userSnap.exists()
+          ) {
+
+            showToast(
+              "Profile not found."
+            );
+
+            return;
+
+          }
+
+
+          currentUserData =
+            userSnap.data();
+
+
+          /*
+            If account is driver,
+            don't allow customer dashboard.
+          */
+
+          if (
+            currentUserData.role ===
+            "driver"
+          ) {
+
+            window.location.href =
+              "driver.html";
+
+            return;
+
+          }
+
+
+          if (
+            currentUserData.role ===
+            "admin"
+          ) {
+
+            window.location.href =
+              "admin.html";
+
+            return;
+
+          }
+
+
+          /* =======================
+             PROFILE UI
+          ======================= */
+
+          const name =
+            currentUserData.name ||
+            user.displayName ||
+            "Rider";
+
+
+          document.getElementById(
+            "helloName"
+          ).textContent =
+            name.split(" ")[0];
+
+
+          document.getElementById(
+            "profileName"
+          ).textContent =
+            name;
+
+
+          document.getElementById(
+            "profileEmail"
+          ).textContent =
+            user.email || "";
+
+
+          const image =
+            currentUserData.photoURL ||
+            user.photoURL ||
+            "";
+
+
+          if (image) {
+
+            const profileImage =
+              document.getElementById(
+                "profileImage"
+              );
+
+
+            profileImage.src =
+              image;
+
+            profileImage.style.display =
+              "block";
+
+
+            document.getElementById(
+              "profileLetter"
+            ).style.display =
+              "none";
+
+
+            document.getElementById(
+              "profileBig"
+            ).src =
+              image;
+
+          } else {
+
+            document.getElementById(
+              "profileLetter"
+            ).textContent =
+              name
+                .charAt(0)
+                .toUpperCase();
+
+          }
+
+        } catch (error) {
+
+          console.error(
+            "Profile error:",
+            error
+          );
+
+        }
+
+      }
+    );
+
+
+    /* =================================
+       PROFILE
+    ================================= */
+
+    window.openProfile = function() {
+
+      document
+        .getElementById(
+          "profileModal"
+        )
+        .classList.add("show");
+
+    };
+
+
+    window.closeProfile = function() {
+
+      document
+        .getElementById(
+          "profileModal"
+        )
+        .classList.remove("show");
+
+    };
+
+
+    window.closeProfileOutside =
+      function(event) {
+
+        if (
+          event.target.id ===
+          "profileModal"
+        ) {
+
+          closeProfile();
+
+        }
+
+      };
+
+
+    /* =================================
+       LOGOUT
+    ================================= */
+
+    window.logout = async function() {
+
+      try {
+
+        await signOut(auth);
+
+        window.location.href =
+          "index.html";
+
+      } catch (error) {
+
+        console.error(
+          "Logout error:",
+          error
+        );
+
+        showToast(
+          "Logout failed."
+        );
+
+      }
+
+    };
+
+
+    /* =================================
+       TOAST
+    ================================= */
+
+    window.showToast =
+      function(message) {
+
+        const toast =
+          document.getElementById(
+            "toast"
+          );
+
+
+        toast.textContent =
+          message;
+
+
+        toast.classList.add(
+          "show"
+        );
+
+
+        setTimeout(() => {
+
+          toast.classList.remove(
+            "show"
+          );
+
+        }, 3000);
+
+      };
+
+
+    /* =================================
+       COMING SOON
+    ================================= */
+
+    window.showComingSoon =
+      function(feature) {
+
+        showToast(
+          feature +
+          " module next build mein connect hoga."
+        );
+
+      };
+
+
+    /* =================================
+       HOME
+    ================================= */
+
+    window.scrollTopPage =
+      function() {
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+
+      };
+
+
+    /* =================================
+       START MAP
+    ================================= */
+
+    window.addEventListener(
+      "load",
+      () => {
+
+        initMap();
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
