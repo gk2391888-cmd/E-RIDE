@@ -804,6 +804,101 @@
       font-weight: 700;
     }
 
+
+    /* =========================
+       PROFILE EDIT
+    ========================= */
+
+    .profile-edit-grid {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .profile-field label {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      margin: 0 0 6px 3px;
+    }
+
+    .profile-field input {
+      width: 100%;
+      height: 48px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      outline: none;
+      padding: 0 13px;
+      background: var(--surface2);
+      color: white;
+      font-size: 12px;
+    }
+
+    .profile-field input:focus {
+      border-color: rgba(34,197,94,.55);
+    }
+
+    .profile-field input:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 9px;
+      margin-bottom: 15px;
+    }
+
+    .profile-stat {
+      padding: 12px;
+      border-radius: 15px;
+      background: rgba(255,255,255,.035);
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .profile-stat-value {
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .profile-stat-label {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .save-profile-btn {
+      width: 100%;
+      height: 50px;
+      border: none;
+      border-radius: 15px;
+      background: linear-gradient(135deg, var(--green), var(--green2));
+      color: #041008;
+      font-weight: 800;
+      margin-bottom: 9px;
+    }
+
+    .edit-profile-btn {
+      width: 100%;
+      height: 50px;
+      border: 1px solid rgba(59,130,246,.25);
+      border-radius: 15px;
+      background: rgba(59,130,246,.08);
+      color: #93c5fd;
+      font-weight: 700;
+      margin-bottom: 9px;
+    }
+
+    .profile-save-status {
+      min-height: 16px;
+      color: var(--muted);
+      font-size: 9px;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
     /* =========================
        TOAST
     ========================= */
@@ -1256,17 +1351,22 @@
         Your Profile
       </div>
 
-
       <div class="profile-info">
 
-        <img
+        <div
           class="profile-big"
-          id="profileBig"
-          alt="Profile"
+          id="profileBigWrap"
+          style="display:grid;place-items:center;overflow:hidden;"
         >
+          <span id="profileBigLetter" style="font-size:18px;font-weight:800;">U</span>
+          <img
+            id="profileBig"
+            alt="Profile"
+            style="width:100%;height:100%;object-fit:cover;display:none;"
+          >
+        </div>
 
         <div>
-
           <div
             class="profile-name"
             id="profileName"
@@ -1280,11 +1380,94 @@
           >
             —
           </div>
-
         </div>
 
       </div>
 
+      <div class="profile-edit-grid">
+
+        <div class="profile-field">
+          <label for="profileEditName">Full Name</label>
+          <input
+            id="profileEditName"
+            type="text"
+            maxlength="60"
+            placeholder="Enter your name"
+          >
+        </div>
+
+        <div class="profile-field">
+          <label for="profileEditPhone">Mobile Number</label>
+          <input
+            id="profileEditPhone"
+            type="tel"
+            inputmode="numeric"
+            maxlength="10"
+            placeholder="10 digit mobile number"
+          >
+        </div>
+
+        <div class="profile-field">
+          <label for="profileEditCity">City</label>
+          <input
+            id="profileEditCity"
+            type="text"
+            maxlength="60"
+            placeholder="Surajgarha"
+          >
+        </div>
+
+        <div class="profile-field">
+          <label for="profileEditPhoto">Profile Photo URL (optional)</label>
+          <input
+            id="profileEditPhoto"
+            type="url"
+            placeholder="https://..."
+          >
+        </div>
+
+      </div>
+
+      <div class="profile-stats">
+
+        <div class="profile-stat">
+          <div
+            class="profile-stat-value"
+            id="profileTotalRides"
+          >
+            0
+          </div>
+          <div class="profile-stat-label">
+            Total Rides
+          </div>
+        </div>
+
+        <div class="profile-stat">
+          <div
+            class="profile-stat-value"
+            id="profileRating"
+          >
+            —
+          </div>
+          <div class="profile-stat-label">
+            Rating
+          </div>
+        </div>
+
+      </div>
+
+      <div
+        class="profile-save-status"
+        id="profileSaveStatus"
+      ></div>
+
+      <button
+        class="save-profile-btn"
+        id="saveProfileBtn"
+        onclick="saveCustomerProfile()"
+      >
+        Save Profile
+      </button>
 
       <button
         class="logout-btn"
@@ -1292,7 +1475,6 @@
       >
         Sign Out
       </button>
-
 
       <button
         class="close-btn"
@@ -1304,7 +1486,6 @@
     </div>
 
   </div>
-
 
   <!-- TOAST -->
   <div
@@ -1340,6 +1521,7 @@
       getFirestore,
       doc,
       getDoc,
+      updateDoc,
       addDoc,
       collection,
       serverTimestamp
@@ -2285,72 +2467,9 @@
              PROFILE UI
           ======================= */
 
-          const name =
-            currentUserData.name ||
-            user.displayName ||
-            "Rider";
+          renderCustomerProfile(user);
 
 
-          document.getElementById(
-            "helloName"
-          ).textContent =
-            name.split(" ")[0];
-
-
-          document.getElementById(
-            "profileName"
-          ).textContent =
-            name;
-
-
-          document.getElementById(
-            "profileEmail"
-          ).textContent =
-            user.email || "";
-
-
-          const image =
-            currentUserData.photoURL ||
-            user.photoURL ||
-            "";
-
-
-          if (image) {
-
-            const profileImage =
-              document.getElementById(
-                "profileImage"
-              );
-
-
-            profileImage.src =
-              image;
-
-            profileImage.style.display =
-              "block";
-
-
-            document.getElementById(
-              "profileLetter"
-            ).style.display =
-              "none";
-
-
-            document.getElementById(
-              "profileBig"
-            ).src =
-              image;
-
-          } else {
-
-            document.getElementById(
-              "profileLetter"
-            ).textContent =
-              name
-                .charAt(0)
-                .toUpperCase();
-
-          }
 
         } catch (error) {
 
@@ -2366,15 +2485,241 @@
 
 
     /* =================================
-       PROFILE
+       CUSTOMER PROFILE
     ================================= */
+
+    function renderCustomerProfile(user) {
+
+      const data = currentUserData || {};
+
+      const name =
+        data.name ||
+        user?.displayName ||
+        "Rider";
+
+      const email =
+        user?.email ||
+        data.email ||
+        "";
+
+      const phone =
+        data.phone ||
+        "";
+
+      const city =
+        data.city ||
+        "Surajgarha";
+
+      const photo =
+        data.photoURL ||
+        user?.photoURL ||
+        "";
+
+      document.getElementById("helloName").textContent =
+        name.split(" ")[0] || "Rider";
+
+      document.getElementById("profileName").textContent =
+        name;
+
+      document.getElementById("profileEmail").textContent =
+        email || "Email not available";
+
+      document.getElementById("profileEditName").value =
+        name;
+
+      document.getElementById("profileEditPhone").value =
+        phone;
+
+      document.getElementById("profileEditCity").value =
+        city;
+
+      document.getElementById("profileEditPhoto").value =
+        photo;
+
+      document.getElementById("profileTotalRides").textContent =
+        Number(data.totalRides || 0);
+
+      document.getElementById("profileRating").textContent =
+        data.rating
+          ? Number(data.rating).toFixed(1)
+          : "—";
+
+      setCustomerProfilePhoto(photo, name);
+    }
+
+
+    function setCustomerProfilePhoto(photo, name) {
+
+      const headerImage =
+        document.getElementById("profileImage");
+
+      const headerLetter =
+        document.getElementById("profileLetter");
+
+      const bigImage =
+        document.getElementById("profileBig");
+
+      const bigLetter =
+        document.getElementById("profileBigLetter");
+
+      const firstLetter =
+        (name || "U")
+          .trim()
+          .charAt(0)
+          .toUpperCase() || "U";
+
+      headerLetter.textContent = firstLetter;
+      bigLetter.textContent = firstLetter;
+
+      if (photo) {
+
+        headerImage.src = photo;
+        headerImage.style.display = "block";
+        headerLetter.style.display = "none";
+
+        bigImage.src = photo;
+        bigImage.style.display = "block";
+        bigLetter.style.display = "none";
+
+      } else {
+
+        headerImage.removeAttribute("src");
+        headerImage.style.display = "none";
+        headerLetter.style.display = "block";
+
+        bigImage.removeAttribute("src");
+        bigImage.style.display = "none";
+        bigLetter.style.display = "block";
+      }
+    }
+
+
+    window.saveCustomerProfile =
+      async function() {
+
+        if (!currentUser) {
+          showToast("Please login first.");
+          return;
+        }
+
+        const saveBtn =
+          document.getElementById("saveProfileBtn");
+
+        const status =
+          document.getElementById("profileSaveStatus");
+
+        const name =
+          document
+            .getElementById("profileEditName")
+            .value
+            .trim();
+
+        const phone =
+          document
+            .getElementById("profileEditPhone")
+            .value
+            .replace(/\D/g, "")
+            .trim();
+
+        const city =
+          document
+            .getElementById("profileEditCity")
+            .value
+            .trim();
+
+        const photoURL =
+          document
+            .getElementById("profileEditPhoto")
+            .value
+            .trim();
+
+        if (name.length < 2) {
+          showToast("Valid name enter karo.");
+          return;
+        }
+
+        if (phone && !/^[6-9]\d{9}$/.test(phone)) {
+          showToast("Valid 10 digit mobile number enter karo.");
+          return;
+        }
+
+        if (city.length < 2) {
+          showToast("City enter karo.");
+          return;
+        }
+
+        if (
+          photoURL &&
+          !/^https?:\/\/.+/i.test(photoURL)
+        ) {
+          showToast("Profile photo ka valid URL enter karo.");
+          return;
+        }
+
+        saveBtn.disabled = true;
+        saveBtn.textContent = "Saving...";
+        status.textContent = "Profile save ho raha hai...";
+
+        try {
+
+          const updates = {
+            name: name,
+            phone: phone,
+            city: city,
+            photoURL: photoURL,
+            updatedAt: serverTimestamp()
+          };
+
+          await updateDoc(
+            doc(db, "users", currentUser.uid),
+            updates
+          );
+
+          currentUserData = {
+            ...(currentUserData || {}),
+            ...updates
+          };
+
+          renderCustomerProfile(currentUser);
+
+          status.textContent =
+            "Profile successfully saved.";
+
+          showToast("Profile updated successfully.");
+
+        } catch (error) {
+
+          console.error(
+            "Customer profile update:",
+            error
+          );
+
+          status.textContent = "";
+          showToast(
+            "Profile save nahi ho paya. Please try again."
+          );
+
+        } finally {
+
+          saveBtn.disabled = false;
+          saveBtn.textContent = "Save Profile";
+
+        }
+      };
+
 
     window.openProfile = function() {
 
+      if (currentUser) {
+        renderCustomerProfile(currentUser);
+      }
+
       document
-        .getElementById(
-          "profileModal"
-        )
+        .getElementById("profileSaveStatus")
+        .textContent = "";
+
+      document
+        .getElementById("profileModal")
         .classList.add("show");
 
     };
@@ -2383,9 +2728,7 @@
     window.closeProfile = function() {
 
       document
-        .getElementById(
-          "profileModal"
-        )
+        .getElementById("profileModal")
         .classList.remove("show");
 
     };
@@ -2404,6 +2747,7 @@
         }
 
       };
+
 
 
     /* =================================
