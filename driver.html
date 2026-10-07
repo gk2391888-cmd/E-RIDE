@@ -3036,7 +3036,7 @@
   ========================================== */
   function listenToActiveRideV2(rideId){
     if(unsubscribeActiveRideV2) unsubscribeActiveRideV2();
-    unsubscribeActiveRideV2=onSnapshot(doc(db,"rides",rideId),snap=>{
+    unsubscribeActiveRideV2=onSnapshot(doc(db,"rides",rideId),async snap=>{
       if(!snap.exists()){clearActiveRideV2();return;}
       const ride={id:snap.id,...snap.data()};
       currentRide=ride;
