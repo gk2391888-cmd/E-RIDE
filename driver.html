@@ -253,7 +253,7 @@
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(4,1fr);
+      grid-template-columns: repeat(3,1fr);
       gap: 9px;
 
       margin-bottom: 22px;
@@ -1249,6 +1249,7 @@
     getFirestore,
     doc,
     getDoc,
+    getDocs,
     setDoc,
     updateDoc,
     addDoc,
@@ -1256,7 +1257,6 @@
     query,
     where,
     onSnapshot,
-    getDocs,
     serverTimestamp,
     increment
   } from
@@ -2982,11 +2982,6 @@
   }
 
 
-  function escapeHtml(value) {
-    return String(value ?? "").replace(/[&<>\"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[char]));
-  }
-
-
   /* ==========================================
      PROFILE
   ========================================== */
@@ -3152,6 +3147,41 @@
 
 
   /* ==========================================
+     ESCAPE HTML
+  ========================================== */
+
+  function escapeHtml(
+    value
+  ) {
+
+    return String(
+      value ?? ""
+    )
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+
+  }
+
+
+  /* ==========================================
      INIT
   ========================================== */
 
@@ -3163,6 +3193,11 @@
 
     }
   );
+
+
+  window.addEventListener("error", event => {
+    console.error("E RIDE Driver error:", event.error || event.message);
+  });
 
 </script>
 
