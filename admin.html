@@ -1,0 +1,2211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>E RIDE — Admin</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+  --bg:#070a10;
+  --card:#10151f;
+  --card2:#151b27;
+  --border:rgba(255,255,255,.08);
+  --text:#fff;
+  --muted:#8f9aaa;
+  --green:#22c55e;
+  --red:#ef4444;
+  --blue:#3b82f6;
+  --yellow:#f59e0b;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,Arial,sans-serif;
+  min-height:100vh;
+}
+
+button{
+  font-family:inherit;
+  cursor:pointer;
+}
+
+.app{
+  max-width:1100px;
+  margin:auto;
+  min-height:100vh;
+  padding-bottom:40px;
+}
+
+/* HEADER */
+
+.header{
+  position:sticky;
+  top:0;
+  z-index:1000;
+
+  height:70px;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:0 22px;
+
+  background:rgba(7,10,16,.94);
+  backdrop-filter:blur(18px);
+
+  border-bottom:1px solid var(--border);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.logo{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  background:linear-gradient(135deg,#22c55e,#86efac);
+  font-size:22px;
+}
+
+.brand-name{
+  font-size:18px;
+  font-weight:800;
+}
+
+.brand-sub{
+  font-size:9px;
+  color:var(--muted);
+  margin-top:2px;
+  letter-spacing:.8px;
+}
+
+.admin-btn{
+  border:1px solid var(--border);
+  background:var(--card2);
+  color:white;
+  padding:10px 14px;
+  border-radius:12px;
+  font-size:11px;
+  font-weight:700;
+}
+
+/* MAIN */
+
+.main{
+  padding:22px;
+}
+
+.page-title{
+  font-size:28px;
+  font-weight:800;
+}
+
+.page-sub{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:6px;
+  margin-bottom:22px;
+}
+
+/* STATS */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-bottom:25px;
+}
+
+.stat{
+  padding:18px;
+  border:1px solid var(--border);
+  background:var(--card);
+  border-radius:19px;
+}
+
+.stat-icon{
+  font-size:20px;
+  margin-bottom:12px;
+}
+
+.stat-value{
+  font-size:24px;
+  font-weight:800;
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:9px;
+  margin-top:4px;
+}
+
+/* TABS */
+
+.tabs{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  margin-bottom:17px;
+}
+
+.tab{
+  white-space:nowrap;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--muted);
+  padding:11px 15px;
+  border-radius:12px;
+  font-size:10px;
+  font-weight:700;
+}
+
+.tab.active{
+  background:var(--green);
+  color:#041008;
+  border-color:var(--green);
+}
+
+/* SECTION */
+
+.section{
+  display:none;
+}
+
+.section.active{
+  display:block;
+}
+
+.section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
+}
+
+.section-title{
+  font-size:16px;
+  font-weight:800;
+}
+
+.refresh{
+  border:1px solid var(--border);
+  background:var(--card);
+  color:white;
+  padding:9px 12px;
+  border-radius:10px;
+  font-size:10px;
+}
+
+/* DRIVER */
+
+.driver-list{
+  display:grid;
+  gap:12px;
+}
+
+.driver-card{
+  padding:17px;
+  border:1px solid var(--border);
+  background:var(--card);
+  border-radius:19px;
+}
+
+.driver-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.driver-user{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.avatar{
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  background:#202938;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  font-weight:800;
+}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.driver-name{
+  font-size:13px;
+  font-weight:800;
+}
+
+.driver-email{
+  color:var(--muted);
+  font-size:9px;
+  margin-top:3px;
+}
+
+.badge{
+  padding:6px 9px;
+  border-radius:999px;
+  font-size:8px;
+  font-weight:800;
+}
+
+.badge.pending{
+  color:#fcd34d;
+  background:rgba(245,158,11,.1);
+}
+
+.badge.active{
+  color:#86efac;
+  background:rgba(34,197,94,.1);
+}
+
+.badge.rejected{
+  color:#fca5a5;
+  background:rgba(239,68,68,.1);
+}
+
+.driver-info{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:15px 0;
+}
+
+.info{
+  padding:10px;
+  background:rgba(255,255,255,.035);
+  border-radius:11px;
+}
+
+.info-label{
+  color:var(--muted);
+  font-size:8px;
+  margin-bottom:4px;
+}
+
+.info-value{
+  font-size:10px;
+  font-weight:700;
+  word-break:break-word;
+}
+
+.driver-actions{
+  display:flex;
+  gap:8px;
+}
+
+.approve,
+.reject,
+.view{
+  flex:1;
+  height:43px;
+  border-radius:12px;
+  font-size:10px;
+  font-weight:800;
+}
+
+.approve{
+  border:0;
+  background:var(--green);
+  color:#041008;
+}
+
+.reject{
+  border:1px solid rgba(239,68,68,.2);
+  background:rgba(239,68,68,.07);
+  color:#fca5a5;
+}
+
+.view{
+  border:1px solid var(--border);
+  background:var(--card2);
+  color:white;
+}
+
+/* RIDES */
+
+.ride-list{
+  display:grid;
+  gap:12px;
+}
+
+.ride-card{
+  padding:16px;
+  border:1px solid var(--border);
+  background:var(--card);
+  border-radius:18px;
+}
+
+.ride-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+
+.ride-id{
+  color:var(--muted);
+  font-size:9px;
+}
+
+.ride-status{
+  font-size:8px;
+  padding:6px 9px;
+  border-radius:999px;
+  background:rgba(59,130,246,.1);
+  color:#93c5fd;
+  font-weight:800;
+}
+
+.route{
+  font-size:11px;
+  line-height:1.7;
+}
+
+.route span{
+  color:var(--muted);
+  font-size:8px;
+  text-transform:uppercase;
+}
+
+/* EMPTY */
+
+.empty{
+  padding:40px 20px;
+  text-align:center;
+  color:var(--muted);
+  border:1px dashed rgba(255,255,255,.1);
+  border-radius:18px;
+}
+
+.empty-icon{
+  font-size:35px;
+  margin-bottom:10px;
+}
+
+/* MODAL */
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:5000;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  background:rgba(0,0,0,.75);
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-card{
+  width:100%;
+  max-width:600px;
+  max-height:85vh;
+  overflow:auto;
+  padding:22px;
+  background:#111722;
+  border-radius:25px 25px 0 0;
+  border:1px solid var(--border);
+}
+
+.modal-title{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:18px;
+}
+
+.modal-row{
+  padding:13px;
+  background:rgba(255,255,255,.04);
+  border-radius:13px;
+  margin-bottom:8px;
+}
+
+.modal-label{
+  color:var(--muted);
+  font-size:8px;
+  margin-bottom:4px;
+}
+
+.modal-value{
+  font-size:11px;
+  font-weight:700;
+  word-break:break-word;
+}
+
+.close{
+  width:100%;
+  height:48px;
+  margin-top:10px;
+  border:0;
+  border-radius:13px;
+  background:rgba(255,255,255,.07);
+  color:white;
+  font-weight:700;
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  z-index:9000;
+  left:50%;
+  bottom:25px;
+  transform:translate(-50%,20px);
+  width:calc(100% - 30px);
+  max-width:450px;
+  padding:13px 15px;
+  border-radius:14px;
+  background:#1c2431;
+  border:1px solid var(--border);
+  font-size:11px;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+  .main{
+    padding:17px;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .driver-info{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .header{
+    padding:0 15px;
+  }
+
+  .page-title{
+    font-size:23px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="header">
+
+  <div class="brand">
+
+    <div class="logo">🛺</div>
+
+    <div>
+      <div class="brand-name">E RIDE</div>
+      <div class="brand-sub">ADMIN CONTROL CENTER</div>
+    </div>
+
+  </div>
+
+  <button
+    class="admin-btn"
+    onclick="logout()"
+  >
+    Sign Out
+  </button>
+
+</header>
+
+
+<main class="main">
+
+  <div class="page-title">
+    Admin Dashboard
+  </div>
+
+  <div class="page-sub">
+    Manage drivers, rides and E RIDE operations.
+  </div>
+
+
+  <!-- STATS -->
+
+  <section class="stats">
+
+    <div class="stat">
+      <div class="stat-icon">🧑‍✈️</div>
+      <div class="stat-value" id="totalDrivers">0</div>
+      <div class="stat-label">Total Drivers</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-value" id="pendingDrivers">0</div>
+      <div class="stat-label">Pending Approval</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-icon">🟢</div>
+      <div class="stat-value" id="onlineDrivers">0</div>
+      <div class="stat-label">Online Drivers</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-icon">🚕</div>
+      <div class="stat-value" id="totalRides">0</div>
+      <div class="stat-label">Total Rides</div>
+    </div>
+
+  </section>
+
+
+  <!-- TABS -->
+
+  <div class="tabs">
+
+    <button
+      class="tab active"
+      onclick="showTab('drivers',this)"
+    >
+      Drivers
+    </button>
+
+    <button
+      class="tab"
+      onclick="showTab('pending',this)"
+    >
+      Pending
+    </button>
+
+    <button
+      class="tab"
+      onclick="showTab('rides',this)"
+    >
+      Rides
+    </button>
+
+  </div>
+
+
+  <!-- ALL DRIVERS -->
+
+  <section
+    class="section active"
+    id="driversSection"
+  >
+
+    <div class="section-head">
+
+      <div class="section-title">
+        All Drivers
+      </div>
+
+      <button
+        class="refresh"
+        onclick="loadDrivers()"
+      >
+        ↻ Refresh
+      </button>
+
+    </div>
+
+    <div
+      class="driver-list"
+      id="driverList"
+    ></div>
+
+  </section>
+
+
+  <!-- PENDING -->
+
+  <section
+    class="section"
+    id="pendingSection"
+  >
+
+    <div class="section-head">
+
+      <div class="section-title">
+        Driver Applications
+      </div>
+
+      <button
+        class="refresh"
+        onclick="loadDrivers()"
+      >
+        ↻ Refresh
+      </button>
+
+    </div>
+
+    <div
+      class="driver-list"
+      id="pendingList"
+    ></div>
+
+  </section>
+
+
+  <!-- RIDES -->
+
+  <section
+    class="section"
+    id="ridesSection"
+  >
+
+    <div class="section-head">
+
+      <div class="section-title">
+        Ride Monitoring
+      </div>
+
+      <button
+        class="refresh"
+        onclick="loadRides()"
+      >
+        ↻ Refresh
+      </button>
+
+    </div>
+
+    <div
+      class="ride-list"
+      id="rideList"
+    ></div>
+
+  </section>
+
+</main>
+
+</div>
+
+
+<!-- DRIVER DETAILS MODAL -->
+
+<div
+  class="modal"
+  id="driverModal"
+  onclick="closeModalOutside(event)"
+>
+
+  <div class="modal-card">
+
+    <div class="modal-title">
+      Driver Details
+    </div>
+
+    <div id="driverDetails"></div>
+
+    <button
+      class="close"
+      onclick="closeDriverModal()"
+    >
+      Close
+    </button>
+
+  </div>
+
+</div>
+
+
+<div
+  class="toast"
+  id="toast"
+></div>
+
+
+<script type="module">
+
+import {
+  initializeApp
+} from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut
+} from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+  updateDoc,
+  setDoc,
+  query,
+  orderBy,
+  limit
+} from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+
+/* ==========================================
+   FIREBASE
+========================================== */
+
+const firebaseConfig = {
+
+  apiKey:
+    "AIzaSyBKuGjmLBUbPCEAQglZK7pCFxH1bnh7OF4",
+
+  authDomain:
+    "e-ride-70342.firebaseapp.com",
+
+  projectId:
+    "e-ride-70342",
+
+  storageBucket:
+    "e-ride-70342.firebasestorage.app",
+
+  messagingSenderId:
+    "946431084655",
+
+  appId:
+    "1:946431084655:web:eddcb4fffe883d4fdf659a",
+
+  measurementId:
+    "G-WZ5YPZ4YZD"
+
+};
+
+
+const app =
+  initializeApp(firebaseConfig);
+
+const auth =
+  getAuth(app);
+
+const db =
+  getFirestore(app);
+
+
+/* ==========================================
+   VARIABLES
+========================================== */
+
+let currentUser = null;
+
+let drivers = [];
+
+let rides = [];
+
+
+/* ==========================================
+   AUTH + ADMIN SECURITY
+========================================== */
+
+onAuthStateChanged(
+  auth,
+  async user => {
+
+    if (!user) {
+
+      window.location.href =
+        "index.html";
+
+      return;
+
+    }
+
+
+    currentUser = user;
+
+
+    try {
+
+      const userRef =
+        doc(
+          db,
+          "users",
+          user.uid
+        );
+
+
+      const snap =
+        await getDoc(userRef);
+
+
+      if (!snap.exists()) {
+
+        showToast(
+          "User profile not found."
+        );
+
+        await signOut(auth);
+
+        return;
+
+      }
+
+
+      const data =
+        snap.data();
+
+
+      /*
+        Only users with:
+        role: admin
+
+        can enter admin.html.
+      */
+
+      if (
+        data.role !==
+        "admin"
+      ) {
+
+        showToast(
+          "Admin access denied."
+        );
+
+        setTimeout(() => {
+
+          if (
+            data.role ===
+            "driver"
+          ) {
+
+            window.location.href =
+              "driver.html";
+
+          } else {
+
+            window.location.href =
+              "customer.html";
+
+          }
+
+        },1000);
+
+        return;
+
+      }
+
+
+      await loadDrivers();
+
+      await loadRides();
+
+    } catch(error){
+
+      console.error(error);
+
+      showToast(
+        "Unable to verify admin account."
+      );
+
+    }
+
+  }
+);
+
+
+/* ==========================================
+   LOAD DRIVERS
+========================================== */
+
+window.loadDrivers =
+async function(){
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(
+          db,
+          "drivers"
+        )
+      );
+
+
+    drivers = [];
+
+
+    snapshot.forEach(
+      item => {
+
+        drivers.push({
+
+          id:
+            item.id,
+
+          ...item.data()
+
+        });
+
+      }
+    );
+
+
+    renderDrivers();
+
+    renderPending();
+
+    updateStats();
+
+  }catch(error){
+
+    console.error(
+      "Drivers:",
+      error
+    );
+
+    showToast(
+      "Could not load drivers."
+    );
+
+  }
+
+};
+
+
+/* ==========================================
+   RENDER ALL DRIVERS
+========================================== */
+
+function renderDrivers(){
+
+  const box =
+    document.getElementById(
+      "driverList"
+    );
+
+
+  if(!drivers.length){
+
+    box.innerHTML = emptyHTML(
+      "🧑‍✈️",
+      "No drivers registered yet."
+    );
+
+    return;
+
+  }
+
+
+  box.innerHTML =
+    drivers
+      .map(
+        driverCard
+      )
+      .join("");
+
+}
+
+
+/* ==========================================
+   RENDER PENDING
+========================================== */
+
+function renderPending(){
+
+  const box =
+    document.getElementById(
+      "pendingList"
+    );
+
+
+  const pending =
+    drivers.filter(
+      d =>
+        d.accountStatus ===
+        "pending"
+    );
+
+
+  if(!pending.length){
+
+    box.innerHTML =
+      emptyHTML(
+        "✅",
+        "No pending driver applications."
+      );
+
+    return;
+
+  }
+
+
+  box.innerHTML =
+    pending
+      .map(
+        driverCard
+      )
+      .join("");
+
+}
+
+
+/* ==========================================
+   DRIVER CARD
+========================================== */
+
+function driverCard(driver){
+
+  const status =
+    driver.accountStatus ||
+    "pending";
+
+
+  const name =
+    driver.name ||
+    "Unknown Driver";
+
+
+  const photo =
+    driver.photoURL ||
+    "";
+
+
+  const vehicle =
+    driver.vehicleType ||
+    "Toto";
+
+
+  const vehicleNumber =
+    driver.vehicleNumber ||
+    "Not provided";
+
+
+  let actions = "";
+
+
+  if(
+    status ===
+    "pending"
+  ){
+
+    actions = `
+
+      <button
+        class="approve"
+        onclick="approveDriver('${driver.id}')"
+      >
+        ✓ Approve
+      </button>
+
+      <button
+        class="reject"
+        onclick="rejectDriver('${driver.id}')"
+      >
+        ✕ Reject
+      </button>
+
+    `;
+
+  }
+
+
+  if(
+    status ===
+    "active"
+  ){
+
+    actions = `
+
+      <button
+        class="view"
+        onclick="viewDriver('${driver.id}')"
+      >
+        View Details
+      </button>
+
+      <button
+        class="reject"
+        onclick="disableDriver('${driver.id}')"
+      >
+        Disable
+      </button>
+
+    `;
+
+  }
+
+
+  if(
+    status ===
+    "rejected"
+  ){
+
+    actions = `
+
+      <button
+        class="approve"
+        onclick="approveDriver('${driver.id}')"
+      >
+        Re-approve
+      </button>
+
+      <button
+        class="view"
+        onclick="viewDriver('${driver.id}')"
+      >
+        View
+      </button>
+
+    `;
+
+  }
+
+
+  return `
+
+    <article class="driver-card">
+
+      <div class="driver-top">
+
+        <div class="driver-user">
+
+          <div class="avatar">
+
+            ${
+              photo
+              ?
+              `<img src="${escapeHTML(photo)}">`
+              :
+              `🧑‍✈️`
+            }
+
+          </div>
+
+          <div>
+
+            <div class="driver-name">
+              ${escapeHTML(name)}
+            </div>
+
+            <div class="driver-email">
+              ${escapeHTML(
+                driver.email || ""
+              )}
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="badge ${status}">
+          ${status.toUpperCase()}
+        </div>
+
+      </div>
+
+
+      <div class="driver-info">
+
+        <div class="info">
+
+          <div class="info-label">
+            VEHICLE
+          </div>
+
+          <div class="info-value">
+            ${escapeHTML(vehicle)}
+          </div>
+
+        </div>
+
+
+        <div class="info">
+
+          <div class="info-label">
+            VEHICLE NO.
+          </div>
+
+          <div class="info-value">
+            ${escapeHTML(vehicleNumber)}
+          </div>
+
+        </div>
+
+
+        <div class="info">
+
+          <div class="info-label">
+            RATING
+          </div>
+
+          <div class="info-value">
+            ${
+              driver.rating
+              ?
+              Number(driver.rating).toFixed(1)
+              :
+              "—"
+            }
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="driver-actions">
+
+        ${actions}
+
+      </div>
+
+    </article>
+
+  `;
+
+}
+
+
+/* ==========================================
+   APPROVE DRIVER
+========================================== */
+
+window.approveDriver =
+async function(driverId){
+
+  try{
+
+    const driver =
+      drivers.find(
+        d =>
+          d.id ===
+          driverId
+      );
+
+
+    if(!driver){
+
+      showToast(
+        "Driver not found."
+      );
+
+      return;
+
+    }
+
+
+    /*
+      Driver collection
+    */
+
+    await updateDoc(
+
+      doc(
+        db,
+        "drivers",
+        driverId
+      ),
+
+      {
+
+        accountStatus:
+          "active",
+
+        approvedAt:
+          new Date(),
+
+        approvedBy:
+          currentUser.uid,
+
+        available:
+          false,
+
+        online:
+          false
+
+      }
+
+    );
+
+
+    /*
+      User collection
+      */
+
+    await setDoc(
+
+      doc(
+        db,
+        "users",
+        driverId
+      ),
+
+      {
+
+        role:
+          "driver",
+
+        accountStatus:
+          "active",
+
+        driverApproved:
+          true,
+
+        approvedAt:
+          new Date(),
+
+        approvedBy:
+          currentUser.uid
+
+      },
+
+      {
+        merge:true
+      }
+
+    );
+
+
+    showToast(
+      "Driver approved successfully."
+    );
+
+
+    await loadDrivers();
+
+  }catch(error){
+
+    console.error(
+      "Approve:",
+      error
+    );
+
+    showToast(
+      "Could not approve driver."
+    );
+
+  }
+
+};
+
+
+/* ==========================================
+   REJECT DRIVER
+========================================== */
+
+window.rejectDriver =
+async function(driverId){
+
+  const ok =
+    confirm(
+      "Reject this driver application?"
+    );
+
+
+  if(!ok)
+    return;
+
+
+  try{
+
+    await updateDoc(
+
+      doc(
+        db,
+        "drivers",
+        driverId
+      ),
+
+      {
+
+        accountStatus:
+          "rejected",
+
+        available:
+          false,
+
+        online:
+          false,
+
+        rejectedAt:
+          new Date(),
+
+        rejectedBy:
+          currentUser.uid
+
+      }
+
+    );
+
+
+    await setDoc(
+
+      doc(
+        db,
+        "users",
+        driverId
+      ),
+
+      {
+
+        role:
+          "driver",
+
+        accountStatus:
+          "rejected",
+
+        driverApproved:
+          false
+
+      },
+
+      {
+        merge:true
+      }
+
+    );
+
+
+    showToast(
+      "Driver rejected."
+    );
+
+
+    await loadDrivers();
+
+  }catch(error){
+
+    console.error(
+      "Reject:",
+      error
+    );
+
+    showToast(
+      "Could not reject driver."
+    );
+
+  }
+
+};
+
+
+/* ==========================================
+   DISABLE DRIVER
+========================================== */
+
+window.disableDriver =
+async function(driverId){
+
+  const ok =
+    confirm(
+      "Disable this driver account?"
+    );
+
+
+  if(!ok)
+    return;
+
+
+  try{
+
+    await updateDoc(
+
+      doc(
+        db,
+        "drivers",
+        driverId
+      ),
+
+      {
+
+        accountStatus:
+          "disabled",
+
+        online:
+          false,
+
+        available:
+          false
+
+      }
+
+    );
+
+
+    await setDoc(
+
+      doc(
+        db,
+        "users",
+        driverId
+      ),
+
+      {
+
+        accountStatus:
+          "disabled",
+
+        driverApproved:
+          false
+
+      },
+
+      {
+        merge:true
+      }
+
+    );
+
+
+    showToast(
+      "Driver disabled."
+    );
+
+
+    await loadDrivers();
+
+  }catch(error){
+
+    console.error(error);
+
+    showToast(
+      "Could not disable driver."
+    );
+
+  }
+
+};
+
+
+/* ==========================================
+   VIEW DRIVER
+========================================== */
+
+window.viewDriver =
+function(driverId){
+
+  const driver =
+    drivers.find(
+      d =>
+        d.id ===
+        driverId
+    );
+
+
+  if(!driver)
+    return;
+
+
+  const details =
+    document.getElementById(
+      "driverDetails"
+    );
+
+
+  details.innerHTML = `
+
+    ${modalRow(
+      "Driver ID",
+      driver.id
+    )}
+
+    ${modalRow(
+      "Name",
+      driver.name
+    )}
+
+    ${modalRow(
+      "Email",
+      driver.email
+    )}
+
+    ${modalRow(
+      "Phone",
+      driver.phone
+    )}
+
+    ${modalRow(
+      "Vehicle Type",
+      driver.vehicleType
+    )}
+
+    ${modalRow(
+      "Vehicle Number",
+      driver.vehicleNumber
+    )}
+
+    ${modalRow(
+      "Status",
+      driver.accountStatus
+    )}
+
+    ${modalRow(
+      "Online",
+      driver.online
+        ? "Yes"
+        : "No"
+    )}
+
+    ${modalRow(
+      "Available",
+      driver.available
+        ? "Yes"
+        : "No"
+    )}
+
+    ${modalRow(
+      "Total Rides",
+      driver.totalRides || 0
+    )}
+
+    ${modalRow(
+      "Rating",
+      driver.rating || "—"
+    )}
+
+  `;
+
+
+  document
+    .getElementById(
+      "driverModal"
+    )
+    .classList.add(
+      "show"
+    );
+
+};
+
+
+/* ==========================================
+   MODAL ROW
+========================================== */
+
+function modalRow(
+  label,
+  value
+){
+
+  return `
+
+    <div class="modal-row">
+
+      <div class="modal-label">
+        ${escapeHTML(label)}
+      </div>
+
+      <div class="modal-value">
+        ${escapeHTML(
+          value ?? "Not provided"
+        )}
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+window.closeDriverModal =
+function(){
+
+  document
+    .getElementById(
+      "driverModal"
+    )
+    .classList.remove(
+      "show"
+    );
+
+};
+
+
+window.closeModalOutside =
+function(event){
+
+  if(
+    event.target.id ===
+    "driverModal"
+  ){
+
+    closeDriverModal();
+
+  }
+
+};
+
+
+/* ==========================================
+   LOAD RIDES
+========================================== */
+
+window.loadRides =
+async function(){
+
+  try{
+
+    const snapshot =
+      await getDocs(
+
+        query(
+
+          collection(
+            db,
+            "rides"
+          ),
+
+          orderBy(
+            "createdAt",
+            "desc"
+          ),
+
+          limit(100)
+
+        )
+
+      );
+
+
+    rides = [];
+
+
+    snapshot.forEach(
+      item => {
+
+        rides.push({
+
+          id:
+            item.id,
+
+          ...item.data()
+
+        });
+
+      }
+    );
+
+
+    renderRides();
+
+    updateStats();
+
+  }catch(error){
+
+    console.error(
+      "Rides:",
+      error
+    );
+
+    /*
+      If createdAt is missing on old
+      documents, fallback to normal
+      collection read.
+    */
+
+    try{
+
+      const snapshot =
+        await getDocs(
+          collection(
+            db,
+            "rides"
+          )
+        );
+
+
+      rides = [];
+
+
+      snapshot.forEach(
+        item => {
+
+          rides.push({
+
+            id:
+              item.id,
+
+            ...item.data()
+
+          });
+
+        }
+      );
+
+
+      renderRides();
+
+      updateStats();
+
+    }catch(secondError){
+
+      console.error(
+        secondError
+      );
+
+      showToast(
+        "Could not load rides."
+      );
+
+    }
+
+  }
+
+};
+
+
+/* ==========================================
+   RENDER RIDES
+========================================== */
+
+function renderRides(){
+
+  const box =
+    document.getElementById(
+      "rideList"
+    );
+
+
+  if(!rides.length){
+
+    box.innerHTML =
+      emptyHTML(
+        "🚕",
+        "No rides found."
+      );
+
+    return;
+
+  }
+
+
+  box.innerHTML =
+    rides.map(
+      ride => {
+
+        const pickup =
+          ride.pickup?.address ||
+          "Pickup not available";
+
+
+        const destination =
+          ride.destination?.address ||
+          "Destination not available";
+
+
+        const status =
+          ride.status ||
+          "unknown";
+
+
+        return `
+
+          <article class="ride-card">
+
+            <div class="ride-top">
+
+              <div class="ride-id">
+                #${escapeHTML(
+                  ride.id.slice(0,8)
+                )}
+              </div>
+
+              <div class="ride-status">
+                ${escapeHTML(
+                  status.toUpperCase()
+                )}
+              </div>
+
+            </div>
+
+
+            <div class="route">
+
+              <span>
+                Pickup
+              </span>
+
+              <br>
+
+              📍 ${escapeHTML(pickup)}
+
+              <br><br>
+
+              <span>
+                Destination
+              </span>
+
+              <br>
+
+              🏁 ${escapeHTML(destination)}
+
+            </div>
+
+          </article>
+
+        `;
+
+      }
+    ).join("");
+
+}
+
+
+/* ==========================================
+   STATS
+========================================== */
+
+function updateStats(){
+
+  const total =
+    drivers.length;
+
+
+  const pending =
+    drivers.filter(
+      d =>
+        d.accountStatus ===
+        "pending"
+    ).length;
+
+
+  const online =
+    drivers.filter(
+      d =>
+        d.online === true &&
+        d.accountStatus ===
+        "active"
+    ).length;
+
+
+  document.getElementById(
+    "totalDrivers"
+  ).textContent =
+    total;
+
+
+  document.getElementById(
+    "pendingDrivers"
+  ).textContent =
+    pending;
+
+
+  document.getElementById(
+    "onlineDrivers"
+  ).textContent =
+    online;
+
+
+  document.getElementById(
+    "totalRides"
+  ).textContent =
+    rides.length;
+
+}
+
+
+/* ==========================================
+   TABS
+========================================== */
+
+window.showTab =
+function(tab,button){
+
+  document
+    .querySelectorAll(
+      ".tab"
+    )
+    .forEach(
+      b =>
+        b.classList.remove(
+          "active"
+        )
+    );
+
+
+  button.classList.add(
+    "active"
+  );
+
+
+  document
+    .querySelectorAll(
+      ".section"
+    )
+    .forEach(
+      s =>
+        s.classList.remove(
+          "active"
+        )
+    );
+
+
+  document
+    .getElementById(
+      tab + "Section"
+    )
+    .classList.add(
+      "active"
+    );
+
+
+  if(tab === "rides")
+    loadRides();
+
+};
+
+
+/* ==========================================
+   LOGOUT
+========================================== */
+
+window.logout =
+async function(){
+
+  try{
+
+    await signOut(auth);
+
+    window.location.href =
+      "index.html";
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+
+};
+
+
+/* ==========================================
+   EMPTY
+========================================== */
+
+function emptyHTML(
+  icon,
+  text
+){
+
+  return `
+
+    <div class="empty">
+
+      <div class="empty-icon">
+        ${icon}
+      </div>
+
+      <div>
+        ${escapeHTML(text)}
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ==========================================
+   ESCAPE
+========================================== */
+
+function escapeHTML(value){
+
+  return String(
+    value ?? ""
+  )
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+  .replace(
+    /</g,
+    "&lt;"
+  )
+  .replace(
+    />/g,
+    "&gt;"
+  )
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+  .replace(
+    /'/g,
+    "&#039;"
+  );
+
+}
+
+
+/* ==========================================
+   TOAST
+========================================== */
+
+window.showToast =
+function(message){
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+
+  toast.textContent =
+    message;
+
+
+  toast.classList.add(
+    "show"
+  );
+
+
+  setTimeout(
+    () =>
+      toast.classList.remove(
+        "show"
+      ),
+    3000
+  );
+
+};
+
+</script>
+
+</body>
+</html>
