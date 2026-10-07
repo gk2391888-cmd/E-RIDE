@@ -1420,6 +1420,105 @@
 
 
         /* ==========================
+           ENSURE DRIVER DOCUMENT
+           CREATE PENDING REQUEST FIRST
+        ========================== */
+
+        try {
+
+          const driverRef =
+            doc(
+              db,
+              "drivers",
+              user.uid
+            );
+
+          await setDoc(
+            driverRef,
+            {
+
+              uid:
+                user.uid,
+
+              name:
+                driverData.name ||
+                user.displayName ||
+                "Driver",
+
+              email:
+                user.email || "",
+
+              phone:
+                driverData.phone || "",
+
+              photoURL:
+                driverData.photoURL ||
+                user.photoURL ||
+                "",
+
+              vehicleType:
+                driverData.vehicleType ||
+                "toto",
+
+              vehicleNumber:
+                driverData.vehicleNumber ||
+                "",
+
+              accountStatus:
+                driverData.accountStatus ||
+                "pending",
+
+              online:
+                false,
+
+              available:
+                false,
+
+              rating:
+                driverData.rating || 0,
+
+              totalRides:
+                driverData.totalRides || 0,
+
+              todayRides:
+                driverData.todayRides || 0,
+
+              todayEarnings:
+                driverData.todayEarnings || 0,
+
+              createdAt:
+                driverData.createdAt ||
+                serverTimestamp(),
+
+              updatedAt:
+                serverTimestamp()
+
+            },
+            { merge: true }
+          );
+
+          console.log(
+            "Driver document ensured:",
+            user.uid
+          );
+
+        } catch (error) {
+
+          console.error(
+            "Failed to create/update driver document:",
+            error
+          );
+
+          showToast(
+            "Driver verification data save nahi ho paya."
+          );
+
+          return;
+
+        }
+
+
+        /* ==========================
            DRIVER APPROVAL
         ========================== */
 
