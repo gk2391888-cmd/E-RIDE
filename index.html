@@ -1,428 +1,596 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-  <title>E RIDE — Surajgarha's Ride & Goods App</title>
+<title>E RIDE — Login</title>
 
-  <meta name="description" content="E RIDE - Toto rides and goods delivery in Surajgarha, Lakhisarai.">
-  <meta name="theme-color" content="#0b0f19">
+<meta name="theme-color" content="#22c55e">
+<meta name="description" content="E RIDE — Toto and e-rickshaw ride service">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+  rel="stylesheet"
+>
 
-    :root {
-      --bg: #070a10;
-      --card: rgba(18, 23, 34, 0.88);
-      --card-border: rgba(255,255,255,0.08);
-      --text: #ffffff;
-      --muted: #9ca6b7;
-      --green: #22c55e;
-      --green-dark: #16a34a;
-      --blue: #3b82f6;
-      --danger: #ef4444;
-    }
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
 
-    body {
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 50% -10%, rgba(34,197,94,0.18), transparent 35%),
-        radial-gradient(circle at 100% 40%, rgba(59,130,246,0.10), transparent 30%),
-        var(--bg);
-      color: var(--text);
-      font-family: Inter, Arial, sans-serif;
-      overflow-x: hidden;
-    }
+:root{
+  --bg:#070a10;
+  --card:#10151f;
+  --card2:#151b27;
+  --border:rgba(255,255,255,.08);
+  --text:#fff;
+  --muted:#8f9aaa;
+  --green:#22c55e;
+  --green2:#86efac;
+  --red:#ef4444;
+  --yellow:#f59e0b;
+}
 
-    .page {
-      width: 100%;
-      max-width: 520px;
-      min-height: 100vh;
-      margin: auto;
-      padding: 24px 18px 30px;
-      display: flex;
-      flex-direction: column;
-    }
+html,
+body{
+  min-height:100%;
+}
 
-    .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 42px;
-    }
+body{
+  background:
+    radial-gradient(
+      circle at 50% -10%,
+      rgba(34,197,94,.13),
+      transparent 38%
+    ),
+    var(--bg);
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+  color:var(--text);
 
-    .logo {
-      width: 45px;
-      height: 45px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, var(--green), #86efac);
-      color: #06100a;
-      font-size: 24px;
-      box-shadow: 0 10px 30px rgba(34,197,94,.22);
-    }
+  font-family:
+    Inter,
+    Arial,
+    sans-serif;
 
-    .brand-text strong {
-      display: block;
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
+  min-height:100vh;
+}
 
-    .brand-text span {
-      color: var(--muted);
-      font-size: 10px;
-      letter-spacing: 1.3px;
-      text-transform: uppercase;
-    }
+button{
+  font-family:inherit;
+  cursor:pointer;
+}
 
-    .location-pill {
-      border: 1px solid var(--card-border);
-      background: rgba(255,255,255,.04);
-      color: #d7dce5;
-      padding: 9px 11px;
-      border-radius: 999px;
-      font-size: 11px;
-      white-space: nowrap;
-    }
+button:disabled{
+  cursor:not-allowed;
+  opacity:.55;
+}
 
-    .hero {
-      text-align: center;
-      margin-bottom: 28px;
-    }
+.app{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
 
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(34,197,94,.10);
-      border: 1px solid rgba(34,197,94,.20);
-      color: #86efac;
-      border-radius: 999px;
-      padding: 7px 12px;
-      font-size: 11px;
-      font-weight: 600;
-      margin-bottom: 18px;
-    }
+.login-wrap{
+  width:100%;
+  max-width:430px;
+}
 
-    .hero h1 {
-      font-size: clamp(34px, 10vw, 52px);
-      line-height: 1;
-      letter-spacing: -2px;
-      margin-bottom: 14px;
-    }
+/* BRAND */
 
-    .hero h1 span {
-      color: var(--green);
-    }
+.brand{
+  text-align:center;
+  margin-bottom:28px;
+}
 
-    .hero p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.65;
-      max-width: 390px;
-      margin: auto;
-    }
+.logo{
+  width:74px;
+  height:74px;
 
-    .services {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin: 8px 0 26px;
-    }
+  margin:0 auto 14px;
 
-    .service-card {
-      border: 1px solid var(--card-border);
-      background: rgba(255,255,255,.035);
-      border-radius: 20px;
-      padding: 18px 14px;
-    }
+  display:grid;
+  place-items:center;
 
-    .service-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 13px;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,.07);
-      font-size: 21px;
-      margin-bottom: 12px;
-    }
+  border-radius:24px;
 
-    .service-card strong {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--green2)
+    );
 
-    .service-card span {
-      color: var(--muted);
-      font-size: 11px;
-    }
+  box-shadow:
+    0 20px 60px rgba(34,197,94,.18);
 
-    .login-card {
-      border: 1px solid var(--card-border);
-      background: var(--card);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 26px;
-      padding: 22px;
-      box-shadow: 0 25px 70px rgba(0,0,0,.28);
-    }
+  font-size:38px;
+}
 
-    .login-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 5px;
-    }
+.brand-name{
+  font-size:31px;
+  font-weight:800;
+  letter-spacing:-1px;
+}
 
-    .login-subtitle {
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 18px;
-    }
+.brand-sub{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:7px;
+}
 
-    .role-label {
-      color: #cbd5e1;
-      font-size: 11px;
-      font-weight: 600;
-      margin-bottom: 9px;
-    }
+/* CARD */
 
-    .roles {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 17px;
-    }
+.card{
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.025),
+      rgba(255,255,255,.01)
+    ),
+    var(--card);
 
-    .role {
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.035);
-      color: white;
-      border-radius: 15px;
-      padding: 13px;
-      cursor: pointer;
-      text-align: left;
-      transition: .2s ease;
-    }
+  border:1px solid var(--border);
 
-    .role.active {
-      border-color: rgba(34,197,94,.7);
-      background: rgba(34,197,94,.10);
-      box-shadow: 0 0 0 2px rgba(34,197,94,.08);
-    }
+  border-radius:26px;
 
-    .role-icon {
-      font-size: 22px;
-      margin-bottom: 7px;
-    }
+  padding:25px;
 
-    .role strong {
-      display: block;
-      font-size: 12px;
-      margin-bottom: 3px;
-    }
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.28);
+}
 
-    .role small {
-      color: var(--muted);
-      font-size: 9px;
-    }
+.heading{
+  font-size:20px;
+  font-weight:800;
+}
 
-    .google-btn {
-      width: 100%;
-      height: 54px;
-      border: 0;
-      border-radius: 16px;
-      background: white;
-      color: #111827;
-      font-size: 14px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 11px;
-      cursor: pointer;
-      transition: transform .15s ease, opacity .15s ease;
-    }
+.description{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.6;
+  margin-top:7px;
+}
 
-    .google-btn:active {
-      transform: scale(.98);
-    }
+/* ROLE */
 
-    .google-icon {
-      width: 20px;
-      height: 20px;
-    }
+.role-title{
+  margin-top:23px;
+  margin-bottom:10px;
 
-    .google-btn.loading {
-      opacity: .65;
-      pointer-events: none;
-    }
+  font-size:10px;
+  font-weight:800;
 
-    .terms {
-      text-align: center;
-      color: #70798a;
-      font-size: 9px;
-      line-height: 1.6;
-      margin-top: 14px;
-    }
+  color:var(--muted);
 
-    .status {
-      display: none;
-      border-radius: 13px;
-      padding: 11px 13px;
-      font-size: 11px;
-      line-height: 1.45;
-      margin-bottom: 13px;
-    }
+  text-transform:uppercase;
+  letter-spacing:.7px;
+}
 
-    .status.show {
-      display: block;
-    }
+.roles{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
 
-    .status.error {
-      color: #fecaca;
-      background: rgba(239,68,68,.10);
-      border: 1px solid rgba(239,68,68,.18);
-    }
+.role{
+  position:relative;
 
-    .status.success {
-      color: #bbf7d0;
-      background: rgba(34,197,94,.10);
-      border: 1px solid rgba(34,197,94,.18);
-    }
+  padding:15px;
 
-    footer {
-      margin-top: auto;
-      text-align: center;
-      padding-top: 30px;
-      color: #606979;
-      font-size: 10px;
-    }
+  border:1px solid var(--border);
 
-    @media (min-width: 700px) {
-      .page {
-        max-width: 1050px;
-        padding: 30px 35px 40px;
-      }
+  background:var(--card2);
 
-      .hero {
-        margin-top: 20px;
-      }
+  color:white;
 
-      .services {
-        max-width: 700px;
-        margin-left: auto;
-        margin-right: auto;
-      }
+  border-radius:16px;
 
-      .login-card {
-        max-width: 470px;
-        margin: auto;
-      }
-    }
-  </style>
+  text-align:left;
+
+  transition:.2s;
+}
+
+.role:hover{
+  border-color:rgba(34,197,94,.35);
+}
+
+.role.selected{
+  border-color:var(--green);
+
+  background:
+    rgba(34,197,94,.08);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(34,197,94,.15);
+}
+
+.role-icon{
+  font-size:24px;
+  margin-bottom:9px;
+}
+
+.role-name{
+  font-size:12px;
+  font-weight:800;
+}
+
+.role-desc{
+  color:var(--muted);
+  font-size:9px;
+  margin-top:4px;
+  line-height:1.4;
+}
+
+/* LOGIN */
+
+.login-btn{
+  width:100%;
+  height:52px;
+
+  margin-top:20px;
+
+  border:0;
+  border-radius:15px;
+
+  background:var(--green);
+
+  color:#041008;
+
+  font-size:12px;
+  font-weight:800;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+
+  transition:.2s;
+}
+
+.login-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:
+    0 12px 30px rgba(34,197,94,.18);
+}
+
+.google-icon{
+  width:20px;
+  height:20px;
+
+  background:white;
+
+  border-radius:50%;
+
+  display:grid;
+  place-items:center;
+
+  font-size:13px;
+}
+
+/* INFO */
+
+.info{
+  margin-top:17px;
+
+  padding:12px 13px;
+
+  border-radius:13px;
+
+  background:
+    rgba(255,255,255,.035);
+
+  color:var(--muted);
+
+  font-size:9px;
+
+  line-height:1.6;
+
+  text-align:center;
+}
+
+/* STATUS */
+
+.status{
+  display:none;
+
+  margin-top:14px;
+
+  padding:12px;
+
+  border-radius:13px;
+
+  font-size:10px;
+
+  text-align:center;
+
+  line-height:1.5;
+}
+
+.status.show{
+  display:block;
+}
+
+.status.loading{
+  background:rgba(59,130,246,.08);
+  border:1px solid rgba(59,130,246,.15);
+  color:#bfdbfe;
+}
+
+.status.error{
+  background:rgba(239,68,68,.08);
+  border:1px solid rgba(239,68,68,.15);
+  color:#fca5a5;
+}
+
+.status.success{
+  background:rgba(34,197,94,.08);
+  border:1px solid rgba(34,197,94,.15);
+  color:#86efac;
+}
+
+/* FOOTER */
+
+.footer{
+  text-align:center;
+  color:#687384;
+  font-size:8px;
+  margin-top:18px;
+}
+
+/* LOADING SCREEN */
+
+#bootScreen{
+  position:fixed;
+  inset:0;
+
+  z-index:9999;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:var(--bg);
+
+  transition:.2s;
+}
+
+#bootScreen.hide{
+  opacity:0;
+  pointer-events:none;
+}
+
+.boot-box{
+  text-align:center;
+}
+
+.boot-logo{
+  width:62px;
+  height:62px;
+
+  margin:auto;
+
+  display:grid;
+  place-items:center;
+
+  border-radius:20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--green2)
+    );
+
+  font-size:31px;
+}
+
+.boot-text{
+  margin-top:14px;
+
+  color:var(--muted);
+
+  font-size:10px;
+}
+
+.spinner{
+  width:22px;
+  height:22px;
+
+  margin:14px auto 0;
+
+  border:2px solid rgba(255,255,255,.1);
+
+  border-top-color:var(--green);
+
+  border-radius:50%;
+
+  animation:
+    spin .8s linear infinite;
+}
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+
+  left:50%;
+  bottom:25px;
+
+  z-index:10000;
+
+  width:
+    min(
+      calc(100% - 30px),
+      430px
+    );
+
+  transform:
+    translate(-50%,20px);
+
+  opacity:0;
+
+  pointer-events:none;
+
+  padding:13px 15px;
+
+  border-radius:14px;
+
+  background:#1c2431;
+
+  border:1px solid var(--border);
+
+  font-size:10px;
+
+  text-align:center;
+
+  transition:.25s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:
+    translate(-50%,0);
+}
+
+/* MOBILE */
+
+@media(max-width:420px){
+
+  .app{
+    padding:14px;
+  }
+
+  .card{
+    padding:20px;
+    border-radius:22px;
+  }
+
+  .brand-name{
+    font-size:28px;
+  }
+
+  .roles{
+    gap:8px;
+  }
+
+  .role{
+    padding:13px;
+  }
+
+}
+</style>
 </head>
 
 <body>
 
-  <main class="page">
+<!-- =========================================
+     BOOT SCREEN
+========================================= -->
 
-    <header class="top">
-      <div class="brand">
-        <div class="logo">🛺</div>
+<div id="bootScreen">
 
-        <div class="brand-text">
-          <strong>E RIDE</strong>
-          <span>Ride • Goods • Local</span>
-        </div>
+  <div class="boot-box">
+
+    <div class="boot-logo">
+      🛺
+    </div>
+
+    <div class="boot-text">
+      Checking your E RIDE session...
+    </div>
+
+    <div class="spinner"></div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================
+     APP
+========================================= -->
+
+<div class="app">
+
+  <div class="login-wrap">
+
+    <!-- BRAND -->
+
+    <div class="brand">
+
+      <div class="logo">
+        🛺
       </div>
 
-      <div class="location-pill">
-        📍 Surajgarha
-      </div>
-    </header>
-
-    <section class="hero">
-
-      <div class="hero-badge">
-        🟢 Now launching in Surajgarha
+      <div class="brand-name">
+        E RIDE
       </div>
 
-      <h1>
-        Your ride.<br>
-        <span>Your way.</span>
-      </h1>
-
-      <p>
-        Book a Toto, send goods and travel around
-        Surajgarha with E RIDE.
-      </p>
-
-    </section>
-
-    <section class="services">
-
-      <div class="service-card">
-        <div class="service-icon">🛺</div>
-        <strong>Toto Ride</strong>
-        <span>Quick local rides</span>
+      <div class="brand-sub">
+        YOUR LOCAL RIDE, SIMPLE & FAST
       </div>
 
-      <div class="service-card">
-        <div class="service-icon">📦</div>
-        <strong>Goods</strong>
-        <span>Local goods delivery</span>
+    </div>
+
+
+    <!-- LOGIN CARD -->
+
+    <div class="card">
+
+      <div class="heading">
+        Welcome to E RIDE
       </div>
 
-    </section>
-
-    <section class="login-card">
-
-      <div class="login-title">
-        Get started with E RIDE
+      <div class="description">
+        Sign in with your Google account to book or drive a Toto.
       </div>
 
-      <div class="login-subtitle">
-        Sign in securely with your Google account.
-      </div>
 
-      <div id="status" class="status"></div>
+      <!-- ROLE -->
 
-      <div class="role-label">
-        I want to use E RIDE as
+      <div class="role-title">
+        Continue as
       </div>
 
       <div class="roles">
 
         <button
           type="button"
-          class="role active"
+          class="role selected"
           id="customerRole"
           onclick="selectRole('customer')"
         >
-          <div class="role-icon">👤</div>
-          <strong>Customer</strong>
-          <small>Book a ride or goods delivery</small>
+
+          <div class="role-icon">
+            👤
+          </div>
+
+          <div class="role-name">
+            Customer
+          </div>
+
+          <div class="role-desc">
+            Book a Toto and travel
+          </div>
+
         </button>
+
 
         <button
           type="button"
@@ -430,389 +598,1025 @@
           id="driverRole"
           onclick="selectRole('driver')"
         >
-          <div class="role-icon">🛺</div>
-          <strong>Driver</strong>
-          <small>Drive and earn with E RIDE</small>
+
+          <div class="role-icon">
+            🧑‍✈️
+          </div>
+
+          <div class="role-name">
+            Driver
+          </div>
+
+          <div class="role-desc">
+            Drive and earn with E RIDE
+          </div>
+
         </button>
 
       </div>
 
+
+      <!-- LOGIN BUTTON -->
+
       <button
         type="button"
-        class="google-btn"
-        id="googleBtn"
+        class="login-btn"
+        id="loginBtn"
         onclick="loginWithGoogle()"
       >
-        <svg class="google-icon" viewBox="0 0 24 24">
-          <path
-            fill="#4285F4"
-            d="M21.35 12.23c0-.78-.07-1.53-.22-2.25H12v4.26h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.4z"
-          />
-          <path
-            fill="#34A853"
-            d="M12 21.5c2.63 0 4.84-.87 6.45-2.36l-3.14-2.45c-.87.58-1.98.93-3.31.93-2.54 0-4.69-1.72-5.46-4.03H3.3v2.53A9.75 9.75 0 0 0 12 21.5z"
-          />
-          <path
-            fill="#FBBC05"
-            d="M6.54 13.59A5.86 5.86 0 0 1 6.23 12c0-.55.11-1.09.31-1.59V7.88H3.3A9.75 9.75 0 0 0 2.25 12c0 1.57.38 3.06 1.05 4.37l3.24-2.78z"
-          />
-          <path
-            fill="#EA4335"
-            d="M12 6.38c1.43 0 2.72.49 3.73 1.45l2.8-2.8C16.84 3.37 14.63 2.5 12 2.5a9.75 9.75 0 0 0-8.7 5.38l3.24 2.53C7.31 8.1 9.46 6.38 12 6.38z"
-          />
-        </svg>
 
-        Continue with Google
+        <span class="google-icon">
+          G
+        </span>
+
+        <span id="loginBtnText">
+          Continue with Google
+        </span>
+
       </button>
 
-      <div class="terms">
-        By continuing, you agree to use E RIDE responsibly
-        and follow applicable local laws and platform rules.
+
+      <!-- STATUS -->
+
+      <div
+        class="status"
+        id="status"
+      ></div>
+
+
+      <!-- INFO -->
+
+      <div class="info">
+
+        New drivers may require admin approval before they can start accepting rides.
+        Existing accounts will keep their previously assigned role.
+
       </div>
 
-    </section>
-
-    <footer>
-      © 2026 E RIDE • Surajgarha, Lakhisarai
-    </footer>
-
-  </main>
+    </div>
 
 
-  <!-- Firebase -->
-  <script type="module">
+    <div class="footer">
+      © E RIDE • Local Mobility Platform
+    </div>
 
-    import { initializeApp }
-      from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+  </div>
 
-    import {
-      getAuth,
-      GoogleAuthProvider,
-      signInWithPopup,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-
-    import {
-      getFirestore,
-      doc,
-      getDoc,
-      setDoc,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+</div>
 
 
-    /* ==============================
-       E RIDE FIREBASE CONFIG
-    ============================== */
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBKuGjmLBUbPCEAQglZK7pCFxH1bnh7OF4",
-      authDomain: "e-ride-70342.firebaseapp.com",
-      projectId: "e-ride-70342",
-      storageBucket: "e-ride-70342.firebasestorage.app",
-      messagingSenderId: "946431084655",
-      appId: "1:946431084655:web:eddcb4fffe883d4fdf659a",
-      measurementId: "G-WZ5YPZ4YZD"
-    };
+<div
+  class="toast"
+  id="toast"
+></div>
 
 
-    /* ==============================
-       FIREBASE INITIALIZATION
-    ============================== */
+<script type="module">
 
-    const app = initializeApp(firebaseConfig);
+/* =========================================
+   FIREBASE IMPORTS
+========================================= */
 
-    const auth = getAuth(app);
-
-    const db = getFirestore(app);
-
-    const provider = new GoogleAuthProvider();
-
-    provider.setCustomParameters({
-      prompt: "select_account"
-    });
+import {
+  initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 
 
-    /* ==============================
-       VARIABLES
-    ============================== */
-
-    let selectedRole = "customer";
-
-
-    /* ==============================
-       ROLE SELECTION
-    ============================== */
-
-    window.selectRole = function(role) {
-
-      selectedRole = role;
-
-      const customerBtn =
-        document.getElementById("customerRole");
-
-      const driverBtn =
-        document.getElementById("driverRole");
-
-      customerBtn.classList.remove("active");
-      driverBtn.classList.remove("active");
-
-      if (role === "customer") {
-        customerBtn.classList.add("active");
-      } else {
-        driverBtn.classList.add("active");
-      }
-
-    };
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+  setPersistence,
+  browserLocalPersistence,
+  signOut
+}
+from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 
-    /* ==============================
-       STATUS
-    ============================== */
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  serverTimestamp
+}
+from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
-    function showStatus(message, type = "error") {
 
-      const status =
-        document.getElementById("status");
+/* =========================================
+   FIREBASE CONFIG
+========================================= */
 
-      status.textContent = message;
+const firebaseConfig = {
 
-      status.className =
-        "status show " + type;
+  apiKey:
+    "AIzaSyBKuGjmLBUbPCEAQglZK7PcfXh1bnh7OF4",
+
+  authDomain:
+    "e-ride-70342.firebaseapp.com",
+
+  projectId:
+    "e-ride-70342",
+
+  storageBucket:
+    "e-ride-70342.firebasestorage.app",
+
+  messagingSenderId:
+    "946431084655",
+
+  appId:
+    "1:946431084655:web:eddcb4fffe883d4fdf659a",
+
+  measurementId:
+    "G-WZ5YPZ4YZD"
+
+};
+
+
+/* =========================================
+   FIREBASE INIT
+========================================= */
+
+const app =
+  initializeApp(firebaseConfig);
+
+const auth =
+  getAuth(app);
+
+const db =
+  getFirestore(app);
+
+const provider =
+  new GoogleAuthProvider();
+
+
+provider.setCustomParameters({
+  prompt:"select_account"
+});
+
+
+/* =========================================
+   VARIABLES
+========================================= */
+
+let selectedRole =
+  "customer";
+
+let persistenceReady =
+  false;
+
+let loginInProgress =
+  false;
+
+let redirecting =
+  false;
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const bootScreen =
+  document.getElementById(
+    "bootScreen"
+  );
+
+const loginBtn =
+  document.getElementById(
+    "loginBtn"
+  );
+
+const loginBtnText =
+  document.getElementById(
+    "loginBtnText"
+  );
+
+const statusBox =
+  document.getElementById(
+    "status"
+  );
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+function setStatus(
+  message,
+  type = "loading"
+){
+
+  statusBox.textContent =
+    message;
+
+  statusBox.className =
+    "status show " + type;
+
+}
+
+
+function clearStatus(){
+
+  statusBox.textContent =
+    "";
+
+  statusBox.className =
+    "status";
+
+}
+
+
+/* =========================================
+   ROLE SELECTION
+========================================= */
+
+window.selectRole =
+function(role){
+
+  if(
+    role !== "customer" &&
+    role !== "driver"
+  ){
+
+    return;
+
+  }
+
+  selectedRole =
+    role;
+
+
+  document
+    .getElementById(
+      "customerRole"
+    )
+    .classList.toggle(
+      "selected",
+      role === "customer"
+    );
+
+
+  document
+    .getElementById(
+      "driverRole"
+    )
+    .classList.toggle(
+      "selected",
+      role === "driver"
+    );
+
+};
+
+
+/* =========================================
+   REDIRECT
+========================================= */
+
+function redirectByRole(
+  data
+){
+
+  if(redirecting)
+    return;
+
+
+  redirecting =
+    true;
+
+
+  let target =
+    "customer.html";
+
+
+  if(data?.role === "admin"){
+
+    target =
+      "admin.html";
+
+  }
+  else if(
+    data?.role === "driver"
+  ){
+
+    target =
+      "driver.html";
+
+  }
+  else{
+
+    target =
+      "customer.html";
+
+  }
+
+
+  setStatus(
+    "Opening your E RIDE dashboard...",
+    "success"
+  );
+
+
+  setTimeout(() => {
+
+    window.location.replace(
+      target
+    );
+
+  },150);
+
+}
+
+
+/* =========================================
+   CREATE/FETCH USER PROFILE
+========================================= */
+
+async function getOrCreateUserProfile(
+  user,
+  roleForNewUser
+){
+
+  const userRef =
+    doc(
+      db,
+      "users",
+      user.uid
+    );
+
+
+  const snapshot =
+    await getDoc(userRef);
+
+
+  /* =======================================
+     EXISTING USER
+  ======================================= */
+
+  if(snapshot.exists()){
+
+    const data =
+      snapshot.data();
+
+
+    /*
+      IMPORTANT:
+
+      Existing role is ALWAYS preserved.
+
+      Login page selection does NOT
+      overwrite existing role.
+    */
+
+    if(
+      data.role === "admin" ||
+      data.role === "driver" ||
+      data.role === "customer"
+    ){
+
+      return data;
 
     }
 
 
-    function clearStatus() {
+    /*
+      If old account exists but has
+      no valid role, repair it.
+    */
 
-      const status =
-        document.getElementById("status");
-
-      status.className = "status";
-
-      status.textContent = "";
-
-    }
-
-
-    /* ==============================
-       GOOGLE LOGIN
-    ============================== */
-
-    window.loginWithGoogle = async function() {
-
-      const button =
-        document.getElementById("googleBtn");
-
-      clearStatus();
-
-      button.classList.add("loading");
-
-      button.innerHTML = "Signing you in...";
-
-      try {
-
-        const result =
-          await signInWithPopup(auth, provider);
-
-        const user = result.user;
-
-        const userRef =
-          doc(db, "users", user.uid);
-
-        const userSnap =
-          await getDoc(userRef);
+    const repairedRole =
+      roleForNewUser === "driver"
+        ? "driver"
+        : "customer";
 
 
-        /* ==========================
-           NEW USER
-        ========================== */
+    const repairedData = {
 
-        if (!userSnap.exists()) {
+      role:
+        repairedRole,
 
-          await setDoc(userRef, {
+      accountStatus:
+        repairedRole === "driver"
+          ? (
+              data.accountStatus ||
+              "pending"
+            )
+          : "active",
 
-            uid: user.uid,
+      displayName:
+        user.displayName ||
+        data.displayName ||
+        "",
 
-            name: user.displayName || "",
+      name:
+        data.name ||
+        user.displayName ||
+        "",
 
-            email: user.email || "",
+      email:
+        user.email ||
+        data.email ||
+        "",
 
-            photoURL: user.photoURL || "",
+      photoURL:
+        user.photoURL ||
+        data.photoURL ||
+        "",
 
-            role: selectedRole,
-
-            phone: "",
-
-            city: "Surajgarha",
-
-            district: "Lakhisarai",
-
-            state: "Bihar",
-
-            profileCompleted: false,
-
-            accountStatus:
-              selectedRole === "driver"
-                ? "pending"
-                : "active",
-
-            createdAt:
-              serverTimestamp(),
-
-            updatedAt:
-              serverTimestamp()
-
-          });
-
-        }
-
-
-        /* ==========================
-           EXISTING USER
-        ========================== */
-
-        const latestSnap =
-          await getDoc(userRef);
-
-        const userData =
-          latestSnap.data() || {};
-
-        const role =
-          userData.role || selectedRole;
-
-
-        showStatus(
-          "Login successful. Redirecting...",
-          "success"
-        );
-
-
-        setTimeout(() => {
-
-          if (role === "driver") {
-
-            window.location.href =
-              "driver.html";
-
-          } else if (role === "admin") {
-
-            window.location.href =
-              "admin.html";
-
-          } else {
-
-            window.location.href =
-              "customer.html";
-
-          }
-
-        }, 700);
-
-
-      } catch (error) {
-
-        console.error(
-          "Google login error:",
-          error
-        );
-
-        let message =
-          "Unable to sign in. Please try again.";
-
-        if (
-          error.code ===
-          "auth/popup-closed-by-user"
-        ) {
-          message =
-            "Google sign-in was cancelled.";
-        }
-
-        if (
-          error.code ===
-          "auth/popup-blocked"
-        ) {
-          message =
-            "Your browser blocked the Google login popup. Please allow popups for this site.";
-        }
-
-        if (
-          error.code ===
-          "auth/unauthorized-domain"
-        ) {
-          message =
-            "This website domain is not authorized in Firebase Authentication.";
-        }
-
-        showStatus(message, "error");
-
-        button.classList.remove("loading");
-
-        button.innerHTML = `
-          <svg class="google-icon" viewBox="0 0 24 24">
-            <path fill="#4285F4"
-              d="M21.35 12.23c0-.78-.07-1.53-.22-2.25H12v4.26h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.4z"/>
-            <path fill="#34A853"
-              d="M12 21.5c2.63 0 4.84-.87 6.45-2.36l-3.14-2.45c-.87.58-1.98.93-3.31.93-2.54 0-4.69-1.72-5.46-4.03H3.3v2.53A9.75 9.75 0 0 0 12 21.5z"/>
-            <path fill="#FBBC05"
-              d="M6.54 13.59A5.86 5.86 0 0 1 6.23 12c0-.55.11-1.09.31-1.59V7.88H3.3A9.75 9.75 0 0 0 2.25 12c0 1.57.38 3.06 1.05 4.37l3.24-2.78z"/>
-            <path fill="#EA4335"
-              d="M12 6.38c1.43 0 2.72.49 3.73 1.45l2.8-2.8C16.84 3.37 14.63 2.5 12 2.5a9.75 9.75 0 0 0-8.7 5.38l3.24 2.53C7.31 8.1 9.46 6.38 12 6.38z"/>
-          </svg>
-          Continue with Google
-        `;
-
-      }
+      updatedAt:
+        serverTimestamp()
 
     };
 
 
-    /* ==============================
-       AUTH STATE
-    ============================== */
+    await setDoc(
+      userRef,
+      repairedData,
+      {merge:true}
+    );
 
-    onAuthStateChanged(auth, async (user) => {
 
-      if (!user) return;
+    return {
+      ...data,
+      ...repairedData
+    };
 
-      try {
+  }
 
-        const userRef =
-          doc(db, "users", user.uid);
 
-        const snap =
-          await getDoc(userRef);
+  /* =======================================
+     NEW USER
+  ======================================= */
 
-        if (!snap.exists()) return;
+  const newData = {
 
-        const data = snap.data();
+    uid:
+      user.uid,
 
-        /*
-          We intentionally do not automatically
-          redirect immediately here.
+    role:
+      roleForNewUser === "driver"
+        ? "driver"
+        : "customer",
 
-          This allows the user to choose
-          their role before the first login.
-        */
+    accountStatus:
+      roleForNewUser === "driver"
+        ? "pending"
+        : "active",
 
-        console.log(
-          "Authenticated user:",
-          data
+    driverApproved:
+      roleForNewUser === "driver"
+        ? false
+        : false,
+
+    name:
+      user.displayName ||
+      "",
+
+    displayName:
+      user.displayName ||
+      "",
+
+    email:
+      user.email ||
+      "",
+
+    photoURL:
+      user.photoURL ||
+      "",
+
+    phone:
+      "",
+
+    createdAt:
+      serverTimestamp(),
+
+    updatedAt:
+      serverTimestamp()
+
+  };
+
+
+  await setDoc(
+    userRef,
+    newData
+  );
+
+
+  /*
+    Driver profile is created separately.
+
+    This makes driver.html/admin.html
+    able to work with a predictable
+    driver document.
+  */
+
+  if(
+    newData.role === "driver"
+  ){
+
+    await setDoc(
+      doc(
+        db,
+        "drivers",
+        user.uid
+      ),
+
+      {
+
+        uid:
+          user.uid,
+
+        name:
+          user.displayName ||
+          "",
+
+        email:
+          user.email ||
+          "",
+
+        photoURL:
+          user.photoURL ||
+          "",
+
+        phone:
+          "",
+
+        vehicleType:
+          "Toto",
+
+        vehicleNumber:
+          "",
+
+        accountStatus:
+          "pending",
+
+        driverApproved:
+          false,
+
+        online:
+          false,
+
+        available:
+          false,
+
+        totalRides:
+          0,
+
+        rating:
+          0,
+
+        ratingCount:
+          0,
+
+        createdAt:
+          serverTimestamp(),
+
+        updatedAt:
+          serverTimestamp()
+
+      },
+
+      {merge:true}
+    );
+
+  }
+
+
+  return newData;
+
+}
+
+
+/* =========================================
+   GOOGLE LOGIN
+========================================= */
+
+window.loginWithGoogle =
+async function(){
+
+  if(loginInProgress)
+    return;
+
+
+  if(!persistenceReady){
+
+    setStatus(
+      "Preparing secure login...",
+      "loading"
+    );
+
+    return;
+
+  }
+
+
+  loginInProgress =
+    true;
+
+
+  loginBtn.disabled =
+    true;
+
+
+  loginBtnText.textContent =
+    "Signing in...";
+
+
+  setStatus(
+    "Opening Google sign-in...",
+    "loading"
+  );
+
+
+  try{
+
+    const result =
+      await signInWithPopup(
+        auth,
+        provider
+      );
+
+
+    const user =
+      result.user;
+
+
+    if(!user){
+
+      throw new Error(
+        "Google login did not return a user."
+      );
+
+    }
+
+
+    setStatus(
+      "Checking your E RIDE account...",
+      "loading"
+    );
+
+
+    const userData =
+      await getOrCreateUserProfile(
+        user,
+        selectedRole
+      );
+
+
+    /*
+      Existing account role is preserved.
+      New account uses selectedRole.
+    */
+
+    redirectByRole(
+      userData
+    );
+
+
+  }
+  catch(error){
+
+    console.error(
+      "Google login error:",
+      error
+    );
+
+
+    /*
+      If popup was closed manually,
+      don't show a scary error.
+    */
+
+    if(
+      error?.code ===
+      "auth/popup-closed-by-user"
+    ){
+
+      setStatus(
+        "Google sign-in was cancelled.",
+        "error"
+      );
+
+    }
+    else if(
+      error?.code ===
+      "auth/popup-blocked"
+    ){
+
+      setStatus(
+        "Popup was blocked. Please allow popups for E RIDE.",
+        "error"
+      );
+
+    }
+    else if(
+      error?.code ===
+      "auth/api-key-not-valid"
+    ){
+
+      setStatus(
+        "Firebase API key is invalid. Check Firebase project configuration.",
+        "error"
+      );
+
+    }
+    else if(
+      error?.code ===
+      "auth/unauthorized-domain"
+    ){
+
+      setStatus(
+        "This website is not authorized in Firebase Authentication.",
+        "error"
+      );
+
+    }
+    else{
+
+      setStatus(
+        error?.message ||
+        "Google sign-in failed. Please try again.",
+        "error"
+      );
+
+    }
+
+
+    loginInProgress =
+      false;
+
+    loginBtn.disabled =
+      false;
+
+    loginBtnText.textContent =
+      "Continue with Google";
+
+  }
+
+};
+
+
+/* =========================================
+   AUTH SESSION LISTENER
+========================================= */
+
+onAuthStateChanged(
+  auth,
+  async user => {
+
+    /*
+      Do not redirect before persistence
+      initialization has completed.
+    */
+
+    if(!persistenceReady){
+
+      return;
+
+    }
+
+
+    if(!user){
+
+      bootScreen
+        .classList
+        .add("hide");
+
+      return;
+
+    }
+
+
+    /*
+      A fresh login is already handling
+      its own redirect.
+    */
+
+    if(loginInProgress){
+
+      return;
+
+    }
+
+
+    if(redirecting){
+
+      return;
+
+    }
+
+
+    try{
+
+      setStatus(
+        "Restoring your E RIDE session...",
+        "loading"
+      );
+
+
+      const snap =
+        await getDoc(
+          doc(
+            db,
+            "users",
+            user.uid
+          )
         );
 
-      } catch (error) {
 
-        console.error(
-          "Auth state error:",
-          error
-        );
+      /*
+        If authenticated but profile doesn't
+        exist, sign out instead of guessing.
+      */
+
+      if(!snap.exists()){
+
+        await signOut(auth);
+
+        clearStatus();
+
+        bootScreen
+          .classList
+          .add("hide");
+
+        return;
 
       }
 
-    });
 
-  </script>
+      const data =
+        snap.data();
+
+
+      if(
+        data.role !== "admin" &&
+        data.role !== "driver" &&
+        data.role !== "customer"
+      ){
+
+        await signOut(auth);
+
+        setStatus(
+          "Your account role is invalid. Please contact E RIDE support.",
+          "error"
+        );
+
+        bootScreen
+          .classList
+          .add("hide");
+
+        return;
+
+      }
+
+
+      redirectByRole(
+        data
+      );
+
+    }
+    catch(error){
+
+      console.error(
+        "Session restore error:",
+        error
+      );
+
+      setStatus(
+        "Could not restore your E RIDE session.",
+        "error"
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   FIREBASE LOCAL PERSISTENCE
+========================================= */
+
+async function initializeAuthPersistence(){
+
+  try{
+
+    /*
+      This is the key part for:
+
+      Browser close
+      Tab close
+      PWA close
+      App reopen
+
+      → Firebase keeps the login session
+      until explicit logout.
+    */
+
+    await setPersistence(
+      auth,
+      browserLocalPersistence
+    );
+
+
+    persistenceReady =
+      true;
+
+
+    bootScreen
+      .classList
+      .add("hide");
+
+
+  }
+  catch(error){
+
+    console.error(
+      "Persistence error:",
+      error
+    );
+
+
+    persistenceReady =
+      false;
+
+
+    bootScreen
+      .classList
+      .add("hide");
+
+
+    setStatus(
+      "Unable to initialize secure login. Please reload the app.",
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+initializeAuthPersistence();
+
+
+/* =========================================
+   GLOBAL ERROR PROTECTION
+========================================= */
+
+window.addEventListener(
+  "unhandledrejection",
+  event => {
+
+    console.error(
+      "Unhandled promise:",
+      event.reason
+    );
+
+  }
+);
+
+</script>
+
+
+<!-- =========================================
+     SERVICE WORKER
+========================================= -->
+
+<script>
+
+if(
+  "serviceWorker" in navigator
+){
+
+  window.addEventListener(
+    "load",
+    () => {
+
+      navigator
+        .serviceWorker
+        .register("./sw.js")
+        .catch(
+          error =>
+            console.warn(
+              "Service worker registration failed:",
+              error
+            )
+        );
+
+    }
+  );
+
+}
+
+</script>
 
 </body>
 </html>
-```
