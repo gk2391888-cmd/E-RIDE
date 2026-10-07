@@ -1,0 +1,3163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>E RIDE — Driver</title>
+  <meta name="theme-color" content="#070a10">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  >
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg: #070a10;
+      --surface: #10151f;
+      --surface2: #151b27;
+      --border: rgba(255,255,255,.08);
+      --text: #fff;
+      --muted: #8f9aaa;
+      --green: #22c55e;
+      --green2: #16a34a;
+      --red: #ef4444;
+      --yellow: #f59e0b;
+      --blue: #3b82f6;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 520px;
+      min-height: 100vh;
+      margin: auto;
+      padding-bottom: 90px;
+    }
+
+    /* HEADER */
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      padding: 16px 18px;
+
+      background: rgba(7,10,16,.92);
+      backdrop-filter: blur(18px);
+
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+
+      display: grid;
+      place-items: center;
+
+      background: linear-gradient(
+        135deg,
+        var(--green),
+        #86efac
+      );
+
+      font-size: 22px;
+    }
+
+    .brand-name {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .brand-sub {
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+    }
+
+    .profile-btn {
+      width: 42px;
+      height: 42px;
+
+      border: 1px solid var(--border);
+      border-radius: 50%;
+
+      background: var(--surface2);
+
+      color: white;
+      font-weight: 700;
+
+      overflow: hidden;
+    }
+
+    .profile-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    /* MAIN */
+
+    .main {
+      padding: 18px;
+    }
+
+    .welcome {
+      margin-bottom: 18px;
+    }
+
+    .welcome-small {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .welcome-name {
+      font-size: 25px;
+      font-weight: 800;
+    }
+
+    /* ONLINE CARD */
+
+    .online-card {
+      padding: 18px;
+
+      border: 1px solid var(--border);
+      border-radius: 23px;
+
+      background:
+        radial-gradient(
+          circle at 100% 0%,
+          rgba(34,197,94,.12),
+          transparent 45%
+        ),
+        var(--surface);
+
+      margin-bottom: 15px;
+    }
+
+    .online-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .online-title {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .online-sub {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .online-switch {
+      width: 58px;
+      height: 32px;
+
+      border: none;
+      border-radius: 999px;
+
+      background: #303846;
+
+      padding: 4px;
+
+      transition: .2s;
+    }
+
+    .online-switch::after {
+      content: "";
+
+      display: block;
+
+      width: 24px;
+      height: 24px;
+
+      border-radius: 50%;
+
+      background: white;
+
+      transition: .2s;
+    }
+
+    .online-switch.active {
+      background: var(--green);
+    }
+
+    .online-switch.active::after {
+      transform: translateX(26px);
+    }
+
+    .online-status {
+      margin-top: 15px;
+
+      padding: 11px 13px;
+
+      border-radius: 13px;
+
+      background: rgba(255,255,255,.04);
+
+      color: var(--muted);
+
+      font-size: 10px;
+    }
+
+    .online-status.active {
+      color: #86efac;
+      background: rgba(34,197,94,.08);
+    }
+
+    /* STATS */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 9px;
+
+      margin-bottom: 22px;
+    }
+
+    .stat {
+      padding: 14px 10px;
+
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+      border-radius: 17px;
+
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .stat-label {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    /* MAP */
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .map-card {
+      height: 220px;
+
+      overflow: hidden;
+
+      border-radius: 22px;
+
+      border: 1px solid var(--border);
+
+      margin-bottom: 20px;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* REQUESTS */
+
+    .requests {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .empty {
+      padding: 25px 16px;
+
+      text-align: center;
+
+      border: 1px dashed rgba(255,255,255,.10);
+
+      border-radius: 18px;
+
+      color: var(--muted);
+
+      font-size: 11px;
+    }
+
+    .empty-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .request-card {
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+
+      border-radius: 20px;
+
+      padding: 16px;
+    }
+
+    .request-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 13px;
+    }
+
+    .request-service {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .request-badge {
+      padding: 5px 8px;
+
+      border-radius: 999px;
+
+      color: #86efac;
+
+      background: rgba(34,197,94,.08);
+
+      font-size: 8px;
+      font-weight: 700;
+    }
+
+    .location-row {
+      display: flex;
+      gap: 10px;
+
+      margin-bottom: 10px;
+    }
+
+    .location-line {
+      width: 9px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+
+      border-radius: 50%;
+
+      background: var(--green);
+
+      margin-top: 4px;
+    }
+
+    .dot.red {
+      background: var(--red);
+    }
+
+    .vertical {
+      width: 1px;
+      flex: 1;
+
+      min-height: 22px;
+
+      background: #394250;
+
+      margin: 3px 0;
+    }
+
+    .location-content {
+      flex: 1;
+    }
+
+    .location-label {
+      color: var(--muted);
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      margin-bottom: 3px;
+    }
+
+    .location-text {
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .request-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      gap: 8px;
+
+      margin: 13px 0;
+    }
+
+    .detail {
+      padding: 10px;
+
+      background: rgba(255,255,255,.035);
+
+      border-radius: 12px;
+    }
+
+    .detail-label {
+      color: var(--muted);
+      font-size: 8px;
+      margin-bottom: 4px;
+    }
+
+    .detail-value {
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .request-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      gap: 9px;
+    }
+
+    .reject-btn,
+    .accept-btn {
+      height: 47px;
+
+      border-radius: 14px;
+
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .reject-btn {
+      border: 1px solid rgba(239,68,68,.20);
+
+      background: rgba(239,68,68,.07);
+
+      color: #fca5a5;
+    }
+
+    .accept-btn {
+      border: none;
+
+      background: linear-gradient(
+        135deg,
+        var(--green),
+        var(--green2)
+      );
+
+      color: #041008;
+    }
+
+    /* ACTIVE RIDE */
+
+    .active-ride {
+      display: none;
+
+      padding: 18px;
+
+      border: 1px solid rgba(59,130,246,.20);
+
+      border-radius: 22px;
+
+      background: rgba(59,130,246,.07);
+
+      margin-bottom: 20px;
+    }
+
+    .active-ride.show {
+      display: block;
+    }
+
+    .active-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 15px;
+    }
+
+    .active-title {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .status-badge {
+      padding: 6px 9px;
+
+      border-radius: 999px;
+
+      color: #93c5fd;
+
+      background: rgba(59,130,246,.10);
+
+      font-size: 8px;
+    }
+
+    .customer-box {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+
+      padding: 12px;
+
+      border-radius: 15px;
+
+      background: rgba(255,255,255,.04);
+
+      margin-bottom: 13px;
+    }
+
+    .customer-avatar {
+      width: 40px;
+      height: 40px;
+
+      border-radius: 50%;
+
+      display: grid;
+      place-items: center;
+
+      background: #263142;
+
+      font-size: 18px;
+    }
+
+    .customer-name {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .customer-email {
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 2px;
+    }
+
+    .active-location {
+      color: var(--muted);
+
+      font-size: 10px;
+
+      line-height: 1.7;
+
+      margin-bottom: 14px;
+    }
+
+    .active-actions {
+      display: grid;
+      gap: 9px;
+    }
+
+    .start-btn,
+    .complete-btn {
+      height: 49px;
+
+      border: none;
+
+      border-radius: 15px;
+
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .start-btn {
+      background: var(--blue);
+      color: white;
+    }
+
+    .complete-btn {
+      background: var(--green);
+      color: #041008;
+    }
+
+    /* BOTTOM */
+
+    .bottom-nav {
+      position: fixed;
+
+      z-index: 2000;
+
+      bottom: 0;
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      width: 100%;
+      max-width: 520px;
+
+      height: 74px;
+
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+
+      padding: 8px;
+
+      background: rgba(12,16,24,.97);
+
+      backdrop-filter: blur(20px);
+
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-item {
+      border: none;
+
+      background: transparent;
+
+      color: #697384;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      gap: 4px;
+
+      font-size: 9px;
+    }
+
+    .nav-item.active {
+      color: var(--green);
+    }
+
+    .nav-icon {
+      font-size: 19px;
+    }
+
+    /* PROFILE MODAL */
+
+    .modal {
+      display: none;
+
+      position: fixed;
+      inset: 0;
+
+      z-index: 5000;
+
+      background: rgba(0,0,0,.70);
+
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 520px;
+
+      padding: 22px;
+
+      background: #111722;
+
+      border-radius: 27px 27px 0 0;
+
+      border: 1px solid var(--border);
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 15px;
+    }
+
+    .profile-info {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+
+      padding: 14px;
+
+      background: rgba(255,255,255,.04);
+
+      border-radius: 17px;
+
+      margin-bottom: 15px;
+    }
+
+    .profile-big {
+      width: 50px;
+      height: 50px;
+
+      border-radius: 50%;
+
+      object-fit: cover;
+
+      background: #202938;
+    }
+
+    .profile-name {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .profile-email {
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 3px;
+    }
+
+    .logout-btn,
+    .close-btn {
+      width: 100%;
+      height: 50px;
+
+      border-radius: 15px;
+
+      font-weight: 700;
+    }
+
+    .logout-btn {
+      border: 1px solid rgba(239,68,68,.20);
+
+      background: rgba(239,68,68,.07);
+
+      color: #fca5a5;
+    }
+
+    .close-btn {
+      margin-top: 9px;
+
+      border: none;
+
+      background: rgba(255,255,255,.06);
+
+      color: white;
+    }
+
+    /* TOAST */
+
+    .toast {
+      position: fixed;
+
+      z-index: 8000;
+
+      left: 50%;
+      bottom: 90px;
+
+      transform:
+        translateX(-50%)
+        translateY(20px);
+
+      width: calc(100% - 36px);
+      max-width: 480px;
+
+      padding: 13px 15px;
+
+      border-radius: 15px;
+
+      background: #1b2330;
+
+      border: 1px solid var(--border);
+
+      color: white;
+
+      font-size: 11px;
+
+      opacity: 0;
+
+      pointer-events: none;
+
+      transition: .25s;
+    }
+
+    .toast.show {
+      opacity: 1;
+
+      transform:
+        translateX(-50%)
+        translateY(0);
+    }
+
+    @media (min-width: 700px) {
+      .app {
+        max-width: 1050px;
+      }
+
+      .main {
+        max-width: 850px;
+        margin: auto;
+      }
+
+      .map-card {
+        height: 330px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+
+  <header class="header">
+
+    <div class="brand">
+
+      <div class="logo">
+        🛺
+      </div>
+
+      <div>
+        <div class="brand-name">
+          E RIDE
+        </div>
+
+        <div class="brand-sub">
+          Driver • Surajgarha
+        </div>
+      </div>
+
+    </div>
+
+    <button
+      class="profile-btn"
+      onclick="openProfile()"
+    >
+      <span id="profileLetter">
+        D
+      </span>
+
+      <img
+        id="profileImage"
+        alt="Driver"
+      >
+    </button>
+
+  </header>
+
+
+  <main class="main">
+
+    <!-- WELCOME -->
+
+    <section class="welcome">
+
+      <div class="welcome-small">
+        Driver dashboard 👋
+      </div>
+
+      <div
+        class="welcome-name"
+        id="welcomeName"
+      >
+        Driver
+      </div>
+
+    </section>
+
+
+    <!-- ONLINE -->
+
+    <section class="online-card">
+
+      <div class="online-top">
+
+        <div>
+
+          <div class="online-title">
+            Driver status
+          </div>
+
+          <div class="online-sub">
+            Go online to receive nearby rides
+          </div>
+
+        </div>
+
+        <button
+          class="online-switch"
+          id="onlineSwitch"
+          onclick="toggleOnline()"
+        ></button>
+
+      </div>
+
+      <div
+        class="online-status"
+        id="onlineStatus"
+      >
+        You are currently offline.
+      </div>
+
+    </section>
+
+
+    <!-- STATS -->
+
+    <section class="stats">
+
+      <div class="stat">
+
+        <div
+          class="stat-value"
+          id="todayRides"
+        >
+          0
+        </div>
+
+        <div class="stat-label">
+          Today's rides
+        </div>
+
+      </div>
+
+      <div class="stat">
+
+        <div
+          class="stat-value"
+          id="todayEarnings"
+        >
+          ₹0
+        </div>
+
+        <div class="stat-label">
+          Today's earning
+        </div>
+
+      </div>
+
+      <div class="stat">
+
+        <div
+          class="stat-value"
+          id="rating"
+        >
+          —
+        </div>
+
+        <div class="stat-label">
+          Rating
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ACTIVE RIDE -->
+
+    <section
+      class="active-ride"
+      id="activeRide"
+    >
+
+      <div class="active-header">
+
+        <div class="active-title">
+          Current ride
+        </div>
+
+        <div
+          class="status-badge"
+          id="activeStatus"
+        >
+          Accepted
+        </div>
+
+      </div>
+
+
+      <div class="customer-box">
+
+        <div
+          class="customer-avatar"
+          id="customerAvatar"
+        >
+          👤
+        </div>
+
+        <div>
+
+          <div
+            class="customer-name"
+            id="activeCustomer"
+          >
+            Customer
+          </div>
+
+          <div
+            class="customer-email"
+            id="activeCustomerEmail"
+          >
+            —
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="active-location"
+        id="activeLocation"
+      >
+        Loading ride details...
+      </div>
+
+
+      <div class="active-actions">
+
+        <button
+          class="start-btn"
+          id="startRideBtn"
+          onclick="startRide()"
+        >
+          ▶ Start Ride
+        </button>
+
+        <button
+          class="complete-btn"
+          id="completeRideBtn"
+          onclick="completeRide()"
+          style="display:none;"
+        >
+          ✓ Complete Ride
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- MAP -->
+
+    <div class="section-title">
+      Driver location
+    </div>
+
+    <section class="map-card">
+      <div id="map"></div>
+    </section>
+
+
+    <!-- REQUESTS -->
+
+    <div class="section-title">
+      Nearby ride requests
+    </div>
+
+    <section
+      class="requests"
+      id="requests"
+    >
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          🛺
+        </div>
+
+        <div>
+          Go online to start receiving ride requests.
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- BOTTOM NAV -->
+
+<nav class="bottom-nav">
+
+  <button
+    class="nav-item active"
+    onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  >
+    <span class="nav-icon">🏠</span>
+    Home
+  </button>
+
+  <button
+    class="nav-item"
+    onclick="scrollToRequests()"
+  >
+    <span class="nav-icon">🔔</span>
+    Requests
+  </button>
+
+  <button
+    class="nav-item"
+    onclick="openProfile()"
+  >
+    <span class="nav-icon">👤</span>
+    Profile
+  </button>
+
+</nav>
+
+
+<!-- PROFILE -->
+
+<div
+  class="modal"
+  id="profileModal"
+  onclick="closeOutside(event)"
+>
+
+  <div class="modal-card">
+
+    <div class="modal-title">
+      Driver Profile
+    </div>
+
+    <div class="profile-info">
+
+      <img
+        class="profile-big"
+        id="profileBig"
+        alt="Driver"
+      >
+
+      <div>
+
+        <div
+          class="profile-name"
+          id="profileName"
+        >
+          Driver
+        </div>
+
+        <div
+          class="profile-email"
+          id="profileEmail"
+        >
+          —
+        </div>
+
+      </div>
+
+    </div>
+
+    <button
+      class="logout-btn"
+      onclick="logout()"
+    >
+      Sign Out
+    </button>
+
+    <button
+      class="close-btn"
+      onclick="closeProfile()"
+    >
+      Close
+    </button>
+
+  </div>
+
+</div>
+
+
+<div
+  class="toast"
+  id="toast"
+></div>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+<script type="module">
+
+  import {
+    initializeApp
+  } from
+    "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+
+  import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+  } from
+    "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    addDoc,
+    collection,
+    query,
+    where,
+    onSnapshot,
+    serverTimestamp,
+    increment
+  } from
+    "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+
+  /* ==========================================
+     FIREBASE
+  ========================================== */
+
+  const firebaseConfig = {
+
+    apiKey:
+      "AIzaSyBKuGjmLBUbPCEAQglZK7pCFxH1bnh7OF4",
+
+    authDomain:
+      "e-ride-70342.firebaseapp.com",
+
+    projectId:
+      "e-ride-70342",
+
+    storageBucket:
+      "e-ride-70342.firebasestorage.app",
+
+    messagingSenderId:
+      "946431084655",
+
+    appId:
+      "1:946431084655:web:eddcb4fffe883d4fdf659a",
+
+    measurementId:
+      "G-WZ5YPZ4YZD"
+
+  };
+
+
+  const app =
+    initializeApp(firebaseConfig);
+
+  const auth =
+    getAuth(app);
+
+  const db =
+    getFirestore(app);
+
+
+  /* ==========================================
+     VARIABLES
+  ========================================== */
+
+  let currentUser = null;
+
+  let driverData = null;
+
+  let isOnline = false;
+
+  let currentRide = null;
+
+  let map = null;
+
+  let driverMarker = null;
+
+  let locationWatchId = null;
+
+  let unsubscribeRides = null;
+
+
+  /* ==========================================
+     MAP
+  ========================================== */
+
+  function initMap() {
+
+    map =
+      L.map("map", {
+        zoomControl: false
+      }).setView(
+        [25.3788, 86.0956],
+        13
+      );
+
+
+    L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        maxZoom: 19,
+        attribution:
+          "&copy; OpenStreetMap contributors"
+      }
+    ).addTo(map);
+
+  }
+
+
+  /* ==========================================
+     AUTH
+  ========================================== */
+
+  onAuthStateChanged(
+    auth,
+    async user => {
+
+      if (!user) {
+
+        window.location.href =
+          "index.html";
+
+        return;
+
+      }
+
+
+      currentUser = user;
+
+
+      try {
+
+        const userRef =
+          doc(
+            db,
+            "users",
+            user.uid
+          );
+
+
+        const snap =
+          await getDoc(userRef);
+
+
+        if (!snap.exists()) {
+
+          showToast(
+            "Driver profile not found."
+          );
+
+          setTimeout(() => {
+
+            window.location.href =
+              "index.html";
+
+          }, 1500);
+
+          return;
+
+        }
+
+
+        driverData =
+          snap.data();
+
+
+        /* ==========================
+           ROLE SECURITY
+        ========================== */
+
+        if (
+          driverData.role !==
+          "driver"
+        ) {
+
+          if (
+            driverData.role ===
+            "admin"
+          ) {
+
+            window.location.href =
+              "admin.html";
+
+          } else {
+
+            window.location.href =
+              "customer.html";
+
+          }
+
+          return;
+
+        }
+
+
+        /* ==========================
+           DRIVER APPROVAL
+        ========================== */
+
+        if (
+          driverData.accountStatus !==
+          "active"
+        ) {
+
+          showPendingScreen();
+
+          return;
+
+        }
+
+
+        /* ==========================
+           PROFILE
+        ========================== */
+
+        const name =
+          driverData.name ||
+          user.displayName ||
+          "Driver";
+
+
+        document.getElementById(
+          "welcomeName"
+        ).textContent =
+          name.split(" ")[0];
+
+
+        document.getElementById(
+          "profileName"
+        ).textContent =
+          name;
+
+
+        document.getElementById(
+          "profileEmail"
+        ).textContent =
+          user.email || "";
+
+
+        const photo =
+          driverData.photoURL ||
+          user.photoURL ||
+          "";
+
+
+        if (photo) {
+
+          document.getElementById(
+            "profileImage"
+          ).src = photo;
+
+          document.getElementById(
+            "profileImage"
+          ).style.display =
+            "block";
+
+          document.getElementById(
+            "profileLetter"
+          ).style.display =
+            "none";
+
+          document.getElementById(
+            "profileBig"
+          ).src = photo;
+
+        } else {
+
+          document.getElementById(
+            "profileLetter"
+          ).textContent =
+            name
+              .charAt(0)
+              .toUpperCase();
+
+        }
+
+
+        /* ==========================
+           DRIVER DOC
+        ========================== */
+
+        await setDoc(
+
+          doc(
+            db,
+            "drivers",
+            user.uid
+          ),
+
+          {
+
+            uid:
+              user.uid,
+
+            name:
+              name,
+
+            email:
+              user.email || "",
+
+            photoURL:
+              photo,
+
+            online:
+              false,
+
+            available:
+              true,
+
+            city:
+              "Surajgarha",
+
+            district:
+              "Lakhisarai",
+
+            vehicleType:
+              driverData.vehicleType ||
+              "toto",
+
+            vehicleNumber:
+              driverData.vehicleNumber ||
+              "",
+
+            rating:
+              driverData.rating ||
+              0,
+
+            totalRides:
+              driverData.totalRides ||
+              0,
+
+            todayRides:
+              driverData.todayRides ||
+              0,
+
+            todayEarnings:
+              driverData.todayEarnings ||
+              0,
+
+            updatedAt:
+              serverTimestamp()
+
+          },
+
+          {
+            merge: true
+          }
+
+        );
+
+
+        loadStats();
+
+      } catch (error) {
+
+        console.error(
+          "Driver initialization:",
+          error
+        );
+
+        showToast(
+          "Unable to load driver profile."
+        );
+
+      }
+
+    }
+  );
+
+
+  /* ==========================================
+     PENDING DRIVER
+  ========================================== */
+
+  function showPendingScreen() {
+
+    const main =
+      document.querySelector(".main");
+
+
+    main.innerHTML = `
+
+      <div style="
+        min-height:65vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+      ">
+
+        <div>
+
+          <div style="
+            font-size:55px;
+            margin-bottom:18px;
+          ">
+            🪪
+          </div>
+
+          <div style="
+            font-size:22px;
+            font-weight:800;
+            margin-bottom:10px;
+          ">
+            Verification Pending
+          </div>
+
+          <div style="
+            color:#8f9aaa;
+            font-size:12px;
+            line-height:1.7;
+            max-width:330px;
+          ">
+            Your driver account has been created.
+            An E RIDE admin must verify your
+            driver details before you can go online
+            and receive rides.
+          </div>
+
+          <button
+            onclick="logout()"
+            style="
+              margin-top:22px;
+              width:100%;
+              max-width:300px;
+              height:50px;
+              border:0;
+              border-radius:15px;
+              background:#22c55e;
+              color:#041008;
+              font-weight:800;
+            "
+          >
+            Sign Out
+          </button>
+
+        </div>
+
+      </div>
+    `;
+
+  }
+
+
+  /* ==========================================
+     ONLINE / OFFLINE
+  ========================================== */
+
+  window.toggleOnline =
+    async function() {
+
+      if (!currentUser) return;
+
+
+      if (
+        driverData.accountStatus !==
+        "active"
+      ) {
+
+        showToast(
+          "Your account is not approved yet."
+        );
+
+        return;
+
+      }
+
+
+      try {
+
+        const newStatus =
+          !isOnline;
+
+
+        await updateDoc(
+
+          doc(
+            db,
+            "drivers",
+            currentUser.uid
+          ),
+
+          {
+
+            online:
+              newStatus,
+
+            available:
+              newStatus,
+
+            updatedAt:
+              serverTimestamp()
+
+          }
+
+        );
+
+
+        isOnline =
+          newStatus;
+
+
+        updateOnlineUI();
+
+
+        if (isOnline) {
+
+          startLocationTracking();
+
+          listenForRides();
+
+          showToast(
+            "You are now online."
+          );
+
+        } else {
+
+          stopLocationTracking();
+
+          stopRideListener();
+
+          showToast(
+            "You are now offline."
+          );
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Online status:",
+          error
+        );
+
+        showToast(
+          "Could not update online status."
+        );
+
+      }
+
+    };
+
+
+  function updateOnlineUI() {
+
+    const switchBtn =
+      document.getElementById(
+        "onlineSwitch"
+      );
+
+    const status =
+      document.getElementById(
+        "onlineStatus"
+      );
+
+
+    switchBtn.classList.toggle(
+      "active",
+      isOnline
+    );
+
+
+    if (isOnline) {
+
+      status.classList.add(
+        "active"
+      );
+
+      status.textContent =
+        "🟢 You are online. Looking for nearby rides.";
+
+    } else {
+
+      status.classList.remove(
+        "active"
+      );
+
+      status.textContent =
+        "You are currently offline.";
+
+    }
+
+  }
+
+
+  /* ==========================================
+     DRIVER LOCATION
+  ========================================== */
+
+  function startLocationTracking() {
+
+    if (
+      !navigator.geolocation
+    ) {
+
+      showToast(
+        "Location is not supported."
+      );
+
+      return;
+
+    }
+
+
+    if (
+      locationWatchId !== null
+    ) {
+
+      return;
+
+    }
+
+
+    locationWatchId =
+      navigator.geolocation.watchPosition(
+
+        async position => {
+
+          const lat =
+            position.coords.latitude;
+
+          const lng =
+            position.coords.longitude;
+
+
+          if (driverMarker) {
+
+            driverMarker.setLatLng(
+              [lat, lng]
+            );
+
+          } else {
+
+            driverMarker =
+              L.marker([
+                lat,
+                lng
+              ])
+              .addTo(map)
+              .bindPopup(
+                "🛺 Your location"
+              );
+
+          }
+
+
+          try {
+
+            await updateDoc(
+
+              doc(
+                db,
+                "drivers",
+                currentUser.uid
+              ),
+
+              {
+
+                latitude:
+                  lat,
+
+                longitude:
+                  lng,
+
+                locationUpdatedAt:
+                  serverTimestamp(),
+
+                online:
+                  true,
+
+                available:
+                  !currentRide
+
+              }
+
+            );
+
+          } catch (error) {
+
+            console.warn(
+              "Location update failed:",
+              error
+            );
+
+          }
+
+        },
+
+        error => {
+
+          console.warn(
+            "GPS:",
+            error
+          );
+
+          showToast(
+            "Location permission required for driver mode."
+          );
+
+        },
+
+        {
+
+          enableHighAccuracy:
+            true,
+
+          maximumAge:
+            5000,
+
+          timeout:
+            10000
+
+        }
+
+      );
+
+  }
+
+
+  function stopLocationTracking() {
+
+    if (
+      locationWatchId !== null
+    ) {
+
+      navigator.geolocation.clearWatch(
+        locationWatchId
+      );
+
+      locationWatchId = null;
+
+    }
+
+  }
+
+
+  /* ==========================================
+     RIDE LISTENER
+  ========================================== */
+
+  function listenForRides() {
+
+    stopRideListener();
+
+
+    const ridesQuery =
+      query(
+
+        collection(
+          db,
+          "rides"
+        ),
+
+        where(
+          "status",
+          "==",
+          "searching"
+        )
+
+      );
+
+
+    unsubscribeRides =
+      onSnapshot(
+
+        ridesQuery,
+
+        snapshot => {
+
+          const rides = [];
+
+
+          snapshot.forEach(
+            docSnap => {
+
+              const ride =
+                docSnap.data();
+
+
+              /*
+                Only show ride requests
+                that haven't already been
+                assigned to a driver.
+              */
+
+              if (
+                !ride.driverId
+              ) {
+
+                rides.push({
+
+                  id:
+                    docSnap.id,
+
+                  ...ride
+
+                });
+
+              }
+
+            }
+          );
+
+
+          renderRequests(
+            rides
+          );
+
+        },
+
+        error => {
+
+          console.error(
+            "Ride listener:",
+            error
+          );
+
+
+          showToast(
+            "Unable to load ride requests."
+          );
+
+        }
+
+      );
+
+  }
+
+
+  function stopRideListener() {
+
+    if (
+      unsubscribeRides
+    ) {
+
+      unsubscribeRides();
+
+      unsubscribeRides =
+        null;
+
+    }
+
+  }
+
+
+  /* ==========================================
+     RENDER REQUESTS
+  ========================================== */
+
+  function renderRequests(
+    rides
+  ) {
+
+    const container =
+      document.getElementById(
+        "requests"
+      );
+
+
+    if (!isOnline) {
+
+      container.innerHTML = `
+
+        <div class="empty">
+
+          <div class="empty-icon">
+            🛺
+          </div>
+
+          <div>
+            Go online to receive ride requests.
+          </div>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    if (!rides.length) {
+
+      container.innerHTML = `
+
+        <div class="empty">
+
+          <div class="empty-icon">
+            🔎
+          </div>
+
+          <div>
+            No new ride requests right now.
+          </div>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    container.innerHTML =
+      rides.map(
+        ride => createRideCard(
+          ride
+        )
+      ).join("");
+
+  }
+
+
+  function createRideCard(
+    ride
+  ) {
+
+    const isGoods =
+      ride.serviceType ===
+      "goods";
+
+
+    const serviceIcon =
+      isGoods
+        ? "📦"
+        : "🛺";
+
+
+    const serviceName =
+      isGoods
+        ? "Goods Toto"
+        : "Toto Ride";
+
+
+    const fare =
+      ride.estimatedFare
+        ? "₹" +
+          ride.estimatedFare
+        : "Fare pending";
+
+
+    const pickup =
+      ride.pickup?.address ||
+      "Pickup location";
+
+
+    const destination =
+      ride.destination?.address ||
+      "Destination";
+
+
+    const goods =
+      ride.goodsDetails ||
+      "";
+
+
+    return `
+
+      <article
+        class="request-card"
+        id="request-${ride.id}"
+      >
+
+        <div class="request-top">
+
+          <div class="request-service">
+
+            <span>
+              ${serviceIcon}
+            </span>
+
+            ${serviceName}
+
+          </div>
+
+          <div class="request-badge">
+            NEW REQUEST
+          </div>
+
+        </div>
+
+
+        <div class="location-row">
+
+          <div class="location-line">
+
+            <span class="dot"></span>
+
+            <span class="vertical"></span>
+
+            <span class="dot red"></span>
+
+          </div>
+
+
+          <div class="location-content">
+
+            <div style="margin-bottom:10px;">
+
+              <div class="location-label">
+                Pickup
+              </div>
+
+              <div class="location-text">
+                ${escapeHtml(pickup)}
+              </div>
+
+            </div>
+
+
+            <div>
+
+              <div class="location-label">
+                Destination
+              </div>
+
+              <div class="location-text">
+                ${escapeHtml(destination)}
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="request-details">
+
+          <div class="detail">
+
+            <div class="detail-label">
+              Estimated fare
+            </div>
+
+            <div class="detail-value">
+              ${fare}
+            </div>
+
+          </div>
+
+
+          <div class="detail">
+
+            <div class="detail-label">
+              Service
+            </div>
+
+            <div class="detail-value">
+              ${isGoods ? "Goods" : "Passenger"}
+            </div>
+
+          </div>
+
+        </div>
+
+
+        ${
+          goods
+            ? `
+              <div
+                class="detail"
+                style="margin-bottom:13px;"
+              >
+
+                <div class="detail-label">
+                  Goods details
+                </div>
+
+                <div class="detail-value">
+                  ${escapeHtml(goods)}
+                </div>
+
+              </div>
+            `
+            : ""
+        }
+
+
+        <div class="request-actions">
+
+          <button
+            class="reject-btn"
+            onclick="rejectRide('${ride.id}')"
+          >
+            Reject
+          </button>
+
+
+          <button
+            class="accept-btn"
+            onclick="acceptRide('${ride.id}')"
+          >
+            Accept Ride
+          </button>
+
+        </div>
+
+      </article>
+
+    `;
+
+  }
+
+
+  /* ==========================================
+     ACCEPT RIDE
+  ========================================== */
+
+  window.acceptRide =
+    async function(rideId) {
+
+      if (!currentUser) return;
+
+
+      if (!isOnline) {
+
+        showToast(
+          "Go online first."
+        );
+
+        return;
+
+      }
+
+
+      if (currentRide) {
+
+        showToast(
+          "You already have an active ride."
+        );
+
+        return;
+
+      }
+
+
+      try {
+
+        const rideRef =
+          doc(
+            db,
+            "rides",
+            rideId
+          );
+
+
+        const rideSnap =
+          await getDoc(
+            rideRef
+          );
+
+
+        if (
+          !rideSnap.exists()
+        ) {
+
+          showToast(
+            "This ride no longer exists."
+          );
+
+          return;
+
+        }
+
+
+        const ride =
+          rideSnap.data();
+
+
+        /*
+          Prevent accepting a ride
+          that another driver already took.
+        */
+
+        if (
+          ride.status !==
+          "searching" ||
+          ride.driverId
+        ) {
+
+          showToast(
+            "This ride has already been taken."
+          );
+
+          return;
+
+        }
+
+
+        await updateDoc(
+
+          rideRef,
+
+          {
+
+            driverId:
+              currentUser.uid,
+
+            driverName:
+              driverData.name ||
+              currentUser.displayName ||
+              "Driver",
+
+            driverPhone:
+              driverData.phone ||
+              "",
+
+            driverVehicleType:
+              driverData.vehicleType ||
+              "toto",
+
+            driverVehicleNumber:
+              driverData.vehicleNumber ||
+              "",
+
+            status:
+              "accepted",
+
+            acceptedAt:
+              serverTimestamp(),
+
+            updatedAt:
+              serverTimestamp()
+
+          }
+
+        );
+
+
+        currentRide = {
+
+          id:
+            rideId,
+
+          ...ride,
+
+          driverId:
+            currentUser.uid,
+
+          status:
+            "accepted"
+
+        };
+
+
+        isOnline = false;
+
+
+        await updateDoc(
+
+          doc(
+            db,
+            "drivers",
+            currentUser.uid
+          ),
+
+          {
+
+            online:
+              false,
+
+            available:
+              false,
+
+            currentRideId:
+              rideId,
+
+            updatedAt:
+              serverTimestamp()
+
+          }
+
+        );
+
+
+        stopLocationTracking();
+
+        stopRideListener();
+
+        updateOnlineUI();
+
+        showActiveRide();
+
+
+        showToast(
+          "Ride accepted successfully."
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Accept ride:",
+          error
+        );
+
+        showToast(
+          "Could not accept this ride."
+        );
+
+      }
+
+    };
+
+
+  /* ==========================================
+     REJECT
+  ========================================== */
+
+  window.rejectRide =
+    async function(rideId) {
+
+      const element =
+        document.getElementById(
+          "request-" + rideId
+        );
+
+
+      if (element) {
+
+        element.remove();
+
+      }
+
+
+      showToast(
+        "Ride request rejected."
+      );
+
+    };
+
+
+  /* ==========================================
+     ACTIVE RIDE UI
+  ========================================== */
+
+  function showActiveRide() {
+
+    if (!currentRide) return;
+
+
+    const box =
+      document.getElementById(
+        "activeRide"
+      );
+
+
+    box.classList.add(
+      "show"
+    );
+
+
+    document.getElementById(
+      "activeCustomer"
+    ).textContent =
+      currentRide.customerName ||
+      "Customer";
+
+
+    document.getElementById(
+      "activeCustomerEmail"
+    ).textContent =
+      currentRide.customerEmail ||
+      "";
+
+
+    const pickup =
+      currentRide.pickup?.address ||
+      "Pickup";
+
+
+    const destination =
+      currentRide.destination?.address ||
+      "Destination";
+
+
+    document.getElementById(
+      "activeLocation"
+    ).innerHTML =
+
+      "📍 <b>Pickup:</b> " +
+      escapeHtml(pickup) +
+
+      "<br>" +
+
+      "🏁 <b>Drop:</b> " +
+      escapeHtml(destination);
+
+
+    updateActiveButtons(
+      currentRide.status
+    );
+
+  }
+
+
+  function updateActiveButtons(
+    status
+  ) {
+
+    const start =
+      document.getElementById(
+        "startRideBtn"
+      );
+
+    const complete =
+      document.getElementById(
+        "completeRideBtn"
+      );
+
+    const badge =
+      document.getElementById(
+        "activeStatus"
+      );
+
+
+    if (
+      status ===
+      "accepted"
+    ) {
+
+      start.style.display =
+        "block";
+
+      complete.style.display =
+        "none";
+
+      badge.textContent =
+        "Accepted";
+
+    }
+
+
+    if (
+      status ===
+      "started"
+    ) {
+
+      start.style.display =
+        "none";
+
+      complete.style.display =
+        "block";
+
+      badge.textContent =
+        "Ride in progress";
+
+    }
+
+  }
+
+
+  /* ==========================================
+     START RIDE
+  ========================================== */
+
+  window.startRide =
+    async function() {
+
+      if (!currentRide) {
+
+        showToast(
+          "No active ride."
+        );
+
+        return;
+
+      }
+
+
+      try {
+
+        await updateDoc(
+
+          doc(
+            db,
+            "rides",
+            currentRide.id
+          ),
+
+          {
+
+            status:
+              "started",
+
+            startedAt:
+              serverTimestamp(),
+
+            updatedAt:
+              serverTimestamp()
+
+          }
+
+        );
+
+
+        currentRide.status =
+          "started";
+
+
+        updateActiveButtons(
+          "started"
+        );
+
+
+        showToast(
+          "Ride started."
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Start ride:",
+          error
+        );
+
+        showToast(
+          "Could not start ride."
+        );
+
+      }
+
+    };
+
+
+  /* ==========================================
+     COMPLETE RIDE
+  ========================================== */
+
+  window.completeRide =
+    async function() {
+
+      if (!currentRide) {
+
+        return;
+
+      }
+
+
+      try {
+
+        const fare =
+          currentRide.estimatedFare ||
+          0;
+
+
+        await updateDoc(
+
+          doc(
+            db,
+            "rides",
+            currentRide.id
+          ),
+
+          {
+
+            status:
+              "completed",
+
+            completedAt:
+              serverTimestamp(),
+
+            finalFare:
+              fare,
+
+            updatedAt:
+              serverTimestamp()
+
+          }
+
+        );
+
+
+        /*
+          Update driver totals.
+        */
+
+        await updateDoc(
+
+          doc(
+            db,
+            "drivers",
+            currentUser.uid
+          ),
+
+          {
+
+            currentRideId:
+              null,
+
+            available:
+              true,
+
+            todayRides:
+              increment(1),
+
+            totalRides:
+              increment(1),
+
+            todayEarnings:
+              increment(fare),
+
+            updatedAt:
+              serverTimestamp()
+
+          }
+
+        );
+
+
+        currentRide =
+          null;
+
+
+        document
+          .getElementById(
+            "activeRide"
+          )
+          .classList.remove(
+            "show"
+          );
+
+
+        isOnline = true;
+
+
+        await updateDoc(
+
+          doc(
+            db,
+            "drivers",
+            currentUser.uid
+          ),
+
+          {
+
+            online:
+              true,
+
+            available:
+              true,
+
+            updatedAt:
+              serverTimestamp()
+
+          }
+
+        );
+
+
+        startLocationTracking();
+
+        listenForRides();
+
+        updateOnlineUI();
+
+        loadStats();
+
+
+        showToast(
+          "Ride completed successfully."
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Complete ride:",
+          error
+        );
+
+        showToast(
+          "Could not complete ride."
+        );
+
+      }
+
+    };
+
+
+  /* ==========================================
+     STATS
+  ========================================== */
+
+  async function loadStats() {
+
+    if (!driverData) return;
+
+
+    document.getElementById(
+      "todayRides"
+    ).textContent =
+      driverData.todayRides ||
+      0;
+
+
+    document.getElementById(
+      "todayEarnings"
+    ).textContent =
+      "₹" +
+      (
+        driverData.todayEarnings ||
+        0
+      );
+
+
+    document.getElementById(
+      "rating"
+    ).textContent =
+      driverData.rating
+        ? Number(
+            driverData.rating
+          ).toFixed(1)
+        : "—";
+
+  }
+
+
+  /* ==========================================
+     PROFILE
+  ========================================== */
+
+  window.openProfile =
+    function() {
+
+      document
+        .getElementById(
+          "profileModal"
+        )
+        .classList.add(
+          "show"
+        );
+
+    };
+
+
+  window.closeProfile =
+    function() {
+
+      document
+        .getElementById(
+          "profileModal"
+        )
+        .classList.remove(
+          "show"
+        );
+
+    };
+
+
+  window.closeOutside =
+    function(event) {
+
+      if (
+        event.target.id ===
+        "profileModal"
+      ) {
+
+        closeProfile();
+
+      }
+
+    };
+
+
+  /* ==========================================
+     LOGOUT
+  ========================================== */
+
+  window.logout =
+    async function() {
+
+      try {
+
+        if (currentUser) {
+
+          try {
+
+            await updateDoc(
+
+              doc(
+                db,
+                "drivers",
+                currentUser.uid
+              ),
+
+              {
+
+                online:
+                  false,
+
+                available:
+                  false,
+
+                updatedAt:
+                  serverTimestamp()
+
+              }
+
+            );
+
+          } catch (_) {}
+
+        }
+
+
+        stopLocationTracking();
+
+        stopRideListener();
+
+        await signOut(auth);
+
+
+        window.location.href =
+          "index.html";
+
+      } catch (error) {
+
+        console.error(
+          error
+        );
+
+        showToast(
+          "Logout failed."
+        );
+
+      }
+
+    };
+
+
+  /* ==========================================
+     SCROLL
+  ========================================== */
+
+  window.scrollToRequests =
+    function() {
+
+      document
+        .getElementById(
+          "requests"
+        )
+        .scrollIntoView({
+          behavior: "smooth"
+        });
+
+    };
+
+
+  /* ==========================================
+     TOAST
+  ========================================== */
+
+  window.showToast =
+    function(message) {
+
+      const toast =
+        document.getElementById(
+          "toast"
+        );
+
+
+      toast.textContent =
+        message;
+
+
+      toast.classList.add(
+        "show"
+      );
+
+
+      setTimeout(() => {
+
+        toast.classList.remove(
+          "show"
+        );
+
+      }, 3000);
+
+    };
+
+
+  /* ==========================================
+     ESCAPE HTML
+  ========================================== */
+
+  function escapeHtml(
+    value
+  ) {
+
+    return String(
+      value ?? ""
+    )
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+
+  }
+
+
+  /* ==========================================
+     INIT
+  ========================================== */
+
+  window.addEventListener(
+    "load",
+    () => {
+
+      initMap();
+
+    }
+  );
+
+</script>
+
+</body>
+</html>
