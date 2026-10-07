@@ -35,7 +35,7 @@
   --green:#22c55e;
   --green2:#86efac;
   --red:#ef4444;
-  --yellow:#f59e0b;
+  --blue:#3b82f6;
 }
 
 html,
@@ -80,8 +80,6 @@ button:disabled{
   max-width:430px;
 }
 
-/* BRAND */
-
 .brand{
   text-align:center;
   margin-bottom:28px;
@@ -91,8 +89,10 @@ button:disabled{
   width:74px;
   height:74px;
   margin:0 auto 14px;
+
   display:grid;
   place-items:center;
+
   border-radius:24px;
 
   background:
@@ -119,8 +119,6 @@ button:disabled{
   font-size:11px;
   margin-top:7px;
 }
-
-/* CARD */
 
 .card{
   background:
@@ -151,14 +149,15 @@ button:disabled{
   margin-top:7px;
 }
 
-/* ROLE */
-
 .role-title{
   margin-top:23px;
   margin-bottom:10px;
+
   font-size:10px;
   font-weight:800;
+
   color:var(--muted);
+
   text-transform:uppercase;
   letter-spacing:.7px;
 }
@@ -170,13 +169,17 @@ button:disabled{
 }
 
 .role{
-  position:relative;
   padding:15px;
+
   border:1px solid var(--border);
+
   background:var(--card2);
   color:white;
+
   border-radius:16px;
+
   text-align:left;
+
   transition:.2s;
 }
 
@@ -186,7 +189,9 @@ button:disabled{
 
 .role.selected{
   border-color:var(--green);
-  background:rgba(34,197,94,.08);
+
+  background:
+    rgba(34,197,94,.08);
 
   box-shadow:
     inset 0 0 0 1px rgba(34,197,94,.15);
@@ -209,17 +214,17 @@ button:disabled{
   line-height:1.4;
 }
 
-/* LOGIN */
-
 .login-btn{
   width:100%;
   height:52px;
+
   margin-top:20px;
 
   border:0;
   border-radius:15px;
 
   background:var(--green);
+
   color:#041008;
 
   font-size:12px;
@@ -256,10 +261,9 @@ button:disabled{
   font-weight:800;
 }
 
-/* INFO */
-
 .info{
   margin-top:17px;
+
   padding:12px 13px;
 
   border-radius:13px;
@@ -270,14 +274,15 @@ button:disabled{
   color:var(--muted);
 
   font-size:9px;
+
   line-height:1.6;
+
   text-align:center;
 }
 
-/* STATUS */
-
 .status{
   display:none;
+
   margin-top:14px;
 
   padding:12px;
@@ -285,7 +290,9 @@ button:disabled{
   border-radius:13px;
 
   font-size:10px;
+
   text-align:center;
+
   line-height:1.5;
 }
 
@@ -311,8 +318,6 @@ button:disabled{
   color:#86efac;
 }
 
-/* FOOTER */
-
 .footer{
   text-align:center;
   color:#687384;
@@ -320,11 +325,10 @@ button:disabled{
   margin-top:18px;
 }
 
-/* BOOT SCREEN */
-
 #bootScreen{
   position:fixed;
   inset:0;
+
   z-index:9999;
 
   display:flex;
@@ -368,7 +372,9 @@ button:disabled{
 
 .boot-text{
   margin-top:14px;
+
   color:var(--muted);
+
   font-size:10px;
 }
 
@@ -379,11 +385,13 @@ button:disabled{
   margin:14px auto 0;
 
   border:2px solid rgba(255,255,255,.1);
+
   border-top-color:var(--green);
 
   border-radius:50%;
 
-  animation:spin .8s linear infinite;
+  animation:
+    spin .8s linear infinite;
 }
 
 @keyframes spin{
@@ -391,46 +399,6 @@ button:disabled{
     transform:rotate(360deg);
   }
 }
-
-/* TOAST */
-
-.toast{
-  position:fixed;
-
-  left:50%;
-  bottom:25px;
-
-  z-index:10000;
-
-  width:min(
-    calc(100% - 30px),
-    430px
-  );
-
-  transform:translate(-50%,20px);
-
-  opacity:0;
-  pointer-events:none;
-
-  padding:13px 15px;
-
-  border-radius:14px;
-
-  background:#1c2431;
-  border:1px solid var(--border);
-
-  font-size:10px;
-  text-align:center;
-
-  transition:.25s;
-}
-
-.toast.show{
-  opacity:1;
-  transform:translate(-50%,0);
-}
-
-/* MOBILE */
 
 @media(max-width:420px){
 
@@ -461,9 +429,7 @@ button:disabled{
 
 <body>
 
-<!-- =========================================
-     BOOT SCREEN
-========================================= -->
+<!-- BOOT -->
 
 <div id="bootScreen">
 
@@ -484,9 +450,7 @@ button:disabled{
 </div>
 
 
-<!-- =========================================
-     APP
-========================================= -->
+<!-- APP -->
 
 <div class="app">
 
@@ -520,11 +484,10 @@ button:disabled{
       </div>
 
 
-      <!-- ROLE -->
-
       <div class="role-title">
         Continue as
       </div>
+
 
       <div class="roles">
 
@@ -574,8 +537,6 @@ button:disabled{
       </div>
 
 
-      <!-- LOGIN -->
-
       <button
         type="button"
         class="login-btn"
@@ -594,8 +555,6 @@ button:disabled{
       </button>
 
 
-      <!-- STATUS -->
-
       <div
         class="status"
         id="status"
@@ -603,8 +562,10 @@ button:disabled{
 
 
       <div class="info">
+
         New drivers may require admin approval before they can start accepting rides.
         Existing accounts will keep their previously assigned role.
+
       </div>
 
     </div>
@@ -619,16 +580,10 @@ button:disabled{
 </div>
 
 
-<div
-  class="toast"
-  id="toast"
-></div>
-
-
 <script type="module">
 
 /* =========================================
-   FIREBASE IMPORTS
+   FIREBASE
 ========================================= */
 
 import {
@@ -644,8 +599,7 @@ import {
   signInWithPopup,
   onAuthStateChanged,
   setPersistence,
-  browserLocalPersistence,
-  signOut
+  browserLocalPersistence
 }
 from
 "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
@@ -664,7 +618,6 @@ from
 
 /* =========================================
    FIREBASE CONFIG
-   EXACT CONFIG FROM FIREBASE CONSOLE
 ========================================= */
 
 const firebaseConfig = {
@@ -694,7 +647,7 @@ const firebaseConfig = {
 
 
 /* =========================================
-   FIREBASE INIT
+   INIT
 ========================================= */
 
 const app =
@@ -715,7 +668,7 @@ provider.setCustomParameters({
 
 
 /* =========================================
-   VARIABLES
+   STATE
 ========================================= */
 
 let selectedRole = "customer";
@@ -762,18 +715,8 @@ function setStatus(
 }
 
 
-function clearStatus(){
-
-  statusBox.textContent = "";
-
-  statusBox.className =
-    "status";
-
-}
-
-
 /* =========================================
-   ROLE SELECTION
+   ROLE
 ========================================= */
 
 window.selectRole =
@@ -783,13 +726,10 @@ function(role){
     role !== "customer" &&
     role !== "driver"
   ){
-
     return;
-
   }
 
-  selectedRole =
-    role;
+  selectedRole = role;
 
 
   document
@@ -813,10 +753,10 @@ function(role){
 
 
 /* =========================================
-   ROLE REDIRECT
+   REDIRECT
 ========================================= */
 
-function redirectByRole(data){
+function redirectToDashboard(role){
 
   if(redirecting){
     return;
@@ -824,37 +764,43 @@ function redirectByRole(data){
 
   redirecting = true;
 
-  let target = "customer.html";
+
+  let page = "customer.html";
 
 
-  if(data?.role === "admin"){
-
-    target = "admin.html";
-
+  if(role === "admin"){
+    page = "admin.html";
   }
-  else if(data?.role === "driver"){
 
-    target = "driver.html";
-
+  else if(role === "driver"){
+    page = "driver.html";
   }
-  else{
 
-    target = "customer.html";
 
-  }
+  console.log(
+    "E RIDE redirect:",
+    role,
+    "→",
+    page
+  );
 
 
   setStatus(
-    "Opening your E RIDE dashboard...",
+    "Login successful. Opening dashboard...",
     "success"
   );
 
 
+  /*
+    Small delay gives browser time to
+    finish Firebase auth state update.
+  */
+
   setTimeout(() => {
 
-    window.location.replace(target);
+    window.location.href = page;
 
-  },150);
+  },300);
 
 }
 
@@ -863,10 +809,7 @@ function redirectByRole(data){
    USER PROFILE
 ========================================= */
 
-async function getOrCreateUserProfile(
-  user,
-  roleForNewUser
-){
+async function loadOrCreateUser(user){
 
   const userRef =
     doc(
@@ -876,23 +819,19 @@ async function getOrCreateUserProfile(
     );
 
 
-  const snapshot =
+  const snap =
     await getDoc(userRef);
 
 
   /* =======================================
-     EXISTING USER
+     EXISTING
   ======================================= */
 
-  if(snapshot.exists()){
+  if(snap.exists()){
 
     const data =
-      snapshot.data();
+      snap.data();
 
-
-    /*
-      Existing role is NEVER overwritten.
-    */
 
     if(
       data.role === "admin" ||
@@ -905,46 +844,41 @@ async function getOrCreateUserProfile(
     }
 
 
-    /* Repair invalid/old role */
+    /*
+      Existing document but invalid role.
+      Repair using selected role.
+    */
 
     const repairedRole =
-      roleForNewUser === "driver"
+      selectedRole === "driver"
         ? "driver"
         : "customer";
 
 
-    const repairedData = {
+    const repaired = {
+
+      uid:
+        user.uid,
 
       role:
         repairedRole,
 
       accountStatus:
         repairedRole === "driver"
-          ? (
-              data.accountStatus ||
-              "pending"
-            )
+          ? "pending"
           : "active",
 
-      displayName:
-        user.displayName ||
-        data.displayName ||
-        "",
-
       name:
-        data.name ||
-        user.displayName ||
-        "",
+        user.displayName || "",
+
+      displayName:
+        user.displayName || "",
 
       email:
-        user.email ||
-        data.email ||
-        "",
+        user.email || "",
 
       photoURL:
-        user.photoURL ||
-        data.photoURL ||
-        "",
+        user.photoURL || "",
 
       updatedAt:
         serverTimestamp()
@@ -954,39 +888,39 @@ async function getOrCreateUserProfile(
 
     await setDoc(
       userRef,
-      repairedData,
+      repaired,
       {merge:true}
     );
 
 
     return {
       ...data,
-      ...repairedData
+      ...repaired
     };
 
   }
 
 
   /* =======================================
-     NEW USER
+     NEW ACCOUNT
   ======================================= */
 
-  const newRole =
-    roleForNewUser === "driver"
+  const role =
+    selectedRole === "driver"
       ? "driver"
       : "customer";
 
 
-  const newData = {
+  const userData = {
 
     uid:
       user.uid,
 
     role:
-      newRole,
+      role,
 
     accountStatus:
-      newRole === "driver"
+      role === "driver"
         ? "pending"
         : "active",
 
@@ -994,20 +928,16 @@ async function getOrCreateUserProfile(
       false,
 
     name:
-      user.displayName ||
-      "",
+      user.displayName || "",
 
     displayName:
-      user.displayName ||
-      "",
+      user.displayName || "",
 
     email:
-      user.email ||
-      "",
+      user.email || "",
 
     photoURL:
-      user.photoURL ||
-      "",
+      user.photoURL || "",
 
     phone:
       "",
@@ -1023,7 +953,7 @@ async function getOrCreateUserProfile(
 
   await setDoc(
     userRef,
-    newData
+    userData
   );
 
 
@@ -1031,7 +961,7 @@ async function getOrCreateUserProfile(
      DRIVER PROFILE
   ======================================= */
 
-  if(newRole === "driver"){
+  if(role === "driver"){
 
     await setDoc(
 
@@ -1047,16 +977,13 @@ async function getOrCreateUserProfile(
           user.uid,
 
         name:
-          user.displayName ||
-          "",
+          user.displayName || "",
 
         email:
-          user.email ||
-          "",
+          user.email || "",
 
         photoURL:
-          user.photoURL ||
-          "",
+          user.photoURL || "",
 
         phone:
           "",
@@ -1103,7 +1030,7 @@ async function getOrCreateUserProfile(
   }
 
 
-  return newData;
+  return userData;
 
 }
 
@@ -1162,36 +1089,64 @@ async function(){
     if(!user){
 
       throw new Error(
-        "Google login did not return a user."
+        "Google account was not returned."
       );
 
     }
 
 
+    console.log(
+      "Google login successful:",
+      user.uid
+    );
+
+
     setStatus(
-      "Checking your E RIDE account...",
+      "Google login successful. Loading account...",
       "loading"
     );
 
 
     const userData =
-      await getOrCreateUserProfile(
-        user,
-        selectedRole
-      );
+      await loadOrCreateUser(user);
 
 
-    redirectByRole(
+    console.log(
+      "E RIDE user profile:",
       userData
     );
+
+
+    const role =
+      userData.role;
+
+
+    if(
+      role !== "customer" &&
+      role !== "driver" &&
+      role !== "admin"
+    ){
+
+      throw new Error(
+        "Invalid E RIDE account role."
+      );
+
+    }
+
+
+    redirectToDashboard(role);
 
   }
   catch(error){
 
     console.error(
-      "Google login error:",
+      "E RIDE login error:",
       error
     );
+
+
+    let message =
+      "Google login failed. Please try again.";
 
 
     if(
@@ -1199,10 +1154,8 @@ async function(){
       "auth/popup-closed-by-user"
     ){
 
-      setStatus(
-        "Google sign-in was cancelled.",
-        "error"
-      );
+      message =
+        "Google sign-in was cancelled.";
 
     }
 
@@ -1211,22 +1164,8 @@ async function(){
       "auth/popup-blocked"
     ){
 
-      setStatus(
-        "Popup was blocked. Please allow popups for E RIDE.",
-        "error"
-      );
-
-    }
-
-    else if(
-      error?.code ===
-      "auth/api-key-not-valid"
-    ){
-
-      setStatus(
-        "Firebase API key is invalid. Please check the Firebase configuration.",
-        "error"
-      );
+      message =
+        "Google popup was blocked. Please allow popups.";
 
     }
 
@@ -1235,34 +1174,37 @@ async function(){
       "auth/unauthorized-domain"
     ){
 
-      setStatus(
-        "This website is not authorized in Firebase Authentication.",
-        "error"
-      );
+      message =
+        "This website is not authorized in Firebase.";
 
     }
 
     else if(
       error?.code ===
-      "auth/network-request-failed"
+      "permission-denied" ||
+      error?.code ===
+      "firestore/permission-denied"
     ){
 
-      setStatus(
-        "Network error. Please check your internet connection and try again.",
-        "error"
-      );
+      message =
+        "Firebase Firestore permission denied. Check Firestore rules.";
 
     }
 
-    else{
+    else if(
+      error?.message
+    ){
 
-      setStatus(
-        error?.message ||
-        "Google sign-in failed. Please try again.",
-        "error"
-      );
+      message =
+        error.message;
 
     }
+
+
+    setStatus(
+      message,
+      "error"
+    );
 
 
     loginInProgress = false;
@@ -1278,7 +1220,129 @@ async function(){
 
 
 /* =========================================
-   AUTH SESSION LISTENER
+   AUTH PERSISTENCE
+========================================= */
+
+async function prepareAuth(){
+
+  try{
+
+    await setPersistence(
+      auth,
+      browserLocalPersistence
+    );
+
+
+    persistenceReady = true;
+
+
+    /*
+      Once persistence is ready,
+      check if an existing Firebase session
+      already exists.
+    */
+
+    const existingUser =
+      auth.currentUser;
+
+
+    if(existingUser){
+
+      setStatus(
+        "Restoring your E RIDE account...",
+        "loading"
+      );
+
+
+      try{
+
+        const userData =
+          await loadExistingUser(
+            existingUser
+          );
+
+
+        if(userData?.role){
+
+          redirectToDashboard(
+            userData.role
+          );
+
+          return;
+
+        }
+
+      }
+      catch(error){
+
+        console.error(
+          "Existing session error:",
+          error
+        );
+
+      }
+
+    }
+
+
+    bootScreen
+      .classList
+      .add("hide");
+
+  }
+  catch(error){
+
+    console.error(
+      "Firebase persistence error:",
+      error
+    );
+
+
+    bootScreen
+      .classList
+      .add("hide");
+
+
+    setStatus(
+      "Unable to initialize Firebase login.",
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   EXISTING USER
+========================================= */
+
+async function loadExistingUser(user){
+
+  const snap =
+    await getDoc(
+      doc(
+        db,
+        "users",
+        user.uid
+      )
+    );
+
+
+  if(!snap.exists()){
+
+    return null;
+
+  }
+
+
+  return snap.data();
+
+}
+
+
+/* =========================================
+   AUTH STATE
 ========================================= */
 
 onAuthStateChanged(
@@ -1286,36 +1350,21 @@ onAuthStateChanged(
   async user => {
 
     /*
-      Wait until local persistence
-      has been configured.
+      Don't interfere with an active
+      Google login.
     */
+
+    if(loginInProgress){
+      return;
+    }
+
 
     if(!persistenceReady){
       return;
     }
 
 
-    /*
-      Not logged in.
-    */
-
     if(!user){
-
-      bootScreen
-        .classList
-        .add("hide");
-
-      return;
-
-    }
-
-
-    /*
-      Fresh Google login handles
-      its own redirect.
-    */
-
-    if(loginInProgress){
       return;
     }
 
@@ -1327,87 +1376,37 @@ onAuthStateChanged(
 
     try{
 
-      setStatus(
-        "Restoring your E RIDE session...",
-        "loading"
+      console.log(
+        "Existing Firebase session:",
+        user.uid
       );
 
 
-      const snap =
-        await getDoc(
-          doc(
-            db,
-            "users",
-            user.uid
-          )
-        );
-
-
-      /*
-        Auth exists but profile missing.
-      */
-
-      if(!snap.exists()){
-
-        await signOut(auth);
-
-        clearStatus();
-
-        bootScreen
-          .classList
-          .add("hide");
-
-        return;
-
-      }
-
-
       const data =
-        snap.data();
+        await loadExistingUser(user);
 
 
-      /*
-        Validate role.
-      */
+      if(!data?.role){
 
-      if(
-        data.role !== "admin" &&
-        data.role !== "driver" &&
-        data.role !== "customer"
-      ){
-
-        await signOut(auth);
-
-        setStatus(
-          "Your account role is invalid. Please contact E RIDE support.",
-          "error"
+        console.warn(
+          "Authenticated user has no E RIDE profile."
         );
-
-        bootScreen
-          .classList
-          .add("hide");
 
         return;
 
       }
 
 
-      redirectByRole(
-        data
+      redirectToDashboard(
+        data.role
       );
 
     }
     catch(error){
 
       console.error(
-        "Session restore error:",
+        "Auth state error:",
         error
-      );
-
-
-      setStatus(
-        "Could not restore your E RIDE session.",
-        "error"
       );
 
     }
@@ -1417,88 +1416,10 @@ onAuthStateChanged(
 
 
 /* =========================================
-   LOCAL AUTH PERSISTENCE
+   START
 ========================================= */
 
-async function initializeAuthPersistence(){
-
-  try{
-
-    /*
-      browserLocalPersistence means:
-
-      Browser close
-      Tab close
-      PWA close
-      App reopen
-
-      → Login remains active
-
-      until explicit logout.
-    */
-
-    await setPersistence(
-      auth,
-      browserLocalPersistence
-    );
-
-
-    persistenceReady = true;
-
-
-    bootScreen
-      .classList
-      .add("hide");
-
-  }
-  catch(error){
-
-    console.error(
-      "Persistence error:",
-      error
-    );
-
-
-    persistenceReady = false;
-
-
-    bootScreen
-      .classList
-      .add("hide");
-
-
-    setStatus(
-      "Unable to initialize secure login. Please reload the app.",
-      "error"
-    );
-
-  }
-
-}
-
-
-/* =========================================
-   START AUTH
-========================================= */
-
-initializeAuthPersistence();
-
-
-/* =========================================
-   GLOBAL ERROR HANDLER
-========================================= */
-
-window.addEventListener(
-  "unhandledrejection",
-  event => {
-
-    console.error(
-      "Unhandled promise:",
-      event.reason
-    );
-
-  }
-);
+prepareAuth();
 
 </script>
 
@@ -1515,21 +1436,20 @@ if("serviceWorker" in navigator){
     "load",
     () => {
 
-      navigator
-        .serviceWorker
+      navigator.serviceWorker
         .register("./sw.js")
-        .then(registration => {
+        .then(reg => {
 
           console.log(
-            "E RIDE service worker registered:",
-            registration.scope
+            "E RIDE Service Worker:",
+            reg.scope
           );
 
         })
         .catch(error => {
 
           console.warn(
-            "Service worker registration failed:",
+            "Service Worker registration failed:",
             error
           );
 
