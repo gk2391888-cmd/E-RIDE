@@ -639,6 +639,23 @@
       line-height: 1.7;
     }
 
+
+    .cancel-ride-btn {
+      width:100%; margin-top:14px; height:48px; border:1px solid rgba(239,68,68,.3);
+      border-radius:14px; background:rgba(239,68,68,.08); color:#fca5a5; font-weight:800;
+    }
+    .cancel-ride-btn:disabled { opacity:.5; }
+    .rating-modal .modal-card { padding-bottom:28px; }
+    .stars { display:flex; justify-content:center; gap:8px; margin:12px 0 18px; }
+    .star-btn { border:0; background:transparent; color:#5d6675; font-size:34px; padding:3px; }
+    .star-btn.active { color:#f59e0b; }
+    .review-input { width:100%; min-height:90px; resize:none; border:1px solid var(--border); border-radius:14px; padding:12px; background:var(--surface2); color:#fff; outline:none; }
+    .submit-rating-btn { width:100%; height:50px; border:0; border-radius:14px; background:var(--green); color:#041008; font-weight:800; margin-top:12px; }
+    .history-list { max-height:55vh; overflow:auto; display:flex; flex-direction:column; gap:9px; }
+    .history-item { padding:12px; border:1px solid var(--border); border-radius:14px; background:rgba(255,255,255,.03); }
+    .history-item b { font-size:11px; }
+    .history-item div { color:var(--muted); font-size:9px; margin-top:4px; line-height:1.5; }
+
     /* =========================
        BOTTOM NAV
     ========================= */
@@ -819,80 +836,6 @@
       color: white;
 
       font-weight: 700;
-    }
-
-    /* =========================
-       RATING MODAL
-    ========================= */
-
-    .rating-stars {
-      display:flex;
-      justify-content:center;
-      gap:8px;
-      margin:8px 0 14px;
-    }
-
-    .rating-star {
-      width:46px;
-      height:46px;
-      border:1px solid var(--border);
-      border-radius:14px;
-      background:rgba(255,255,255,.04);
-      color:#596273;
-      font-size:25px;
-    }
-
-    .rating-star.active {
-      color:#fbbf24;
-      background:rgba(245,158,11,.10);
-      border-color:rgba(245,158,11,.35);
-    }
-
-    .rating-label {
-      text-align:center;
-      color:var(--muted);
-      font-size:10px;
-      margin-bottom:12px;
-    }
-
-    .rating-review {
-      width:100%;
-      min-height:85px;
-      resize:none;
-      border:1px solid var(--border);
-      border-radius:15px;
-      outline:none;
-      padding:13px;
-      background:var(--surface2);
-      color:white;
-      font-size:12px;
-      margin-bottom:10px;
-    }
-
-    .rating-review::placeholder { color:#70798a; }
-
-    .rating-submit {
-      width:100%;
-      height:50px;
-      border:none;
-      border-radius:15px;
-      background:linear-gradient(135deg,var(--green),var(--green2));
-      color:#041008;
-      font-weight:800;
-    }
-
-    .rating-submit:disabled { opacity:.45; }
-
-    .rate-driver-btn {
-      width:100%;
-      height:48px;
-      margin-top:12px;
-      border:none;
-      border-radius:14px;
-      background:rgba(245,158,11,.12);
-      border:1px solid rgba(245,158,11,.25);
-      color:#fbbf24;
-      font-weight:800;
     }
 
     /* =========================
@@ -1239,14 +1182,7 @@
           Searching for nearby Toto drivers...
         </div>
 
-        <button
-          class="rate-driver-btn"
-          id="rateDriverBtn"
-          style="display:none;"
-          onclick="openRating()"
-        >
-          ⭐ Rate Your Driver
-        </button>
+        <button id="cancelRideBtn" class="cancel-ride-btn" onclick="cancelRide()" style="display:none;">✕ Cancel Ride</button>
 
       </section>
 
@@ -1260,7 +1196,7 @@
 
         <button
           class="quick"
-          onclick="showComingSoon('Ride history')"
+          onclick="openHistory()"
         >
 
           <div class="quick-icon">
@@ -1325,7 +1261,7 @@
 
     <button
       class="nav-item"
-      onclick="showComingSoon('Your rides')"
+      onclick="openHistory()"
     >
       <span class="nav-icon">🛺</span>
       Rides
@@ -1413,36 +1349,24 @@
   </div>
 
 
-  <!-- RATING MODAL -->
-  <div
-    class="modal"
-    id="ratingModal"
-    onclick="closeRatingOutside(event)"
-  >
+  <div class="modal rating-modal" id="ratingModal">
     <div class="modal-card">
-      <div class="modal-title">Rate Your Driver</div>
-      <div class="rating-label" id="ratingDriverLabel">How was your ride?</div>
-
-      <div class="rating-stars">
-        <button class="rating-star" id="star1" onclick="selectRating(1)">★</button>
-        <button class="rating-star" id="star2" onclick="selectRating(2)">★</button>
-        <button class="rating-star" id="star3" onclick="selectRating(3)">★</button>
-        <button class="rating-star" id="star4" onclick="selectRating(4)">★</button>
-        <button class="rating-star" id="star5" onclick="selectRating(5)">★</button>
+      <div class="modal-title">Rate your ride</div>
+      <div style="color:var(--muted);font-size:11px;text-align:center;">How was your driver?</div>
+      <div class="stars" id="ratingStars">
+        <button class="star-btn" data-rating="1">★</button><button class="star-btn" data-rating="2">★</button><button class="star-btn" data-rating="3">★</button><button class="star-btn" data-rating="4">★</button><button class="star-btn" data-rating="5">★</button>
       </div>
+      <textarea id="reviewInput" class="review-input" maxlength="500" placeholder="Optional review..."></textarea>
+      <button class="submit-rating-btn" id="submitRatingBtn" onclick="submitRating()">Submit Rating</button>
+      <button class="close-btn" onclick="closeRating()">Later</button>
+    </div>
+  </div>
 
-      <textarea
-        class="rating-review"
-        id="ratingReview"
-        maxlength="500"
-        placeholder="Write a review (optional)"
-      ></textarea>
-
-      <button class="rating-submit" id="ratingSubmitBtn" onclick="submitRating()" disabled>
-        Submit Rating
-      </button>
-
-      <button class="close-btn" onclick="closeRating()">Cancel</button>
+  <div class="modal" id="historyModal" onclick="closeHistoryOutside(event)">
+    <div class="modal-card">
+      <div class="modal-title">Ride History</div>
+      <div class="history-list" id="historyList"><div class="ride-info">Loading...</div></div>
+      <button class="close-btn" onclick="closeHistory()">Close</button>
     </div>
   </div>
 
@@ -1485,6 +1409,9 @@
       onSnapshot,
       updateDoc,
       setDoc,
+      query,
+      where,
+      getDocs,
       serverTimestamp
     } from
       "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
@@ -1554,9 +1481,8 @@
 
     let activeRideId = null;
     let unsubscribeActiveRide = null;
-    let ratingValue = 0;
-    let ratingRide = null;
-    let ratingSubmitting = false;
+    let selectedRating = 0;
+    let pendingRatingRide = null;
 
 
     /* =================================
@@ -2380,23 +2306,41 @@
       const card = document.getElementById("driverRideCard");
       const callBtn = document.getElementById("callDriverBtn");
       const avatar = document.getElementById("activeDriverAvatar");
-      const rateBtn = document.getElementById("rateDriverBtn");
+      const cancelBtn = document.getElementById("cancelRideBtn");
+
+      if (ride.status === "cancelled") {
+        status.textContent = "Cancelled";
+        info.innerHTML = "❌ This ride was cancelled.";
+        card.style.display = "none";
+        cancelBtn.style.display = "none";
+        active.classList.add("show");
+        if (unsubscribeActiveRide) { unsubscribeActiveRide(); unsubscribeActiveRide = null; }
+        setTimeout(() => active.classList.remove("show"), 1200);
+        return;
+      }
+
+      if (ride.status === "completed") {
+        status.textContent = "Completed";
+        info.innerHTML = "✅ Ride completed.";
+        cancelBtn.style.display = "none";
+        active.classList.add("show");
+        if (ride.driverId && !ride.customerRated) openRating(ride);
+        return;
+      }
 
       active.classList.add("show");
-
-      status.textContent =
-        ride.status === "searching" ? "Finding driver" :
+      status.textContent = ride.status === "searching" ? "Finding driver" :
         ride.status === "accepted" ? "Driver accepted" :
-        ride.status === "started" ? "Ride in progress" :
-        ride.status === "completed" ? "Ride completed" :
-        ride.status || "Ride";
+        ride.status === "started" ? "Ride in progress" : (ride.status || "Ride");
 
-      info.innerHTML =
-        "📍 <b>Pickup:</b> " + escapeHtml(ride.pickup?.address || "Pickup") +
+      info.innerHTML = "📍 <b>Pickup:</b> " + escapeHtml(ride.pickup?.address || "Pickup") +
         "<br>🏁 <b>Drop:</b> " + escapeHtml(ride.destination?.address || "Destination") +
         (ride.estimatedFare ? "<br>💰 <b>Fare:</b> ₹" + escapeHtml(String(ride.estimatedFare)) : "");
 
-      if (ride.driverId && ["accepted", "started", "completed"].includes(ride.status)) {
+      cancelBtn.style.display = ["searching", "accepted"].includes(ride.status) ? "block" : "none";
+      cancelBtn.disabled = false;
+
+      if (ride.driverId && ["accepted","started"].includes(ride.status)) {
         card.style.display = "flex";
         document.getElementById("activeDriverName").textContent = ride.driverName || "Driver";
         document.getElementById("activeDriverMeta").textContent =
@@ -2405,113 +2349,98 @@
         document.getElementById("activeDriverPhone").textContent = phone ? phone : "Phone not available";
         callBtn.style.display = phone ? "grid" : "none";
         callBtn.href = phone ? "tel:" + phone : "#";
-        if (ride.driverPhotoURL) {
-          avatar.innerHTML = "<img alt=\"Driver\" src=\"" + escapeHtml(ride.driverPhotoURL) + "\">";
-        } else {
-          avatar.textContent = "🛺";
-        }
-      } else {
-        card.style.display = "none";
-      }
-
-      if (ride.status === "completed" && ride.driverId) {
-        if (ride.customerRated) {
-          rateBtn.style.display = "block";
-          rateBtn.textContent = "⭐ Rating Submitted";
-          rateBtn.disabled = true;
-        } else {
-          rateBtn.style.display = "block";
-          rateBtn.disabled = false;
-          rateBtn.textContent = "⭐ Rate Your Driver";
-          ratingRide = ride;
-        }
-      } else {
-        rateBtn.style.display = "none";
-      }
+        if (ride.driverPhotoURL) avatar.innerHTML = "<img alt=\"Driver\" src=\"" + escapeHtml(ride.driverPhotoURL) + "\">";
+        else avatar.textContent = "🛺";
+      } else card.style.display = "none";
     }
 
-    window.selectRating = function(value) {
-      ratingValue = Number(value);
-      for (let i = 1; i <= 5; i++) {
-        const star = document.getElementById("star" + i);
-        if (star) star.classList.toggle("active", i <= ratingValue);
-      }
-      document.getElementById("ratingSubmitBtn").disabled = ratingValue < 1 || ratingSubmitting;
-    };
-
-    window.openRating = function() {
-      if (!ratingRide || !ratingRide.driverId) {
-        showToast("Driver details are not available yet.");
-        return;
-      }
-      if (ratingRide.customerRated) {
-        showToast("You already rated this ride.");
-        return;
-      }
-      ratingValue = 0;
-      ratingSubmitting = false;
-      for (let i = 1; i <= 5; i++) {
-        document.getElementById("star" + i)?.classList.remove("active");
-      }
-      document.getElementById("ratingReview").value = "";
-      document.getElementById("ratingDriverLabel").textContent =
-        "How was your ride with " + (ratingRide.driverName || "your driver") + "?";
-      document.getElementById("ratingSubmitBtn").disabled = true;
-      document.getElementById("ratingModal").classList.add("show");
-    };
-
-    window.closeRating = function() {
-      document.getElementById("ratingModal").classList.remove("show");
-    };
-
-    window.closeRatingOutside = function(event) {
-      if (event.target.id === "ratingModal") closeRating();
-    };
-
-    window.submitRating = async function() {
-      if (ratingSubmitting || ratingValue < 1 || !ratingRide || !currentUser) return;
-
-      ratingSubmitting = true;
-      const submitBtn = document.getElementById("ratingSubmitBtn");
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting...";
-
+    window.cancelRide = async function() {
+      if (!activeRideId || !currentUser) return;
+      const ok = confirm("Are you sure you want to cancel this ride?");
+      if (!ok) return;
+      const btn = document.getElementById("cancelRideBtn");
+      btn.disabled = true;
+      btn.textContent = "Cancelling...";
       try {
-        const review = String(document.getElementById("ratingReview").value || "").trim().slice(0, 500);
-        const ratingId = ratingRide.id + "_" + currentUser.uid;
-
-        await setDoc(doc(db, "ratings", ratingId), {
-          rideId: ratingRide.id,
-          customerId: currentUser.uid,
-          customerName: currentUserData?.name || currentUser.displayName || "Customer",
-          driverId: ratingRide.driverId,
-          driverName: ratingRide.driverName || "Driver",
-          rating: ratingValue,
-          review,
-          createdAt: serverTimestamp()
-        });
-
-        await updateDoc(doc(db, "rides", ratingRide.id), {
-          customerRated: true,
-          customerRating: ratingValue,
-          customerReview: review,
+        const rideRef = doc(db, "rides", activeRideId);
+        const snap = await getDoc(rideRef);
+        if (!snap.exists()) throw new Error("Ride not found");
+        const ride = snap.data();
+        if (ride.customerId !== currentUser.uid) throw new Error("Not your ride");
+        if (!["searching","accepted"].includes(ride.status)) {
+          showToast("This ride can no longer be cancelled.");
+          return;
+        }
+        await updateDoc(rideRef, {
+          status: "cancelled",
+          cancelledBy: "customer",
+          cancelReason: "Cancelled by customer",
+          cancelledAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
-
-        ratingRide = { ...ratingRide, customerRated: true, customerRating: ratingValue, customerReview: review };
-        document.getElementById("rateDriverBtn").textContent = "⭐ Rating Submitted";
-        document.getElementById("rateDriverBtn").disabled = true;
-        closeRating();
-        showToast("Thanks! Your rating has been submitted.");
+        showToast("Ride cancelled successfully.");
       } catch (error) {
-        console.error("Rating submission error:", error);
-        showToast("Rating submit nahi ho paaya. Please try again.");
-        submitBtn.disabled = false;
-      } finally {
-        ratingSubmitting = false;
-        submitBtn.textContent = "Submit Rating";
+        console.error("Cancel ride error:", error);
+        showToast("Ride cancel nahi ho paaya. Please try again.");
+        btn.disabled = false;
+        btn.textContent = "✕ Cancel Ride";
       }
     };
+
+    function openRating(ride) {
+      if (!ride.driverId || ride.customerRated) return;
+      pendingRatingRide = ride;
+      selectedRating = 0;
+      document.querySelectorAll("#ratingStars .star-btn").forEach(b => b.classList.remove("active"));
+      document.getElementById("reviewInput").value = "";
+      document.getElementById("ratingModal").classList.add("show");
+    }
+    window.closeRating = function() { document.getElementById("ratingModal").classList.remove("show"); };
+    document.querySelectorAll("#ratingStars .star-btn").forEach(btn => btn.addEventListener("click", () => {
+      selectedRating = Number(btn.dataset.rating);
+      document.querySelectorAll("#ratingStars .star-btn").forEach(b => b.classList.toggle("active", Number(b.dataset.rating) <= selectedRating));
+    }));
+
+    window.submitRating = async function() {
+      if (!pendingRatingRide || !currentUser || !selectedRating) { showToast("Please select a star rating."); return; }
+      const submit = document.getElementById("submitRatingBtn");
+      submit.disabled = true; submit.textContent = "Saving...";
+      try {
+        const ride = pendingRatingRide;
+        const ratingId = ride.id + "_" + currentUser.uid;
+        const ratingRef = doc(db, "ratings", ratingId);
+        await setDoc(ratingRef, {
+          rideId: ride.id, customerId: currentUser.uid,
+          customerName: currentUserData?.name || currentUser.displayName || "Customer",
+          driverId: ride.driverId, driverName: ride.driverName || "Driver",
+          rating: selectedRating,
+          review: document.getElementById("reviewInput").value.trim().slice(0,500),
+          createdAt: serverTimestamp()
+        }, {merge:false});
+        await updateDoc(doc(db,"rides",ride.id), { customerRated:true, customerRating:selectedRating, customerReview:document.getElementById("reviewInput").value.trim().slice(0,500), updatedAt:serverTimestamp() });
+        showToast("Thanks! Your rating was saved.");
+        closeRating();
+        pendingRatingRide = null;
+      } catch (error) {
+        console.error("Rating error:", error);
+        showToast("Rating save nahi hua. Please try again.");
+      } finally { submit.disabled = false; submit.textContent = "Submit Rating"; }
+    };
+
+    window.openHistory = async function() {
+      document.getElementById("historyModal").classList.add("show");
+      const list = document.getElementById("historyList");
+      list.innerHTML = "<div class='ride-info'>Loading...</div>";
+      try {
+        const q = query(collection(db,"rides"), where("customerId","==",currentUser.uid));
+        const snap = await getDocs(q);
+        const rows = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>((b.createdAt?.seconds||0)-(a.createdAt?.seconds||0))).slice(0,30);
+        if (!rows.length) { list.innerHTML="<div class='ride-info'>No rides yet.</div>"; return; }
+        list.innerHTML = rows.map(r => `<div class="history-item"><b>${escapeHtml(r.status || "ride").toUpperCase()} • ${escapeHtml(r.serviceType || "toto")}</b><div>📍 ${escapeHtml(r.pickup?.address||"Pickup")}<br>🏁 ${escapeHtml(r.destination?.address||"Destination")}<br>💰 ${r.estimatedFare ? "₹"+escapeHtml(String(r.estimatedFare)) : "Fare pending"}</div></div>`).join("");
+      } catch(e) { console.error(e); list.innerHTML="<div class='ride-info'>History load nahi ho paaya.</div>"; }
+    };
+    window.closeHistory = function(){ document.getElementById("historyModal").classList.remove("show"); };
+    window.closeHistoryOutside = function(e){ if(e.target.id==="historyModal") closeHistory(); };
 
     function escapeHtml(value) {
       return String(value ?? "").replace(/[&<>'"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[char]));
