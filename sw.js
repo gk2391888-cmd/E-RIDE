@@ -1,8 +1,4 @@
-const CACHE_NAME = "e-ride-v100";
-
-const STATIC_CACHE = [
-  "./manifest.json"
-];
+const CACHE_NAME = "e-ride-v101";
 
 
 // ========================================
@@ -11,26 +7,9 @@ const STATIC_CACHE = [
 
 self.addEventListener("install", event => {
 
-  event.waitUntil(
+  console.log("E RIDE Service Worker installing...");
 
-    caches.open(CACHE_NAME)
-      .then(cache => {
-
-        return cache.addAll(STATIC_CACHE);
-
-      })
-      .catch(error => {
-
-        console.warn(
-          "E RIDE cache install error:",
-          error
-        );
-
-      })
-
-  );
-
-  // New SW immediately activate
+  // Immediately activate new service worker
   self.skipWaiting();
 
 });
@@ -46,8 +25,9 @@ self.addEventListener("activate", event => {
 
     (async () => {
 
-      const keys =
-        await caches.keys();
+      console.log("E RIDE Service Worker activated");
+
+      const keys = await caches.keys();
 
       await Promise.all(
 
@@ -72,7 +52,8 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
 
-  if(event.request.method !== "GET"){
+  // Only GET requests
+  if (event.request.method !== "GET") {
     return;
   }
 
@@ -81,12 +62,12 @@ self.addEventListener("fetch", event => {
     new URL(event.request.url);
 
 
-  /*
-    Firebase / Google / Firestore
-    ko Service Worker touch nahi karega.
-  */
+  // ======================================
+  // Firebase / Google requests
+  // NEVER intercept
+  // ======================================
 
-  const isFirebase =
+  const isExternalApi =
     url.hostname.includes("googleapis.com") ||
     url.hostname.includes("firebaseio.com") ||
     url.hostname.includes("firestore.googleapis.com") ||
@@ -95,96 +76,22 @@ self.addEventListener("fetch", event => {
     url.hostname.includes("google.com");
 
 
-  if(isFirebase){
+  if (isExternalApi) {
     return;
   }
 
 
-  /*
-    IMPORTANT:
-    HTML/navigation ko CACHE NAHI KARNA.
+  // ======================================
+  // HTML / PAGE NAVIGATION
+  // ALWAYS NETWORK
+  // ======================================
 
-    Isse GitHub Pages hamesha latest
-    index.html / customer.html / driver.html
-    serve karega.
-  */
-
-  if(event.request.mode === "navigate"){
+  if (event.request.mode === "navigate") {
 
     event.respondWith(
 
       fetch(event.request, {
         cache: "no-store"
-      })
-
-      .then(response => {
-
-        return response;
-
-      })
-
-      .catch(() => {
-
-        /*
-          Network unavailable hone par
-          browser ka normal error page use hoga.
-
-          Purana index.html inject nahi karenge.
-        */
-
-        return new Response(
-          `
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width,initial-scale=1">
-            <title>E RIDE</title>
-            <style>
-              body{
-                margin:0;
-                min-height:100vh;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                background:#070a10;
-                color:white;
-                font-family:Arial,sans-serif;
-                text-align:center;
-              }
-              div{
-                padding:30px;
-              }
-              button{
-                margin-top:15px;
-                padding:12px 20px;
-                border:0;
-                border-radius:10px;
-                background:#22c55e;
-                font-weight:bold;
-              }
-            </style>
-          </head>
-          <body>
-            <div>
-              <h2>E RIDE</h2>
-              <p>Internet connection required.</p>
-              <button onclick="location.reload()">
-                Retry
-              </button>
-            </div>
-          </body>
-          </html>
-          `,
-          {
-            status:503,
-            headers:{
-              "Content-Type":
-                "text/html; charset=utf-8"
-            }
-          }
-        );
-
       })
 
     );
@@ -193,38 +100,16 @@ self.addEventListener("fetch", event => {
   }
 
 
-  /*
-    Static files:
-    network first → cache fallback
-  */
+  // ======================================
+  // OTHER STATIC FILES
+  // Network first
+  // ======================================
 
   event.respondWith(
 
     fetch(event.request)
 
       .then(response => {
-
-        if(
-          response &&
-          response.status === 200 &&
-          response.type === "basic"
-        ){
-
-          const copy =
-            response.clone();
-
-          caches.open(CACHE_NAME)
-            .then(cache => {
-
-              cache.put(
-                event.request,
-                copy
-              );
-
-            })
-            .catch(() => {});
-
-        }
 
         return response;
 
@@ -251,31 +136,25 @@ self.addEventListener("push", event => {
 
   let data = {};
 
-  try{
+  try {
 
-    data =
-      event.data
-        ? event.data.json()
-        : {};
+    data = event.data
+      ? event.data.json()
+      : {};
 
-  }
-  catch(error){
+  } catch (error) {
 
     data = {
-
-      body:
-        event.data
-          ? event.data.text()
-          : "New E RIDE update"
-
+      body: event.data
+        ? event.data.text()
+        : "New E RIDE update"
     };
 
   }
 
 
   const title =
-    data.title ||
-    "E RIDE";
+    data.title || "E RIDE";
 
 
   const options = {
@@ -301,7 +180,7 @@ self.addEventListener("push", event => {
       },
 
     vibrate:
-      [200,100,200],
+      [200, 100, 200],
 
     tag:
       data.tag ||
@@ -349,7 +228,7 @@ self.addEventListener(
     let finalUrl;
 
 
-    try{
+    try {
 
       finalUrl =
         new URL(
@@ -357,8 +236,7 @@ self.addEventListener(
           self.location.origin
         ).href;
 
-    }
-    catch(error){
+    } catch (error) {
 
       finalUrl =
         new URL(
@@ -372,29 +250,26 @@ self.addEventListener(
     event.waitUntil(
 
       clients.matchAll({
-
-        type:"window",
-
-        includeUncontrolled:true
-
+        type: "window",
+        includeUncontrolled: true
       })
 
       .then(clientList => {
 
-        for(
+        for (
           const client of clientList
-        ){
+        ) {
 
-          if(
+          if (
             client.url.startsWith(
               self.location.origin
             ) &&
             "focus" in client
-          ){
+          ) {
 
-            if(
+            if (
               "navigate" in client
-            ){
+            ) {
 
               client.navigate(
                 finalUrl
@@ -409,9 +284,7 @@ self.addEventListener(
         }
 
 
-        if(
-          clients.openWindow
-        ){
+        if (clients.openWindow) {
 
           return clients.openWindow(
             finalUrl
@@ -435,10 +308,11 @@ self.addEventListener(
   "message",
   event => {
 
-    if(
-      event.data?.type ===
+    if (
+      event.data &&
+      event.data.type ===
       "SKIP_WAITING"
-    ){
+    ) {
 
       self.skipWaiting();
 
