@@ -1,22 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1.0"
+>
 
 <title>E RIDE — Login</title>
 
-<meta name="theme-color" content="#22c55e">
-<meta name="description" content="E RIDE — Toto and e-rickshaw ride service">
+<!-- PWA -->
+<meta
+  name="theme-color"
+  content="#22c55e"
+>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta
+  name="description"
+  content="E RIDE — Toto and e-rickshaw ride service"
+>
+
+<link
+  rel="manifest"
+  href="./manifest.json"
+>
+
+<link
+  rel="icon"
+  href="./icon-192.png"
+  type="image/png"
+>
+
+<link
+  rel="apple-touch-icon"
+  href="./icon-192.png"
+>
+
+
+<!-- Fonts -->
+
+<link
+  rel="preconnect"
+  href="https://fonts.googleapis.com"
+>
+
+<link
+  rel="preconnect"
+  href="https://fonts.gstatic.com"
+  crossorigin
+>
 
 <link
   href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
   rel="stylesheet"
 >
+
 
 <style>
 
@@ -445,12 +486,16 @@ button:disabled{
 
 </head>
 
+
 <body>
 
 
 <div class="app">
 
   <div class="login-wrap">
+
+
+    <!-- BRAND -->
 
     <div class="brand">
 
@@ -469,11 +514,15 @@ button:disabled{
     </div>
 
 
+    <!-- LOGIN CARD -->
+
     <div class="card">
+
 
       <div class="heading">
         Welcome to E RIDE
       </div>
+
 
       <div class="description">
         Sign in with your Google account to book or drive a Toto.
@@ -486,6 +535,9 @@ button:disabled{
 
 
       <div class="roles">
+
+
+        <!-- CUSTOMER -->
 
         <button
           type="button"
@@ -509,6 +561,8 @@ button:disabled{
         </button>
 
 
+        <!-- DRIVER -->
+
         <button
           type="button"
           class="role"
@@ -530,8 +584,11 @@ button:disabled{
 
         </button>
 
+
       </div>
 
+
+      <!-- GOOGLE LOGIN -->
 
       <button
         type="button"
@@ -551,6 +608,8 @@ button:disabled{
       </button>
 
 
+      <!-- STATUS -->
+
       <div
         class="status"
         id="status"
@@ -560,9 +619,11 @@ button:disabled{
       <div class="info">
 
         New drivers may require admin approval before they can start accepting rides.
+
         Existing accounts will keep their previously assigned role.
 
       </div>
+
 
     </div>
 
@@ -571,12 +632,18 @@ button:disabled{
       © E RIDE • Local Mobility Platform
     </div>
 
+
   </div>
 
 </div>
 
 
+<!-- =========================================
+     FIREBASE
+========================================= -->
+
 <script type="module">
+
 
 /* =========================================
    FIREBASE IMPORTS
@@ -592,7 +659,8 @@ from
 import {
   getAuth,
   GoogleAuthProvider,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   setPersistence,
   browserLocalPersistence
 }
@@ -648,14 +716,18 @@ const firebaseConfig = {
 const app =
   initializeApp(firebaseConfig);
 
+
 const auth =
   getAuth(app);
+
 
 const db =
   getFirestore(app);
 
+
 const provider =
   new GoogleAuthProvider();
+
 
 provider.setCustomParameters({
   prompt:"select_account"
@@ -724,6 +796,7 @@ function(role){
 
   }
 
+
   selectedRole =
     role;
 
@@ -758,6 +831,7 @@ function redirectToDashboard(role){
     return;
   }
 
+
   redirecting =
     true;
 
@@ -772,6 +846,7 @@ function redirectToDashboard(role){
       "./driver.html";
 
   }
+
 
   else if(role === "admin"){
 
@@ -788,12 +863,16 @@ function redirectToDashboard(role){
 
 
   console.log(
-    "REDIRECT:",
+    "E RIDE REDIRECT:",
     page
   );
 
 
-  window.location.replace(page);
+  setTimeout(() => {
+
+    window.location.replace(page);
+
+  }, 300);
 
 }
 
@@ -883,14 +962,21 @@ async function createUser(user){
 
 
   await setDoc(
+
     doc(
       db,
       "users",
       user.uid
     ),
+
     data
+
   );
 
+
+  /* =====================================
+     DRIVER PROFILE
+  ===================================== */
 
   if(role === "driver"){
 
@@ -969,6 +1055,87 @@ async function createUser(user){
 
 
 /* =========================================
+   PROCESS GOOGLE RESULT
+========================================= */
+
+async function processLoginResult(result){
+
+  if(!result || !result.user){
+
+    return;
+
+  }
+
+
+  const user =
+    result.user;
+
+
+  console.log(
+    "GOOGLE LOGIN SUCCESS:",
+    user.uid
+  );
+
+
+  setStatus(
+    "Google login successful...",
+    "loading"
+  );
+
+
+  /* =====================================
+     GET PROFILE
+  ===================================== */
+
+  let userData =
+    await getUser(user);
+
+
+  /* =====================================
+     CREATE PROFILE
+  ===================================== */
+
+  if(!userData){
+
+    setStatus(
+      "Creating your E RIDE account...",
+      "loading"
+    );
+
+
+    userData =
+      await createUser(user);
+
+  }
+
+
+  /* =====================================
+     EXISTING USER ROLE
+  ===================================== */
+
+  const role =
+    userData?.role;
+
+
+  if(
+    role !== "customer" &&
+    role !== "driver" &&
+    role !== "admin"
+  ){
+
+    throw new Error(
+      "Your E RIDE account has an invalid role."
+    );
+
+  }
+
+
+  redirectToDashboard(role);
+
+}
+
+
+/* =========================================
    GOOGLE LOGIN
 ========================================= */
 
@@ -991,7 +1158,7 @@ async function(){
 
 
   loginBtnText.textContent =
-    "Signing in...";
+    "Opening Google...";
 
 
   setStatus(
@@ -1003,8 +1170,10 @@ async function(){
   try{
 
     /*
-      Persistence is OPTIONAL.
-      If it fails, login continues.
+      Local persistence.
+
+      Agar persistence fail bhi ho,
+      login process continue karega.
     */
 
     try{
@@ -1015,6 +1184,7 @@ async function(){
       );
 
     }
+
     catch(error){
 
       console.warn(
@@ -1025,92 +1195,27 @@ async function(){
     }
 
 
-    /* =====================================
-       GOOGLE
-    ===================================== */
+    /*
+      IMPORTANT:
 
-    const result =
-      await signInWithPopup(
-        auth,
-        provider
-      );
+      Popup ke instead redirect use kar rahe hain.
 
+      Isse Chrome ka:
+      window.closed / COOP popup warning
+      avoid hota hai.
+    */
 
-    const user =
-      result.user;
-
-
-    if(!user){
-
-      throw new Error(
-        "Google account was not returned."
-      );
-
-    }
-
-
-    console.log(
-      "GOOGLE SUCCESS:",
-      user.uid
+    await signInWithRedirect(
+      auth,
+      provider
     );
-
-
-    setStatus(
-      "Google login successful...",
-      "loading"
-    );
-
-
-    /* =====================================
-       PROFILE
-    ===================================== */
-
-    let userData =
-      await getUser(user);
-
-
-    if(!userData){
-
-      setStatus(
-        "Creating your E RIDE account...",
-        "loading"
-      );
-
-
-      userData =
-        await createUser(user);
-
-    }
-
-
-    /* =====================================
-       ROLE
-    ===================================== */
-
-    const role =
-      userData?.role;
-
-
-    if(
-      role !== "customer" &&
-      role !== "driver" &&
-      role !== "admin"
-    ){
-
-      throw new Error(
-        "Your E RIDE account has an invalid role."
-      );
-
-    }
-
-
-    redirectToDashboard(role);
 
   }
+
   catch(error){
 
     console.error(
-      "E RIDE ERROR:",
+      "E RIDE LOGIN ERROR:",
       error
     );
 
@@ -1121,33 +1226,14 @@ async function(){
 
     if(
       error?.code ===
-      "auth/popup-closed-by-user"
-    ){
-
-      message =
-        "Google sign-in cancelled.";
-
-    }
-
-    else if(
-      error?.code ===
-      "auth/popup-blocked"
-    ){
-
-      message =
-        "Google popup blocked. Allow popups.";
-
-    }
-
-    else if(
-      error?.code ===
       "auth/unauthorized-domain"
     ){
 
       message =
-        "This website is not authorized in Firebase.";
+        "This website is not authorized in Firebase. Add gk2391888-cmd.github.io in Firebase Authentication → Settings → Authorized domains.";
 
     }
+
 
     else if(
       error?.code ===
@@ -1159,17 +1245,17 @@ async function(){
 
     }
 
+
     else if(
       error?.code ===
-      "permission-denied" ||
-      error?.code ===
-      "firestore/permission-denied"
+      "auth/network-request-failed"
     ){
 
       message =
-        "Firestore permission denied. Check Firestore Rules.";
+        "Network error. Check your internet connection.";
 
     }
+
 
     else if(
       error?.message
@@ -1204,21 +1290,131 @@ async function(){
 
 
 /* =========================================
-   IMPORTANT
+   CHECK REDIRECT RESULT
 ========================================= */
 
-/*
-  NO onAuthStateChanged here.
+async function checkRedirectLogin(){
 
-  The login page will NOT wait for
-  Firebase auth state.
+  try{
 
-  Google login itself controls the flow.
-*/
+    const result =
+      await getRedirectResult(auth);
 
-console.log(
-  "E RIDE LOGIN READY"
-);
+
+    if(!result){
+
+      console.log(
+        "E RIDE LOGIN READY"
+      );
+
+      return;
+
+    }
+
+
+    loginInProgress =
+      true;
+
+
+    loginBtn.disabled =
+      true;
+
+
+    loginBtnText.textContent =
+      "Signing in...";
+
+
+    await processLoginResult(
+      result
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "REDIRECT LOGIN ERROR:",
+      error
+    );
+
+
+    let message =
+      "Google login failed.";
+
+
+    if(
+      error?.code ===
+      "auth/unauthorized-domain"
+    ){
+
+      message =
+        "This website is not authorized in Firebase. Add gk2391888-cmd.github.io to Authorized domains.";
+
+    }
+
+
+    else if(
+      error?.code ===
+      "auth/account-exists-with-different-credential"
+    ){
+
+      message =
+        "This Google account already exists with another sign-in method.";
+
+    }
+
+
+    else if(
+      error?.code ===
+      "permission-denied" ||
+      error?.code ===
+      "firestore/permission-denied"
+    ){
+
+      message =
+        "Firestore permission denied. Check Firestore Rules.";
+
+    }
+
+
+    else if(
+      error?.message
+    ){
+
+      message =
+        error.message;
+
+    }
+
+
+    setStatus(
+      message,
+      "error"
+    );
+
+
+    loginInProgress =
+      false;
+
+
+    loginBtn.disabled =
+      false;
+
+
+    loginBtnText.textContent =
+      "Continue with Google";
+
+  }
+
+}
+
+
+/* =========================================
+   START REDIRECT CHECK
+========================================= */
+
+checkRedirectLogin();
+
 
 </script>
 
@@ -1261,5 +1457,7 @@ if("serviceWorker" in navigator){
 
 </script>
 
+
 </body>
+
 </html>
