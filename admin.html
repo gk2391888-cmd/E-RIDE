@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080d18">
+  <title>E RIDE — Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .admin-wrap{max-width:1050px;margin:auto;padding:24px 16px}
+    .admin-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0}
+    .admin-stat,.admin-card{background:#111a2a;border:1px solid #263349;border-radius:16px;padding:18px;min-width:0}
+    .admin-stat small{display:block;color:#9ba9bd;font-size:12px}
+    .admin-stat strong{display:block;font-size:30px;margin-top:8px}
+    .admin-card{margin:14px 0;overflow-wrap:anywhere}
+    .admin-card h3{margin:0 0 10px}
+    .admin-meta{color:#9ba9bd;font-size:13px;line-height:1.7}
+    .admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+    .admin-actions button{flex:1;min-width:110px}
+    .btn-danger{background:#4a2029;color:#ffdce0;border:1px solid #813746}
+    .admin-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0}
+    .admin-tabs button{background:#111a2a;color:#fff;border:1px solid #263349;border-radius:10px;padding:11px 16px}
+    .admin-tabs button.active{border-color:#28d99b;color:#28d99b}
+    .admin-error{color:#ff9a9a;white-space:pre-wrap;overflow-wrap:anywhere}
+    @media(max-width:540px){.admin-grid{grid-template-columns:1fr}.admin-stat{padding:14px}.admin-stat strong{font-size:25px}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./index.html">
+      <span class="brand-icon">E</span>
+      <span>E RIDE<small>ADMIN CONSOLE</small></span>
+    </a>
+    <button id="admin-logout" class="btn btn-light btn-small" hidden>Sign out</button>
+  </header>
+
+  <main class="admin-wrap">
+    <div class="eyebrow">CONTROL CENTRE</div>
+    <h1 style="font-size:clamp(34px,6vw,52px);letter-spacing:-1px">Admin <span style="color:#28d99b">Dashboard.</span></h1>
+    <p class="muted">Manage driver verification and monitor ride requests.</p>
+
+    <section id="admin-login" class="admin-card">
+      <h3>Administrator sign-in</h3>
+      <p class="admin-meta">Only an account with a trusted Firebase admin claim can access the dashboard.</p>
+      <button id="admin-google-login" class="btn btn-primary">Sign in with Google</button>
+      <p id="admin-login-message" class="message" role="status"></p>
+    </section>
+
+    <section id="admin-dashboard" hidden>
+      <p id="admin-identity" class="admin-meta"></p>
+      <div class="admin-grid">
+        <div class="admin-stat"><small>Pending applications</small><strong id="stat-pending">—</strong></div>
+        <div class="admin-stat"><small>Approved drivers</small><strong id="stat-approved">—</strong></div>
+        <div class="admin-stat"><small>Ride requests</small><strong id="stat-rides">—</strong></div>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="active" data-view="applications">Driver applications</button>
+        <button data-view="rides">Rides</button>
+      </div>
+
+      <p id="admin-message" class="message" role="status"></p>
+      <section id="applications-view">
+        <h2>Driver applications</h2>
+        <div id="admin-applications"></div>
+      </section>
+      <section id="rides-view" hidden>
+        <h2>Ride monitoring</h2>
+        <div id="admin-rides"></div>
+      </section>
+      <button id="admin-refresh" class="btn btn-light">Refresh dashboard</button>
+    </section>
+  </main>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
