@@ -1,0 +1,118 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="description" content="E RIDE — Book passenger and cargo TOTO rides in Surajgarha and Lakhisarai.">
+  <title>E RIDE — Your Local Ride</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#">
+      <span class="brand-icon">E</span>
+      <span>E RIDE<small>YOUR LOCAL RIDE</small></span>
+    </a>
+    <span class="location-label">📍 Surajgarha</span>
+  </header>
+
+  <main class="container">
+    <section id="welcome" class="hero">
+      <div class="eyebrow">YOUR CITY. YOUR RIDE.</div>
+      <h1>Move around<br>with <span>ease.</span></h1>
+      <p>Book a local TOTO ride or arrange a cargo trip in just a few steps.</p>
+      <button id="google-login" class="btn btn-primary">Continue with Google</button>
+      <p class="muted tiny">Sign in securely with your Google account.</p>
+      <p id="login-message" class="message" role="status"></p>
+    </section>
+
+    <section id="app-panel" hidden>
+      <div class="user-card">
+        <img id="user-photo" alt="Profile photo" src="">
+        <div class="user-info">
+          <strong id="user-name">Welcome</strong>
+          <small id="user-email"></small>
+        </div>
+        <button id="logout" class="btn btn-light btn-small">Sign out</button>
+      </div>
+
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">BOOK A TRIP</div>
+          <h2>Where to today?</h2>
+        </div>
+        <span class="live-dot">Available soon</span>
+      </div>
+
+      <div class="ride-options">
+        <button class="ride-option selected" data-ride="passenger">
+          <span class="ride-emoji">🛺</span>
+          <strong>Passenger</strong>
+          <small>Local TOTO ride</small>
+        </button>
+        <button class="ride-option" data-ride="cargo">
+          <span class="ride-emoji">📦</span>
+          <strong>Cargo</strong>
+          <small>Goods transport</small>
+        </button>
+      </div>
+
+      <form id="booking-form" class="card">
+        <label for="pickup">Pickup location</label>
+        <div class="input-with-button">
+          <input id="pickup" name="pickup" placeholder="Enter pickup location" required maxlength="180">
+          <button type="button" id="get-location" class="gps-btn" title="Use my GPS location">◎</button>
+        </div>
+
+        <label for="destination">Destination</label>
+        <input id="destination" name="destination" placeholder="Where are you going?" required maxlength="180">
+
+        <div id="cargo-details" hidden>
+          <label for="goods">Goods details</label>
+          <input id="goods" name="goods" placeholder="e.g. boxes, furniture" maxlength="180">
+        </div>
+
+        <label>Payment preference</label>
+        <div class="payment-options">
+          <label class="payment-choice">
+            <input type="radio" name="payment" value="cash" checked>
+            <span>💵 Cash</span>
+          </label>
+          <label class="payment-choice">
+            <input type="radio" name="payment" value="upi">
+            <span>📱 UPI</span>
+          </label>
+        </div>
+
+        <p class="muted tiny">Final fare and driver availability will be confirmed once the ride service is connected.</p>
+        <button class="btn btn-primary btn-full" id="book-ride" type="submit">Request a ride →</button>
+        <p id="booking-message" class="message" role="status"></p>
+      </form>
+
+      <section class="history-section">
+        <div class="section-heading">
+          <div><div class="eyebrow">YOUR ACTIVITY</div><h2>Recent rides</h2></div>
+          <button id="refresh-rides" class="text-btn">Refresh</button>
+        </div>
+        <div id="ride-history" class="history-list">
+          <p class="muted">Your ride requests will appear here.</p>
+        </div>
+      </section>
+    </section>
+
+    <section class="trust-strip">
+      <span>🔒 Secure sign-in</span>
+      <span>📍 Local rides</span>
+      <span>📦 Cargo trips</span>
+    </section>
+  </main>
+
+  <footer>© <span id="year"></span> E RIDE · Surajgarha, Bihar</footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
+```
