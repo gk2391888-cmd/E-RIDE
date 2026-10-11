@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080d18">
+  <title>E RIDE — Driver Partner</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .driver-wrap{max-width:760px;margin:auto;padding:24px 16px}
+    .driver-card{background:#111a2a;border:1px solid #263349;border-radius:16px;padding:18px;margin:16px 0}
+    .driver-card h2{font-size:21px;margin:0 0 14px}
+    .driver-form label{display:block;font-size:13px;margin:14px 0 7px}
+    .driver-form input,.driver-form select{width:100%;padding:13px;background:#080d18;color:#fff;border:1px solid #263349;border-radius:10px}
+    .driver-form button{margin-top:16px}
+    .driver-note{color:#9ba9bd;font-size:13px;line-height:1.6}
+    .driver-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .driver-actions button{flex:1;min-width:110px}
+    .call-link{display:inline-block;color:#28d99b;margin-top:10px;font-weight:800}
+    .ride-status{color:#28d99b;text-transform:capitalize}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./index.html">
+      <span class="brand-icon">E</span>
+      <span>E RIDE<small>DRIVER PARTNER</small></span>
+    </a>
+    <a href="./index.html" style="color:#28d99b;text-decoration:none">Customer App ↗</a>
+  </header>
+
+  <main class="driver-wrap">
+    <div class="eyebrow">DRIVER PARTNER PORTAL</div>
+    <h1 style="font-size:42px;letter-spacing:-1px">Earn with <span style="color:#28d99b">E RIDE.</span></h1>
+    <p class="driver-note">Register your vehicle, get verified and receive local ride requests.</p>
+
+    <section id="driver-login" class="driver-card">
+      <h2>Sign in</h2>
+      <p class="driver-note">Use your Google account to register or access your driver profile.</p>
+      <button id="driver-google-login" class="btn btn-primary btn-full">Continue with Google</button>
+      <p id="driver-login-message" class="message" role="status"></p>
+    </section>
+
+    <section id="driver-dashboard" hidden>
+      <div class="driver-card">
+        <h2 id="driver-welcome">Welcome, Driver</h2>
+        <p id="driver-account" class="driver-note"></p>
+        <button id="driver-logout" class="btn btn-light">Sign out</button>
+      </div>
+
+      <section id="driver-application" class="driver-card">
+        <h2>Driver registration</h2>
+        <p class="driver-note">Submit accurate details. You cannot accept rides until the admin approves your application.</p>
+        <form id="driver-application-form" class="driver-form">
+          <label for="driver-name">Full name</label>
+          <input id="driver-name" required maxlength="100" autocomplete="name">
+
+          <label for="driver-phone">Mobile number</label>
+          <input id="driver-phone" required type="tel" inputmode="tel"
+                 pattern="[+]?[0-9 ]{10,16}" maxlength="16" autocomplete="tel">
+
+          <label for="vehicle-type">Vehicle type</label>
+          <select id="vehicle-type" required>
+            <option value="passenger">Passenger TOTO</option>
+            <option value="cargo">Cargo TOTO</option>
+            <option value="both">Passenger + Cargo</option>
+          </select>
+
+          <label for="vehicle-number">Vehicle registration number</label>
+          <input id="vehicle-number" required maxlength="20"
+                 placeholder="e.g. BR-XX-XX-1234">
+
+          <label for="driver-area">Service area</label>
+          <input id="driver-area" required maxlength="100" value="Surajgarha, Lakhisarai">
+
+          <button id="driver-submit" type="submit" class="btn btn-primary btn-full">Submit for verification</button>
+          <p id="driver-application-message" class="message" role="status"></p>
+        </form>
+      </section>
+
+      <section class="driver-card">
+        <h2>Driver status</h2>
+        <p id="driver-approval-status" class="driver-note">Checking verification…</p>
+        <button id="driver-online-toggle" class="btn btn-primary btn-full" disabled>Go online</button>
+        <p class="driver-note">Online mode will be available after admin approval.</p>
+      </section>
+
+      <section class="driver-card">
+        <h2>Ride requests</h2>
+        <p class="driver-note">New requests will appear here once your application is approved.</p>
+        <button id="driver-refresh-rides" class="btn btn-light">Refresh requests</button>
+        <div id="driver-rides" style="margin-top:14px"></div>
+      </section>
+    </section>
+  </main>
+
+  <script type="module" src="driver.js"></script>
+</body>
+</html>
