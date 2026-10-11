@@ -1,0 +1,13 @@
+
+{
+  "name": "E RIDE - Your Local Ride",
+  "short_name": "E RIDE",
+  "description": "Book passenger and cargo TOTO rides in Surajgarha and Lakhisarai.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#080d18",
+  "theme_color": "#0b1220",
+  "categories": ["travel", "transportation"]
+}
